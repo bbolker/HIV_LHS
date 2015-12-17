@@ -4,11 +4,13 @@ library("testthat")
 source("LHSparms2.R")
 source("hivFuns.R")
 source("hivModels.R")
+
+## slight asymmetry is due to enforcing row-sum=1 constraint
 mm <- makeMutMat(expand(ltab_mean))
 image(log10(mm))
 
 tvec <- 0:50
-fun1 <- gfun(ltab_mean)
+fun1 <- gfun(ltab_mean,FALSE)
 y1 <- unlist(calc_yini(ltab_mean))
 
 grad1 <- fun1(t=0,yini=y1,ltab_mean)
@@ -25,3 +27,12 @@ res1 <- ode(y=y1,
 
 ## TESTS
 ## equivalence of models with each other?
+
+y2 <- unlist(calc_yini(ltab2))
+ltab2 <- ltab_mean
+ltab2$alphaDist["delta"] <- 0.1
+fun2 <- gfun(ltab2,FALSE)
+res2 <- ode(y=y2,
+            func=fun2,
+            parms=ltab2,
+            time=tvec)

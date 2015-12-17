@@ -42,7 +42,6 @@ hill <- function(x,a,b,p) {
     a*b^p/(b^p+x^p)
 }
 
-
 ##' get r value within specified bounds
 ##'
 ##' @param g
