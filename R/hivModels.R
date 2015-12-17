@@ -6,7 +6,7 @@ makeMutMat <- function(xpars) {
              x <- min.alpha + (i-1)*d.alpha
              denom <- 
                  diff(pnorm(c(min.alpha-d.alpha/2,max.alpha+d.alpha/2),
-                            mean=x, sd=Vm))
+                              mean=x, sd=Vm))
              for (j in 1:n.alpha){
                  k <- min.alpha + (j-1)*d.alpha
                  p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
@@ -18,7 +18,7 @@ makeMutMat <- function(xpars) {
 }
 
 
-## 'full model'; 
+## multi-strain CD model; non-instantaneous partnership, extra-pair contact
 gfun <- function(parameters,mm=TRUE) {
     pp <- expand(parameters)
     attach(pp)
@@ -90,7 +90,7 @@ gfun <- function(parameters,mm=TRUE) {
 return(g)
 }
 
-#serial
+## CD multi-strain model; non-instantaneous, WITHOUT EPC
 gfun2 <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
@@ -149,7 +149,7 @@ gfun2 <- function(parameters) {
 return(g)
 }
 
-#serial + inst
+## instantaneous partnership, WITHOUT EPC
 gfun3 <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
@@ -214,7 +214,7 @@ return(g)
 }
 
 
-## serial monogamy; instantaneous partnership formation + extra-partnership contact
+## instantaneous partnership formation + extra-partnership contact
 gfun4 <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
@@ -333,7 +333,6 @@ I_initialize <- function(parameters) {
 })
 return(I)
 }
-
 
 
 #I_ex <- I_initialize(pars_ex)
