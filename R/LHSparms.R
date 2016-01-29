@@ -1,3 +1,4 @@
+## SHOULD BE OBSOLETE NOW
 n.trial <- 1000  ## total number of sims
 
 HIVpars.skeleton <- list(

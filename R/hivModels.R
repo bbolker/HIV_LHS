@@ -19,25 +19,25 @@ makeMutMat <- function(xpars) {
 
 
 ## multi-strain CD model; non-instantaneous partnership, extra-pair contact
-gfun <- function(parameters,mm=TRUE) {
+gfun_epc <- function(parameters,mm=TRUE) {
     pp <- expand(parameters)
     attach(pp)
 
     if (mm) {
         p <- makeMutMat(pp)
     } else {
-    p <- matrix(NA, n.alpha, n.alpha)
-    ## compute mutation matrix
-    for(i in 1:n.alpha){
-        x <- alphaDist[["min"]] + (i-1)*d.alpha
-        for (j in 1:n.alpha){
-            k <- alphaDist[["min"]] + (j-1)*d.alpha
-            denom <- with(as.list(alphaDist),
-                diff(pnorm(c(min-d.alpha/2,max+d.alpha/2), mean=x, sd=Vm)))
-      p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
+        p <- matrix(NA, n.alpha, n.alpha)
+        ## compute mutation matrix
+        for(i in 1:n.alpha){
+            x <- alphaDist[["min"]] + (i-1)*d.alpha
+            for (j in 1:n.alpha){
+                k <- alphaDist[["min"]] + (j-1)*d.alpha
+                denom <- with(as.list(alphaDist),
+                              diff(pnorm(c(min-d.alpha/2,max+d.alpha/2), mean=x, sd=Vm)))
+                p[i,j] <- diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
+            }
+        }
     }
-  }
-}
   
   detach(pp)
   
@@ -91,7 +91,7 @@ return(g)
 }
 
 ## CD multi-strain model; non-instantaneous, WITHOUT EPC
-gfun2 <- function(parameters) {
+gfun_noepc <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
   
@@ -150,7 +150,7 @@ return(g)
 }
 
 ## instantaneous partnership, WITHOUT EPC
-gfun3 <- function(parameters) {
+gfun_instant_noepc <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
   
@@ -215,7 +215,7 @@ return(g)
 
 
 ## instantaneous partnership formation + extra-partnership contact
-gfun4 <- function(parameters) {
+gfun_inst_epc <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
   
@@ -284,7 +284,7 @@ return(g)
 }
 
 ## Shirreff: "fake serial monogamy"
-gfun5 <- function(parameters) {
+gfun_implicit <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
   
@@ -328,10 +328,11 @@ return(g)
 
 I_initialize <- function(parameters) {
   I <- with(expand(parameters),
-{
-  i_col = dnorm(alpha, mean = 3.5, sd = inisd)/sum(dnorm(alpha, mean = 3.5, sd = inisd))
-})
-return(I)
+  {
+      i_col <- dnorm(alpha, mean = ini_V, sd = inisd)
+      i_col/sum(i_col)
+  })
+  return(I)
 }
 
 

@@ -12,10 +12,10 @@ expand.HIVvirparlist <- function(x,...) {
     ## mutate() doesn't work this deeply ...
     x <- within(x,
        {
-          min.alpha <- x$alphaDist[["min"]]
-          max.alpha <- x$alphaDist[["max"]]
-          d.alpha <- x$alphaDist[["delta"]]
-          alpha <- seq(alphaDist[["min"]],alphaDist[["max"]],by=d.alpha)
+          min.alpha <- alphaDist[["min"]]
+          max.alpha <- alphaDist[["max"]]
+          d.alpha <- alphaDist[["delta"]]
+          alpha <- seq(min.alpha,max.alpha,by=d.alpha)
           n.alpha <- length(alpha)
           
           rho <- scale_all * scale_c * rho_base
@@ -54,14 +54,17 @@ hill <- function(x,a,b,p) {
 get_rval <- function(g, yini, pp, plot.it=FALSE,
                      tvec = c(1:500),
                      lims=c(1e-3,5e-2),
-                     verbose=FALSE) {
+                     verbose=FALSE,
+                     method="ode45") {
   
     start <- unlist(yini)
+
     
     r <- ode(y=start,
-                 times=tvec,
-                 func=g,
-                 parms=pp)
+             times=tvec,
+             func=g,
+             parms=pp,
+             method=method)
         
     Itot <- r[,(ncol(r)-1)]
     
