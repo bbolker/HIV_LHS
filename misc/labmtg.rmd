@@ -105,7 +105,7 @@ opts_chunk$set(echo=FALSE,fig.width=4,fig.height=4) ## ,out.width=400)
 - **very simple**
 - implicit partnership-formation model
 $$
-\textrm{foi} = \frac{\beta c}{\beta + c + d}
+\textrm{foi} = \frac{\beta c}{\beta + c + 1/d}
 $$
 
 - derived from ${\cal R}_0$ for an instantaneous-partnership-formation model, e.g. @hollingsworth_hiv1_2008, @diekmann_mathematical_2000
@@ -294,6 +294,7 @@ ggplot(mL2,aes(LHSval,sumval,colour=model))+
 implicit $\approx$ pairform < instswitch < instswitch+epc $\approx$ pairform+epc
 - why no low-eq-vir tail for pairform+epc?
 - why is pairform, not instswitch, closest to implicit?
+- *breaking news*: random mixing (no pairs) is closest to pairform+epc
 
 ## Conclusions/questions: big picture
 
