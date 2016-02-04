@@ -1,0 +1,305 @@
+---
+title: HIV virulence evolution in structured epidemic models
+author: Ben Bolker and Daniel Park
+date: "`r format(Sys.time(), '%H:%M %d %B %Y ')`"
+bibliography: "../manuscript1/virulence.bib"
+csl: apa.csl
+output:
+  ioslides_presentation
+---
+<!-- 
+apa.csl is a slightly hacked version of APA 
+  (modified for "et al" after 2 authors in text)
+-->
+<!-- .refs is style for reference page (small text) -->
+<style>
+.refs {
+   font-size: 12px;
+}
+h2 { 
+ color: #3399ff;		
+}
+h3 { 
+ color: #3399ff;		
+}
+.title-slide {
+   background-color: #55bbff;
+}
+div#before-column p.forceBreak {
+	break-before: column;
+}
+
+div#after-column p.forceBreak {
+	break-after: column;
+}
+</style>
+<!--    content: url(https://i.creativecommons.org/l/by-sa/4.0/88x31.png)
+>
+<!-- Limit image width and height -->
+<style type="text/css">
+img {     
+  max-height: 560px;     
+  max-width: 800px; 
+}
+</style>
+
+
+
+```{r setup,echo=FALSE,message=FALSE}
+library("ggplot2"); theme_set(theme_classic())
+library("MASS")
+scale_colour_discrete <- function(...,palette="Set1") scale_colour_brewer(...,palette=palette,guide=guide_legend(reverse=TRUE))
+scale_fill_discrete <- function(...,palette="Set1") scale_fill_brewer(...,palette=palette,guide=guide_legend(reverse=TRUE))
+library("gridExtra")
+library("plyr")  ## for ldply()
+library("dplyr") ## for full_join()
+library("reshape2")  ## for melt()
+library("GGally")
+## devtools::install_github("lionel-/ggstance")
+library("ggstance")
+library("knitr")
+opts_chunk$set(echo=FALSE,fig.width=4,fig.height=4) ## ,out.width=400)
+```
+
+# Intro to virulence evolution
+
+## Tradeoff theory
+
+- assume that virulence evolution is mediated by parasite-level tradeoff between transmission and "virulence" (clearance/mortality rate)
+- need a *saturating* relationship: $\frac{d^2 \, \textrm{transmission}}{d\,\textrm{clearance}^2}<0$
+- mediated through pathogen replication rate (?)
+- simple form assumes no within-host competition (single clone per host)
+- alternatives: short-sighted evolution, within-host competition, effects of genetic drift ... [@LevinBull1994,@EbertBull2003]
+
+## Eco-evolutionary dynamics
+
+- feedback between ecological and evolutionary processes
+- typical emphasis on *short-term* dynamics (cf. adaptive dynamics)
+- eco-evo-epi: *transient virulence* [@bolker_transient_2010]
+- balance between $r$-selection (epidemic phase) and ${\cal R}_0$-selection (endemic phase)
+- transient peak observed in phage systems [@berngruber_evolution_2013]
+
+## Virulence evolution in HIV
+
+- set-point viral load (SPVL)
+- @Fraser+2007 : plausible tradeoff observed from Rakai data
+    - heritability of SPVL
+	- correlated with rate of progression to AIDS
+	- correlated with probability (rate) of within-couple transmission
+- @shirreff_transmission_2011 : transient peak after $\approx 1$ in a *reasonably* realistic model
+
+# Modeling virulence evolution in HIV
+
+## @shirreff_transmission_2011 : evolutionary/within-host
+
+- generally based on Rakai estimates
+- Normally distributed mutation
+- Normally distributed phenotypic variation
+- different infectivity for early, mid, late HIV stages
+- Hill functions ($x^d/(a+bx^d)$) for infectivity, progression through mid stage
+- Weibull time in mid stage
+
+
+## @shirreff_transmission_2011 : epidemiological
+
+- **very simple**
+- implicit partnership-formation model
+$$
+\textrm{foi} = \frac{\beta c}{\beta + c + d}
+$$
+
+- derived from ${\cal R}_0$ for an instantaneous-partnership-formation model, e.g. @hollingsworth_hiv1_2008, @diekmann_mathematical_2000
+- (@herbeck_hiv_2014 is worse [I think])
+
+## Epidemiological models for HIV [@champredon_hiv_2013]
+
+<!-- convert journal.pone.0082906.g001.png -crop 100%x50% output.png-->
+
+![](champ1.png)
+   
+## Model modifications
+
+- @champredon_hiv_2013 track $\{X,Y,N,D,P\}$ ($\{S,I,SS,SI,II\}$) $\times$ infected strain
+- we need $\{S,SS,I(\alpha),SI(\alpha),II(\alpha,\alpha')\}$
+- simplifications:
+    - single-stage, exponential infectious period  
+($\beta =$ time-weighted average of $\beta_1$, $\beta_2(\alpha)$, $\beta_3$)
+	- no phenotypic variation
+	
+## Model variations
+
+- 4 models:
+    - extra-pair contact (yes/no) 
+    - instantaneous partnership formation (yes/no)
+- implicit (Shirreff/Hollingsworth) model
+
+## Latin hypercube sampling {.columns-2}
+
+- sample evenly, randomly across (potentially many) uncertain parameters
+- following @champredon_hiv_2013, earlier @blower_drugs_1991
+
+<p class="forceBreak"></p>
+
+![](LHScrop.png)
+[User:Saittam, Wikipedia](https://commons.wikimedia.org/wiki/File:LHSsampling.png#/media/File:LHSsampling.png)
+
+## Details
+
+- $r$ varies widely across parameters/model sets
+     - *scale* parameters to $r=0.04$ (partnership formation, dissolution, *and* transmission probability)
+     - scale both uncoupled and extra-coupled rates relative to within-coupled rate
+- *response variables*
+     - equilibrium virulence
+	 - peak virulence time (years)
+	 - peak virulence
+	 - relative peak virulence (peak/eq)
+
+# Results
+
+```{r load,echo=FALSE,cache=TRUE,message=FALSE}
+## get all the batch output and combine it into a convenient (?) format
+source("../hivFuns.R")  ## must be loaded before LHSparms3
+source("../LHSparms3.R")
+ltab <- data.frame(run=seq(nrow(ltab)),ltab)
+##  combine them/rename appropriately
+run_nums <- c("pairform+epc"=5,"pairform"=6,
+               "instswitch"=7,"instswitch+epc"=8,"implicit"=9)
+## each entry has
+##    I_mat*:
+##    vir_mat*:
+##    eq_vec*: equilibrium value
+##    peak_mat*: peak value (time, height)
+##    val_vec*: ???
+for (i in run_nums)
+    L <- load(paste0("ev_LHS_res",i,".rda"))
+## combine
+component_names <- c("I_mat","vir_mat","eq_vec","peak_mat","val_vec")
+## make one big nested list of components
+comp_list <- lapply(component_names,
+                    function(c) {
+    res <- lapply(paste0(c,run_nums),get)
+    setNames(res,names(run_nums))
+})
+names(comp_list) <- component_names
+mat_names <- c("I_mat","vir_mat")
+## reduce matrices to melted data frame of mean & quantiles
+##  (we don't really need to make giant pictures with all of the
+##   individual lines - ribbons with mean and 95% quantiles should
+##   be sufficient)
+sum_mat_fun <- function(x) {
+    data.frame(
+        tvec=1:nrow(x),  ## ?? better time index?
+        mean=rowMeans(x),
+        lwr=apply(x,1,quantile,0.025),
+        upr=apply(x,1,quantile,0.975))
+}
+sum_list <- list()
+for (m in mat_names) {
+    sum_list[[m]] <- ldply(comp_list[[m]],
+                           sum_mat_fun, .id="model")
+}
+s1 <- ldply(comp_list[["eq_vec"]],
+                function(x) data.frame(run=1:length(x),eq_vir=x),
+                .id="model")
+s2 <- ldply(comp_list[["peak_mat"]],
+                function(x) {
+                   x <- setNames(data.frame(x),c("peak_time","peak_vir"))
+                   data.frame(run=1:nrow(x),x)
+                 },
+                .id="model")
+sum_list[["sum_mat"]] <- full_join(s1,s2)
+## unlike merge(), full_join() preserves run order
+```
+
+```{r fix_order}
+mods <- c("pairform+epc","instswitch+epc","instswitch","pairform","implicit")
+fixfac <- function(x) {
+    mutate(x,model=factor(model,levels=mods))
+}
+sum_list[["vir_mat"]] <- fixfac(sum_list[["vir_mat"]])
+sum_list[["I_mat"]] <-   fixfac(sum_list[["I_mat"]])
+```
+
+## Epidemic trajectories
+
+```{r epi_traj,fig.width=10}
+gg_Itraj <- ggplot(sum_list[["I_mat"]],
+       aes(tvec,mean,ymin=lwr,ymax=upr))+
+    geom_line(aes(colour=model))+
+    geom_ribbon(aes(fill=model),alpha=0.4)+
+    labs(y="mean prevalence")
+grid.arrange(gg_Itraj+ggtitle("linear scale"),
+             gg_Itraj+scale_y_log10()+ggtitle("log scale"),nrow=1)
+```
+
+## Virulence trajectories {.centered}
+
+```{r vir_traj,fig.width=6}
+(gg_virtraj <- ggplot(sum_list[["vir_mat"]],
+       aes(tvec,mean,ymin=lwr,ymax=upr))+
+    geom_line(aes(colour=model))+
+    geom_ribbon(aes(fill=model),alpha=0.4))
+```
+
+## Univariate distributions
+
+```{r unidist,fig.width=7}
+sL <- fixfac(transform(sum_list[["sum_mat"]],rel_peak=peak_vir/eq_vir))
+mL <- fixfac(melt(sL,id.vars=c("model","run")))
+ggplot(mL,aes(value,model,fill=model))+geom_violinh()+
+    facet_wrap(~variable,scale="free")+
+    labs(y="",x="")
+```
+
+## Pairs plots {.centered}
+
+```{r ggpairs_ex,fig.width=7,fig.height=6.5,dev="png"}
+ggp1 <- ggpairs(sL,
+        mapping = ggplot2::aes(color = model),
+        columns=3:6,
+        lower = list(continuous = wrap("points", alpha = 0.5)),
+        diag = list(continuous = wrap("densityDiag", alpha=0.5)),
+        upper = list(continuous = "blank"))+
+    theme(panel.margin=grid::unit(0,"lines"))
+## http://stackoverflow.com/questions/14711550/is-there-a-way-to-change-the-color-palette-for-ggallyggpairs-using-ggplot
+cbscales <- list(scale_colour_discrete(),
+                 scale_fill_discrete())
+for (row in seq_len(ggp1$nrow))
+    for (col in seq_len(ggp1$ncol))
+        ggp1[row, col] <- ggp1[row, col] + cbscales[[(row==col)+1]]
+ggp1
+```
+
+
+```{r corrsum,message=FALSE,cache=TRUE}
+m1 <- rename(melt(sum_list[["sum_mat"]],id.vars=c("model","run")),
+             sumvar=variable,sumval=value)
+m2 <- rename(melt(ltab,id.vars="run"),
+             LHSvar=variable,LHSval=value)
+mL2 <- full_join(m1,m2)
+```
+
+## Sensitivity
+
+```{r corrsum_plot,dev="png",echo=FALSE,fig.width=10,fig.height=6}
+ggplot(mL2,aes(LHSval,sumval,colour=model))+
+    geom_point(pch=".",alpha=0.5)+
+    facet_grid(sumvar~LHSvar,scales="free")+
+    geom_smooth(se=FALSE)+labs(x="",y="")
+```
+
+## Conclusions/questions: details
+
+- essentially:
+implicit $\approx$ pairform < instswitch < instswitch+epc $\approx$ pairform+epc
+- why no low-eq-vir tail for pairform+epc?
+- why is pairform, not instswitch, closest to implicit?
+
+## Conclusions/questions: big picture
+
+- how do we decide what to pick on?
+- how does scaling $r$ help/hurt?
+
+## References {.refs .columns-2}
+
+
