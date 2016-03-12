@@ -54,9 +54,3 @@ Lsub <- function(L,subs) {
         L[[n]] <- subs[[n]]
     L
 }
-expand <- function(x, ...)
-{
-    UseMethod("expand")
-}
-
-

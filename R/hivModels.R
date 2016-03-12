@@ -1,97 +1,167 @@
-## compute mutation matrix
 makeMutMat <- function(xpars) {
-    p <- with(xpars, {
-         p <- matrix(NA, n.alpha, n.alpha)
-         for(i in 1:n.alpha){
-             x <- min.alpha + (i-1)*d.alpha
-             denom <- 
-                 diff(pnorm(c(min.alpha-d.alpha/2,max.alpha+d.alpha/2),
-                              mean=x, sd=Vm))
-             for (j in 1:n.alpha){
-                 k <- min.alpha + (j-1)*d.alpha
-                 p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
-             }
-         }
-         p
-         })
-   return(p)
+  p <- with(xpars, {
+    p <- matrix(NA, n.alpha, n.alpha)
+    for(i in 1:n.alpha){
+      x <- min.alpha + (i-1)*d.alpha
+      denom <- 
+        diff(pnorm(c(min.alpha-d.alpha/2,max.alpha+d.alpha/2),
+                   mean=x, sd=Vm))
+      for (j in 1:n.alpha){
+        k <- min.alpha + (j-1)*d.alpha
+        p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
+      }
+    }
+    p
+  })
+  return(p)
 }
 
-
-## multi-strain CD model; non-instantaneous partnership, extra-pair contact
-gfun_epc <- function(parameters,mm=TRUE) {
-    pp <- expand(parameters)
-    attach(pp)
-
-    if (mm) {
-        p <- makeMutMat(pp)
-    } else {
-        p <- matrix(NA, n.alpha, n.alpha)
-        ## compute mutation matrix
-        for(i in 1:n.alpha){
-            x <- alphaDist[["min"]] + (i-1)*d.alpha
-            for (j in 1:n.alpha){
-                k <- alphaDist[["min"]] + (j-1)*d.alpha
-                denom <- with(as.list(alphaDist),
-                              diff(pnorm(c(min-d.alpha/2,max+d.alpha/2), mean=x, sd=Vm)))
-                p[i,j] <- diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
-            }
-        }
+#extra couple
+gfun <- function(parameters, experimental=FALSE) {
+  pp <- expand(parameters)
+  attach(pp)
+  
+  p <- matrix(NA, n.alpha, n.alpha)
+  
+  
+  for(i in 1:n.alpha){
+    x = alphaDist[["min"]] + (i-1)*d.alpha
+    
+    for(j in 1:n.alpha){
+      k = alphaDist[["min"]] + (j-1)*d.alpha
+      denom <- with(as.list(alphaDist),
+                    diff(pnorm(c(min-d.alpha/2,max+d.alpha/2), mean=x, sd=Vm)))
+      p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
     }
+  }
+  
   
   detach(pp)
   
   g <- function(t,yini,parameters) {
-    with(as.list(c(yini,expand(parameters))), 
-{
-    
-  ## density of partnerships of different types 
-  SI = yini[3:(2+n.alpha)]
-  I = yini[(3+n.alpha):(2+2*n.alpha)]
-  II = matrix(yini[(3+2*n.alpha):(2+(2+n.alpha)*n.alpha)], n.alpha, n.alpha)
+      with(as.list(c(yini,expand(parameters))), 
+      { 
+          SI <- yini[3:(2+n.alpha)]
+          I <- yini[(3+n.alpha):(2+2*n.alpha)]
+          II <- matrix(yini[(3+2*n.alpha):(2+(2+n.alpha)*n.alpha)],
+                       n.alpha, n.alpha)
   
-  II_adj = II
+          II_adj <- II
+          diag(II_adj) <- 2 * diag(II_adj) 
   
-  ## ?
-  diag(II_adj) = 2 * diag(II_adj) 
+          prop <- (c_u_ratio * I + c_e_ratio * (SI + colSums(II_adj)))/
+              (c_u_ratio * (S + sum(I)) +
+               c_e_ratio * (2 * SS + 2 * sum(SI) + sum(II_adj)))
   
-  prop = (c_u_ratio * I + c_e_ratio * (SI + colSums(II_adj)))/
-      (c_u_ratio * (S + sum(I)) + c_e_ratio * (2 * SS + 2 * sum(SI) + sum(II_adj)))
+          dS <- - rho * S * S/(S+sum(I)) +
+              2 * c_mean * SS - rho * S *sum( I)/(S+sum(I)) +
+              c_mean * sum(SI) + 2 * sum(lam * SI) + sum(lam * I) +
+              sum(lammat_dis * II) - sum(prop * c_u) * S
+          dSS <- 0.5 * rho * S * S/(S+sum(I)) - c_mean * SS -
+              2 * sum(prop * c_e) * SS
+          dSI <- rho * S * I/(S+sum(I)) - c_mean * SI -
+              lam * SI - Beta * SI +
+              (prop * 2 * c_e * SS) %*% p - sum(c_e * prop) * SI
   
-  dS = - rho * S * S/(S+sum(I)) + 2 * c_mean * SS - rho * S *sum( I)/(S+sum(I)) + c_mean * sum(SI) + 2 * sum(lam * SI) + sum(lam * I) + sum(lammat_dis * II) - sum(prop * c_u) * S
-  dSS = 0.5 * rho * S * S/(S+sum(I)) - c_mean * SS - 2 * sum(prop * c_e) * SS
-  dSI = rho * S * I/(S+sum(I)) - c_mean * SI - lam * SI - Beta * SI + (prop * 2 * c_e * SS) %*% p - sum(c_e * prop) * SI
+          infrate <- (Beta * SI) * p
+          infrate_adj <- infrate + t(infrate)
+          diag(infrate_adj) <- diag(infrate_adj)/2
   
-  infrate = (Beta * SI) * p
-  infrate_adj = infrate + t(infrate)
-  diag(infrate_adj) = diag(infrate_adj)/2
+          infrate_e <- outer(SI, c((c_e * prop) %*% p))
+          infrate_e_adj <- infrate_e + t(infrate_e)
+          infrate_e_save <- infrate_e_adj
+          diag(infrate_e_adj) <- diag(infrate_e_adj)/2
   
-  infrate_e = outer(SI, c((c_e * prop) %*% p))
-  infrate_e_adj = infrate_e + t(infrate_e)
-  infrate_e_save = infrate_e_adj
-  diag(infrate_e_adj) = diag(infrate_e_adj)/2
+          frate.I <- rho * outer(I,I,"*")/(S+sum(I))
+          diag(frate.I) <- diag(frate.I)/2
   
-  frate.I = rho * outer(I,I,"*")/(S+sum(I))
-  diag(frate.I) = diag(frate.I)/2
+          dI <- - rho * S * I/(S+sum(I)) +
+              c_mean * SI - rho * I * sum(I)/(S+sum(I))  +
+              colSums(c_mean * II_adj) - lam * I +
+              colSums(lammat_dis * II) + (prop * c_u * S) %*% p
+          dII <- frate.I - c_mean * II - lammat_adj * II +
+              infrate_adj + infrate_e_adj
   
+          tot <- S + 2* sum(SI) + 2*SS + sum(I) + sum(II_adj)
   
-  dI = - rho * S * I/(S+sum(I)) + c_mean * SI - rho * I * (sum(I))/(S+sum(I))  + colSums(c_mean * II_adj) - lam * I + colSums(lammat_dis * II) + (prop * c_u * S) %*% p
-  dII = frate.I - c_mean * II - lammat_adj * II + infrate_adj + infrate_e_adj
+          tot_I <- sum(SI) + sum(I) + sum(II_adj)
   
-  tot = S + 2* sum(SI) + 2*SS + sum(I) + sum(II_adj)
+          tot_V <- sum(SI * alpha) + sum(I * alpha) +
+              sum(sweep(II_adj, 2, alpha, "*"))
+          list(c(dS, dSS, dSI, dI, dII), tot_I = tot_I, mean_V = tot_V/tot_I)
+      })
+  }
+
+  ## tweak for performance
+
+  px <- expand(parameters)
+  gX <- function(t,yini,parameters) {
+      with(as.list(c(yini,px)),
+      { 
+          SI <- yini[3:(2+n.alpha)]
+          I <- yini[(3+n.alpha):(2+2*n.alpha)]
+          II <- matrix(yini[(3+2*n.alpha):(2+(2+n.alpha)*n.alpha)],
+                       n.alpha, n.alpha)
   
-  tot_I = sum(SI) + sum(I) + sum(II_adj)
+          II_adj <- II
+          diag(II_adj) <- 2 * diag(II_adj) 
+
+          ## precompute sums for efficiency
+          sumI <- sum(I)
+          sumSI <- sum(SI)
+          
+          prop <- (c_u_ratio * I + c_e_ratio * (SI + colSums(II_adj)))/
+              (c_u_ratio * (S + sumI) +
+               c_e_ratio * (2 * SS + 2 * sumSI + sum(II_adj)))
+
+          sumpropce <- sum(prop*c_e)
+          s <- seq_len(n.alpha)
+          mind <- cbind(s,s)
+
+          dS <- - rho * S * S/(S+sumI) +
+              2 * c_mean * SS - rho * S *sumI/(S+sumI) +
+              c_mean * sumSI + 2 * sum(lam * SI) + sum(lam * I) +
+              sum(lammat_dis * II) - sum(prop * c_u) * S
+          dSS <- 0.5 * rho * S * S/(S+sumI) - c_mean * SS -
+              2 * sumpropce * SS
+          dSI <- rho * S * I/(S+sumI) - c_mean * SI -
+              lam * SI - Beta * SI +
+              (prop * 2 * c_e * SS) %*% p - sumpropce * SI
   
-  tot_V = sum(SI * alpha) + sum(I * alpha) + sum(sweep(II_adj, 2, alpha, "*"))
+          infrate <- (Beta * SI) * p
+          infrate_adj <- infrate + t(infrate)
+          infrate_adj[mind] <- infrate_adj[mind]/2
   
-  list(c(dS, dSS, dSI, dI, dII), tot_I = tot_I, mean_V = tot_V/tot_I)
-})
+          infrate_e <- outer(SI, c((c_e * prop) %*% p))
+          infrate_e_adj <- infrate_e + t(infrate_e)
+          infrate_e_save <- infrate_e_adj
+          infrate_e_adj[mind] <- infrate_e_adj[mind]/2
+  
+          frate.I <- rho * outer(I,I,"*")/(S+sumI)
+          frate.I[mind] <- frate.I[mind]/2
+  
+          dI <- -rho * S*I/(S+sumI) +
+              c_mean * SI - rho*I*sumI/(S+sumI)  +
+              colSums(c_mean*II_adj) - lam*I +
+              colSums(lammat_dis*II) + (prop * c_u * S) %*% p
+          dII <- frate.I - c_mean*II - lammat_adj*II +
+              infrate_adj + infrate_e_adj
+  
+          tot <- S + 2*sumSI + 2*SS + sumI + sum(II_adj)
+          tot_I <- sumSI + sumI + sum(II_adj)
+          tot_V <- sum(SI * alpha) + sum(I * alpha) +
+              sum(sweep(II_adj, 2, alpha, "*"))
+          
+          list(c(dS, dSS, dSI, dI, dII), tot_I = tot_I, mean_V = tot_V/tot_I)
+      })
   } 
-return(g)
+
+  if (experimental) return(gX) else return(g)
 }
 
-## CD multi-strain model; non-instantaneous, WITHOUT EPC
-gfun_noepc <- function(parameters) {
+gfunX <- 
+#serial
+gfun2 <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
   
@@ -149,8 +219,8 @@ gfun_noepc <- function(parameters) {
 return(g)
 }
 
-## instantaneous partnership, WITHOUT EPC
-gfun_instant_noepc <- function(parameters) {
+#serial + inst
+gfun3 <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
   
@@ -214,8 +284,8 @@ return(g)
 }
 
 
-## instantaneous partnership formation + extra-partnership contact
-gfun_inst_epc <- function(parameters) {
+#serial + inst + extra
+gfun4 <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
   
@@ -283,8 +353,8 @@ gfun_inst_epc <- function(parameters) {
 return(g)
 }
 
-## Shirreff: "fake serial monogamy"
-gfun_implicit <- function(parameters) {
+#shirreff
+gfun5 <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
   
@@ -326,14 +396,55 @@ return(g)
 }
 
 
-I_initialize <- function(parameters) {
-  I <- with(expand(parameters),
-  {
-      i_col <- dnorm(alpha, mean = ini_V, sd = inisd)
-      i_col/sum(i_col)
-  })
-  return(I)
+#random mixing
+gfun_random <- function(parameters) {
+  pp <- expand(parameters)
+  attach(pp)
+  
+  p <- matrix(NA, n.alpha, n.alpha)
+  
+  for(i in 1:n.alpha){
+    x = alphaDist[["min"]] + (i-1)*d.alpha
+    
+    for(j in 1:n.alpha){
+      k = alphaDist[["min"]] + (j-1)*d.alpha
+      denom <- with(as.list(alphaDist),
+                    diff(pnorm(c(min-d.alpha/2,max+d.alpha/2), mean=x, sd=Vm)))
+      p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
+    }
+  }
+  
+  detach(pp)
+  
+  g <- function(t,yini,parameters) {
+    with(as.list(c(yini,expand(parameters))), 
+{      
+  
+  I = yini[-1]
+ 
+  dS = sum(lam * I) - sum(c_mean * Beta * I * S)
+  
+  dI = (c_mean * Beta * I * S) %*% p - lam * I
+  
+  tot_I = sum(I)
+  
+  tot_V = sum(alpha * I)
+  
+  list(c(dS, dI), tot_I = tot_I, mean_V = tot_V/tot_I)
+})
+  } 
+return(g)
 }
+
+
+I_initialize <- function(parameters) {
+  with(expand(parameters),
+  {
+    I = dnorm(alpha, mean = ini_V, sd = inisd)/sum(dnorm(alpha, mean = ini_V, sd = inisd))
+    return(I)
+  })
+}
+
 
 
 #I_ex <- I_initialize(pars_ex)

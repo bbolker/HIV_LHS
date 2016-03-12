@@ -1,13 +1,6 @@
 expand <- function(x, ...) {
     UseMethod("expand")
 }
-
-as.HIVvirparlist <- function(x) {
-  res <- append(x,HIVpars.skeleton)
-  class(res) <- c("list","parlist","HIVvirparlist")
-  return(res)
-}
-
 expand.HIVvirparlist <- function(x,...) {
     ## mutate() doesn't work this deeply ...
     x <- within(x,
@@ -15,22 +8,22 @@ expand.HIVvirparlist <- function(x,...) {
           min.alpha <- alphaDist[["min"]]
           max.alpha <- alphaDist[["max"]]
           d.alpha <- alphaDist[["delta"]]
-          alpha <- seq(min.alpha,max.alpha,by=d.alpha)
+          alpha <- seq(alphaDist[["min"]],alphaDist[["max"]],by=d.alpha)
           n.alpha <- length(alpha)
           
           rho <- scale_all * scale_c * rho_base
           c_mean <- scale_all * scale_c * c_mean_base
           
-          v3 <- 10^alpha
-          ## duration <- (Dmax * D50^h)/(D50^h + v3^h)
-          Duration2 <- hill(v3,Dmax,D50,h)
+          v <- 10^alpha
+          ## duration <- (Dmax * D50^h)/(D50^h + v^h)
+          Duration2 <- hill(v,Dmax,D50,h)
           lam = 1/(Duration1 + Duration2 + Duration3)
           lammat = matrix(rep(lam,n.alpha), n.alpha, n.alpha)
           lammat_dis = lammat
           diag(lammat_dis) = 2 * diag(lammat_dis)
           lammat_adj = lammat + t(lammat)
-          ## Beta2 <- Bmax * v3^a / (v3^a + K^a)
-          Beta2 <- hill(K,Bmax,v3,a)
+          ## Beta2 <- Bmax * v^a / (v^a + K^a)
+          Beta2 <- hill(K,Bmax,v,a)
           Beta = scale_all * scale* (Beta1 * Duration1 + Beta2 * Duration2 + Beta3 * Duration3) * lam
           c_e = Beta * c_e_ratio
           c_u = Beta * c_u_ratio
@@ -41,6 +34,7 @@ expand.HIVvirparlist <- function(x,...) {
 hill <- function(x,a,b,p) {
     a*b^p/(b^p+x^p)
 }
+
 
 ##' get r value within specified bounds
 ##'
@@ -54,17 +48,14 @@ hill <- function(x,a,b,p) {
 get_rval <- function(g, yini, pp, plot.it=FALSE,
                      tvec = c(1:500),
                      lims=c(1e-3,5e-2),
-                     verbose=FALSE,
-                     method="ode45") {
+                     verbose=FALSE) {
   
     start <- unlist(yini)
-
     
-    r <- ode(y=start,
-             times=tvec,
-             func=g,
-             parms=pp,
-             method=method)
+    r <- rk(y=start,
+                 times=tvec,
+                 func=g,
+                 parms=pp, method = "ode45")
         
     Itot <- r[,(ncol(r)-1)]
     
@@ -116,5 +107,5 @@ find_scale <- function(target,
 }
 
 geom_mean <- function(a){
-    exp(mean(log(a)))
+  exp(mean(log(a)))
 }
