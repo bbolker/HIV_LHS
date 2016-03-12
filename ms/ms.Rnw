@@ -169,8 +169,9 @@ d_littleR_m <- melt(vir_matS,value.name="Mean.VL")
 shirreff_df_m <- subset(res_sum_df,run==1,select=c(run,Time, Mean.VL))
 shirreff_df_m$run <- "Shirreff"
 df_tot <- rbind(shirreff_df_m,d_littleR_m)
+vlab <- "mean virulence ($\\log_{10}$ SPVL)"
 g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run))+
-    geom_line()+labs(x="time",y="mean virulence ($\\log_{10}$ SPVL)")
+    geom_line()+labs(x="time",y=vlab)
 ###
 dimnames(vir_matS2) <- list(Time=tvec,
                run=c("$10^{-3}$", "$10^{-4}$", "$10^{-5}$"))
@@ -190,15 +191,16 @@ g3.y <- g3 + scale_y_continuous(limits = limits, breaks = breaks)+
 grid.arrange(g1.y, g2.y, g3.y, nrow=1)
 @ 
 
-<<virtraj,fig.cap="Envelopes of virulence trajectories under all models">>=
+<<virtraj,fig.cap="Envelopes of virulence trajectories under all models",dev="tikz",fig.width=6,cache=TRUE>>=
 gg_virtraj <- ggplot(sum_list[["vir_mat"]],
        aes(tvec,mean,ymin=lwr,ymax=upr))+
     geom_line(aes(colour=model,linetype=model),lwd=1.5)+
-    geom_ribbon(aes(fill=model),alpha=0.3)
+    geom_ribbon(aes(fill=model),alpha=0.3)+
+    labs(x="time",y=vlab)
 print(gg_virtraj)
 @ 
 
-<<unidist,fig.cap="Univariate distributions of summary statistics",fig.width=6,fig.height=6>>=
+<<unidist,fig.cap="Univariate distributions of summary statistics",fig.width=8,fig.height=4.8>>=
 sL <- transform(sum_list[["sum_mat"]],rel_peak=peak_vir/eq_vir)
 mL <- melt(sL,id.vars=c("model","run"))
 ggplot(mL,aes(value,model,fill=model))+
