@@ -11,3 +11,15 @@
 # produced vignettes
 vignettes/*.html
 vignettes/*.pdf
+
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.soc
+*-tikzDictionary
+
+*~
+cache
+figure

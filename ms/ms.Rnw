@@ -24,7 +24,7 @@
 
 <<setup,echo=FALSE>>=
 library("knitr")
-opts_chunk$set(echo=FALSE,error=FALSE,fig.width=4,fig.height=4) #
+opts_chunk$set(echo=FALSE,error=FALSE,fig.width=8,fig.height=4) #
 @
 
 
@@ -157,12 +157,65 @@ For each model we derive the following summary statistics:
 
 \section{Results}
 
-<<panel3>>=
+<<panel3,fig.cap="Time plot (3-panel plot): baseline dynamics, illustrating summary statistics (peak time, eq virulence, length of time until peak virulence). Full Shirreff model, effects of $I(0)$, $\\alpha(0)$, $r$",dev="tikz",fig.width=10>>=
+for (i in c("","2","3")) 
+    load(sprintf("../simdata/ev_LHS_resS%s.rda",i))
+Ls <- load("../simdata/shirreff_data.rda")
+tvec <- seq(from=1,by = 0.1,length.out=nrow(vir_matS))
+dimnames(vir_matS) <- list(Time=tvec,
+                           run=paste0("r=",c(0.021,0.042,0.084)))
 
+d_littleR_m <- melt(vir_matS,value.name="Mean.VL")
+shirreff_df_m <- subset(res_sum_df,run==1,select=c(run,Time, Mean.VL))
+shirreff_df_m$run <- "Shirreff"
+df_tot <- rbind(shirreff_df_m,d_littleR_m)
+g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run))+
+    geom_line()+labs(x="time",y="mean virulence ($\\log_{10}$ SPVL)")
+###
+dimnames(vir_matS2) <- list(Time=tvec,
+               run=c("$10^{-3}$", "$10^{-4}$", "$10^{-5}$"))
+g2 <- g1 %+% melt(vir_matS2,id.var="Time",value.name="Mean.VL")
+###
+dimnames(vir_matS3) <- list(Time=tvec,
+                            run=c("$2.5$", "$3$", "$3.5$"))
+g3 <- g1 %+% melt(vir_matS3,id.var="Time",value.name="Mean.VL")
+limits <- c(2.5,4.7)
+breaks <- seq(limits[1],limits[2], by = 0.5)
+g1.y <- g1 + scale_y_continuous(limits = limits, breaks = breaks)+
+    scale_colour_discrete(name="run")
+g2.y <- g2 + scale_y_continuous(limits = limits, breaks = breaks)+
+    scale_colour_discrete(name="$I(0)$")
+g3.y <- g3 + scale_y_continuous(limits = limits, breaks = breaks)+
+        scale_colour_discrete(name="$\\alpha(0)$")
+grid.arrange(g1.y, g2.y, g3.y, nrow=1)
 @ 
+
+<<virtraj,fig.cap="Envelopes of virulence trajectories under all models">>=
+gg_virtraj <- ggplot(sum_list[["vir_mat"]],
+       aes(tvec,mean,ymin=lwr,ymax=upr))+
+    geom_line(aes(colour=model,linetype=model),lwd=1.5)+
+    geom_ribbon(aes(fill=model),alpha=0.3)
+print(gg_virtraj)
+@ 
+
+<<unidist,fig.cap="Univariate distributions of summary statistics",fig.width=6,fig.height=6>>=
+sL <- transform(sum_list[["sum_mat"]],rel_peak=peak_vir/eq_vir)
+mL <- melt(sL,id.vars=c("model","run"))
+ggplot(mL,aes(value,model,fill=model))+
+    geom_violinh(scale="area")+
+    facet_wrap(~variable,scale="free")+
+    labs(y="")
+@
+
+Figure to-do:
 \begin{itemize}
-\item Time plot (3-panel plot): baseline dynamics, illustrating summary statistics (peak time, eq virulence, length of time until peak virulence). Full Shirreff model, effects of $I(0)$, $\alpha(0)$, $r$
-\item Virulence trajectories under all models
+\item fig 1. move legends into panels: tweak size? remove redundant y axes?
+\item fig 3. add random-mixing model
+\item fig 4. re-order, figure out how to tweak random density width
+\end{itemize}
+
+
+\begin{itemize}
 \item Univariate plots
 \item Bivariate plots
 \item Unscaled sensitivity 
