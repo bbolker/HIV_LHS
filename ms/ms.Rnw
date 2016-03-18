@@ -19,6 +19,7 @@
 \newcommand{\shir}{\citeauthor{shirreff_transmission_2011}}
 \newcommand{\champr}{\citeauthor{champredon_hiv_2013}}
 \newcommand{\tsub}[2]{#1_{{\small \textrm{#2}}}}
+\newcommand{\rzero}{{\cal R}_0}
 \usepackage{changes}
 \usepackage[backgroundcolor=lightgray,textsize=small]{todonotes}
 
@@ -138,12 +139,13 @@ Not only is there discrepancy in parameters regarding partnership dynamics betwe
 
 \subsection{Simulation runs}
 
-\todo{BMB: add to this description}
-In disease modeling, one of the most important parameter is the initial exponential growth rate. As it is one of the few parameters that can be directly observed, many modelers try to match the initial exponential growth rate to correctly simulate the epidemic. Furthermore, evolution of virulence is sensitive to the initial growth rate. Thus, we scale a parameter so that every run has an equal exponential rate of growth rate.
+One of the most difficult parts of our model comparison exercise is coming up with sets of parameters that are commensurate against many different model structures. For the most part, our models are too complex to easily derive analytical correspondences among them. Given a numerical criterion, such as $r$ (initial exponential growth rate) or $\rzero$ (intrinsic reproductive number), we can adjust one or more parameters by brute force to ensure that all of the models match according to that criterion. While $\rzero$ is often considered the most fundamental property of an epidemic, and might thus seem to be a natural goal, here we focus on matching the initial growth rate $r$ for several reasons. First, our primary interest is in the transient evolutionary dynamics of virulence, which are more strongly affected by $r$ than $\rzero$ (CITE?). Second, $r$ is in general more directly observable in real epidemics; $r$ can be estimated by simply fitting an exponential curve to the initial incidence or prevalence curves (CITE Ma et al.), while $\rzero$ typically requires either (1) knowledge of \emph{all} epidemic parameters or (2) relatively sophisticated back-calculation based on $r$ and knowledge of the serial interval or generation interval of the disease (CITE Wallinga, Teunis, Lipsitch, etc.) Thus, we scale a parameter so that every run has an equal exponential rate of growth rate.
 
 In order to allow for all models to have equal initial exponential growth rate, $r$, we need to pick a parameter, $s$, so that $\lim_{s\to 0} r(s) = 0$ and $\lim_{s\to\infty}  r(s) = \infty$. As adjusting either partnership change rate (i.e. partnership formation and dissolution rate) or transmission rate does not fulfill this requirement for certain models, we decided to scale partnership change rate and dissolution rate by the same factor of $\gamma$: $\tsub{beta}{adj} =  \gamma \tsub{\beta}{base}$, $\tsub{c}{adj} = \gamma \tsub{c}{base}$, $\tsub{\rho}{adj} = \gamma \tsub{\rho}{base}$. Since transmission rate is adjusted by the scale of $\gamma$, uncoupled and extra-couple transmission rates are adjusted as well. For model 3, 4, and 5, all of which assume instantaneous partnership, only the transmission rate and partnership dissolution rate are adjusted.
 
 We run each model for 1000 times with different parameter sets calculated from latin hypercube sampling with fixed starting condition: mean $\log_{10}$ SPVL of 3 and epidemic size of $10^{-4}$ (refer to appendix). After each run, initial exponential growth rate is calculate. Then, paraeters are scaled so that the initial exponential growth rate is scaled to 0.04, which is approximately equal to that of Shirreff et al's model.
+
+\todo{mention that baseline parameters are geometric means of ranges}
 
 For each model we derive the following summary statistics:
 
@@ -156,6 +158,11 @@ For each model we derive the following summary statistics:
 \end{description}
 
 \section{Results}
+
+Our simplifications of \shir's model reproduce the qualitative behaviour reasonably well; as $r$ decreases from 0.084 to 0.42 the initial trajectory of increasing virulence brackets the rate from the original model (Figure~\ref{fig:panel3}a). Our model produces lower peak virulence ($\approx ?$ vs. $\approx ?$) and equilibrium virulence $\approx ?$ vs. $\approx?$) than Shirreff's, probably because \ldots \todo{describe more; is this because we can't match both R0 and r? Can we match r exactly?}. Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory, making the virulence peaks slightly later and larger as $I(0)$ decreases and allows a longer epidemic phase before the transition to endemic dynamics (Figure~\ref{fig:panel3}b). Decreasing the initial virulence similarly but more strongly leads to progressively later, larger peaks in virulence.
+
+For the baseline set of parameters, with the initial epidemic spread rate scaled to be the
+\todo{just double-checking: Figure 1 shows results from the implicit model, right?}
 
 <<panel3,fig.cap="Baseline dynamics. Time series of mean population virulence ($\\log_{10}$ SPVL). (a) Shirreff model, effects of varying $r$. (b) Effects of varying initial infectious density $I(0)$. (c) Effects of varying initial mean virulence $\\alpha(0)$",dev="tikz",fig.height=3,fig.width=8,cache=TRUE>>=
 for (i in c("","2","3")) 
@@ -184,12 +191,16 @@ dimnames(vir_matS3) <- list(Time=tvec,
 g3 <- g1 %+% melt(vir_matS3,id.var="Time",value.name="Mean.VL")
 limits <- c(2.5,4.7)
 breaks <- seq(limits[1],limits[2], by = 0.5)
+afun <- function(label,size=8) {
+    annotate(geom="text",label=label,x=-Inf,y=Inf,
+             size=size,vjust=1,hjust=0)
+}
 g1.y <- g1 + scale_y_continuous(limits = limits, breaks = breaks)+
-    scale_colour_discrete(name="run")
+    scale_colour_discrete(name="run")+afun("a")
 g2.y <- g2 + scale_y_continuous(limits = limits, breaks = breaks)+
-    scale_colour_discrete(name="$I(0)$")
+    scale_colour_discrete(name="$I(0)$")+afun("b")
 g3.y <- g3 + scale_y_continuous(limits = limits, breaks = breaks)+
-        scale_colour_discrete(name="$\\alpha(0)$")
+        scale_colour_discrete(name="$\\alpha(0)$")+afun("c")
 grid.arrange(g1.y, g2.y, g3.y, nrow=1)
 @ 
 
@@ -232,8 +243,8 @@ grid.arrange(
 
 Figure to-do:
 \begin{itemize}
-\item fig 1. add labels? tweak size? remove redundant y axes?
-\item fig 3. add random-mixing model
+\item fig 1. tweak size? remove redundant y axes/labels?
+\item fig 3. add random-mixing model; remove x-axis label; rename factor to make strip labels prettier
 \item fig 4. re-order (reverse legend order), figure out how to tweak random density width
 \end{itemize}
 
