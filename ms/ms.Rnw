@@ -6,11 +6,10 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage[usenames,dvipsnames]{xcolor} %% for non-standard cite color
 \usepackage{graphicx}
-\usepackage[colorlinks = true, linkcolor = blue, urlcolor=blue,citecolor = MidnightBlue]{hyperref}
 \usepackage{url}
 \usepackage{enumerate}
+\usepackage[colorlinks = true, linkcolor = blue, urlcolor=blue,citecolor = MidnightBlue]{hyperref}
 \usepackage[left=50pt,
             textwidth=345pt,
             marginparsep=25pt,
@@ -27,14 +26,23 @@
 <<setup,echo=FALSE>>=
 library("knitr")
 opts_chunk$set(echo=FALSE,error=FALSE,fig.width=8,fig.height=4) #
+## https://github.com/yihui/tikzDevice/issues/46 
+local({
+    hook_document <- knitr::knit_hooks$get('document')
+    knitr::knit_hooks$set(document = function(x){
+        res <- hook_document(x)
+        gsub('\\usepackage[]{color}', '\\usepackage[usenames,dvipsnames]{xcolor}', res, fixed = TRUE)
+  })
+})
 @
 
 
 <<pkgs,warning=FALSE,message=FALSE>>=
 library("ggplot2"); theme_set(theme_classic())
 library("MASS")
-scale_colour_discrete <- function(...,palette="Set1") scale_colour_brewer(...,palette=palette)
-scale_fill_discrete <- function(...,palette="Set1") scale_fill_brewer(...,palette=palette)
+## use Dark2 rather than Set1 because colour #6 of Set1 is yellow (ugh/too light)
+scale_colour_discrete <- function(...,palette="Dark2") scale_colour_brewer(...,palette=palette)
+scale_fill_discrete <- function(...,palette="Dark2") scale_fill_brewer(...,palette=palette)
 library("gridExtra")
 library("plyr")  ## for ldply()
 library("dplyr") ## for full_join()
@@ -177,25 +185,22 @@ For each model we derive the following summary statistics: peak virulence, peak 
 
 We focus on these statistics for the following two reasons. First of all, knowing the possible ranges for the peak virulence allows us to estimate the worst-case scenario for the HIV and other sexually transmitted disease epidemics. When an epidemic begins, it is often the case that the pathogen has already evolved towards high virulence by the time it is observed [CITE]. Understanding how virulent a pathogen can evolve before an epidemic begins can be helpful for controlling the disease. Furthermore, knowing the initial virulence, peak virulence, timing of the peak virulence, and equilibrium virulence provide sufficient detail to identify the shape of the virulence trajectory. During an epidemic outbreak, it is difficult to observe virulence evolution. Specifically, in the case of HIV and other sexually transmitted diseases, slow evolutionary time-scale makes observing changes in the mean virulence even more challenging. Knowing the ranges of these statistics can help real-time virulence evolution prediction during an epidemic less troublesome.
 
-\todo{define each summary statistic and explain what it tells us}
-\begin{description}
-\item[peak time] ...
-\item[peak virulence] ...
-\item[relative peak virulence] ...
-\item[equilibrium virulence] ...
-\end{description}
-
 \section{Results}
 
-Our simplifications of \shir's model reproduce the qualitative behaviour reasonably well; as $r$ decreases from 0.084 to 0.42 the initial trajectory of increasing virulence brackets the rate from the original model (Figure~\ref{fig:panel3}a). Our model produces lower peak virulence ($\approx ?$ vs. $\approx ?$) and equilibrium virulence $\approx ?$ vs. $\approx?$) than Shirreff's, probably because \ldots \todo{describe more; is this because we 
-can't match both R0 and r? Can we match r exactly?}. (We're matching epidemic curve, not virulence curve!)  
+Our simplifications of \shir's model reproduce the qualitative behaviour reasonably well; as $r$ decreases from 0.084 to 0.42 (the latter value matching the initial rate of increase in prevalence in \shir's full model) the initial trajectory of increasing virulence brackets the rate from the original model (Figure~\ref{fig:panel3}a). However, our model produces lower peak virulence ($\approx ?$ vs. $\approx ?$) and equilibrium virulence $\approx ?$ vs. $\approx?$) than Shirreff's, even for matching initial incidence (i.e., $r=0.042$).
 
-  Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory, making the virulence peaks slightly later and larger as $I(0)$ decreases and allows a longer epidemic phase before the transition to endemic dynamics (Figure~\ref{fig:panel3}b). Decreasing the initial virulence similarly but more strongly leads to progressively later, larger peaks in virulence.
+Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory, making the virulence peaks slightly later and larger as $I(0)$ decreases and allows a longer epidemic phase before the transition to endemic dynamics (Figure~\ref{fig:panel3}b). Decreasing the initial virulence similarly but more strongly leads to progressively later, larger peaks in virulence (Figure~\ref{fig:panel3}c).
 
- For the baseline set of parameters, with the initial epidemic spread rate scaled to be the
- \todo{just double-checking: Figure 1 shows results from the implicit model, right?}
+\todo{note that in Fig 1 we're using Shirreff's parameters}
+\todo{add Shir. params to table 1: Beta1=2.76, Dur1 = 0.25, Beta3 = 0.76, Dur3 = 0.75, c = 1.25, alpha=\{2,7,0.1\}}
 
- Throughout Fig 1 we're using Shirreff's parameters (Beta1 = 2.76, Duration1 = 0.25, Beta3 = 0.76, Duration3 = 0.75, cmeanbase = 1.25, alphaDist = c(min = 2, max = 7,  delta = 0.1))
+<<setup2,echo=FALSE>>=
+orig_sum_labs <- c("peak_time","peak_vir","eq_vir","rel_peak")
+new_sum_labs <- c("peak time","peak virulence","equil virulence","relative peak")
+fixfac2 <- function(x) factor(x,
+                       levels=orig_sum_labs,
+                       labels=new_sum_labs)
+@
 
 <<panel3,fig.cap="Baseline dynamics. Time series of mean population virulence ($\\log_{10}$ SPVL). (a) Shirreff model, effects of varying $r$. (b) Effects of varying initial infectious density $I(0)$. (c) Effects of varying initial mean virulence $\\alpha(0)$",dev="tikz",fig.height=3,fig.width=8,cache=TRUE>>=
 for (i in c("","2","3")) 
@@ -237,9 +242,10 @@ g3.y <- g3 + scale_y_continuous(limits = limits, breaks = breaks)+
 grid.arrange(g1.y, g2.y, g3.y, nrow=1)
 @ 
 
-<<virtraj,fig.cap="Envelopes of virulence trajectories under all models",dev="tikz",fig.width=6,cache=TRUE>>=
+
+<<virtraj,fig.cap="Envelopes of virulence trajectories under all models",fig.width=6,cache=TRUE,dev="tikz">>=
 gg_virtraj <- ggplot(sum_list[["vir_mat"]],
-       aes(tvec,mean,ymin=lwr,ymax=upr))+
+                     aes(tvec,mean,ymin=lwr,ymax=upr))+
     geom_line(aes(colour=model,linetype=model),lwd=1.5)+
     geom_ribbon(aes(fill=model),alpha=0.3)+
     labs(x="time",y=vlab)
@@ -255,13 +261,36 @@ mL <- melt(sL,id.vars=c("model","run"))
 w <- with(mL,which(model=="random" & variable=="eq_vir"))
 rval <- mean(mL$value[w])
 mLw <- droplevels(mL[-w,])
+mLw$variable <- fixfac2(mLw$variable)
 ggplot(mLw,aes(value,model,fill=model))+
     geom_violinh(width=1)+
     facet_wrap(~variable,scale="free_x")+
     guides(fill=guide_legend(reverse=TRUE))+
     labs(y="")+
-    geom_point(data=data.frame(model="random",variable="eq_vir",
+    geom_point(data=data.frame(model="random",variable="equil virulence",
                                value=rval),pch=22,size=3,show.legend=FALSE)
+@
+
+<<pairplot,echo=FALSE,fig.cap="pairs plot",fig.width=7,fig.height=7>>=
+## names(sL)[na.omit(match(names(sL),orig_sum_labs))] <- paste0("`",new_sum_labs,"`")
+ggp1 <- ggpairs(sL,
+        mapping = ggplot2::aes(color = model),
+        columns=3:6,
+        lower = list(continuous = wrap("points", alpha = 0.5,size=0.5)),
+        diag = list(continuous = "blankDiag"),
+        upper = list(continuous = "blank"))+
+    theme(panel.margin=grid::unit(0,"lines"))
+## http://stackoverflow.com/questions/14711550/is-there-a-way-to-change-the-color-palette-for-ggallyggpairs-using-ggplot
+## have to change plot one panel at a time
+cbscales <- list(scale_colour_brewer(palette = 'Dark2'),
+                 scale_fill_brewer(palette = 'Dark2'))  ## DRY
+for (row in seq_len(ggp1$nrow))
+    for (col in seq_len(ggp1$ncol))
+        ggp1[row, col] <- ggp1[row, col] + cbscales[[(row==col)+1]]
+## hack to remove top row/right column
+ggp1$nrow <- ggp1$ncol <- 3
+ggp1$plots <- ggp1$plots[c(5:7,9:11,13:15)]
+print(ggp1)
 @
 
 <<testrev,echo=FALSE,eval=FALSE>>=
@@ -272,6 +301,14 @@ grid.arrange(
     g0,
     g0+ guides(fill=guide_legend(reverse=TRUE)),
     nrow=2)
+@
+
+<<plot_sens,dev="png",echo=FALSE,fig.width=10,fig.height=6>>=
+ggplot(mL2,aes(LHSval,sumval,colour=model))+
+    geom_point(pch=".",alpha=0.5)+
+    facet_grid(sumvar~LHSvar,scales="free")+
+    geom_smooth(se=FALSE)+labs(x="",y="")+
+    scale_x_log10()
 @
 
 Figure to-do:
