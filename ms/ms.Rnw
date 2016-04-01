@@ -187,7 +187,7 @@ We focus on these statistics for the following two reasons. First of all, knowin
 
 \section{Results}
 
-Our simplifications of \shir's model reproduce the qualitative behaviour reasonably well; as $r$ decreases from 0.084 to 0.42 (the latter value matching the initial rate of increase in prevalence in \shir's full model) the initial trajectory of increasing virulence brackets the rate from the original model (Figure~\ref{fig:panel3}a). However, our model produces lower peak virulence ($\approx ?$ vs. $\approx ?$) and equilibrium virulence $\approx ?$ vs. $\approx?$) than Shirreff's, even for matching initial incidence (i.e., $r=0.042$).
+Our simplifications of \shir's model reproduce its qualitative behaviour reasonably well; as $r$ decreases from 0.084 to 0.42 (the latter value matching the initial rate of increase in prevalence in \shir's full model) the initial trajectory of increasing virulence brackets the rate from the original model (Figure~\ref{fig:panel3}a). However, our model produces lower peak virulence ($\approx ?$ vs. $\approx ?$) and equilibrium virulence $\approx ?$ vs. $\approx?$) than Shirreff's, even for matching initial incidence (i.e., $r=0.042$).
 
 Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory, making the virulence peaks slightly later and larger as $I(0)$ decreases and allows a longer epidemic phase before the transition to endemic dynamics (Figure~\ref{fig:panel3}b). Decreasing the initial virulence similarly but more strongly leads to progressively later, larger peaks in virulence (Figure~\ref{fig:panel3}c).
 
@@ -242,13 +242,15 @@ g3.y <- g3 + scale_y_continuous(limits = limits, breaks = breaks)+
 grid.arrange(g1.y, g2.y, g3.y, nrow=1)
 @ 
 
+Across the entire range of parameters covered by the LHS analysis, all of the classes of models we considered produce qualitatively similar virulence trajectories (Figure~\ref{fig:virtraj}). Although the speed of virulence evolution varies, leading to wide variation in the peak virulence (means ranging from approximately 3.75 to 4.5 $\log_{10}$ SPVL), virulence peaks in all models between 200 and 300 years.
 
-<<virtraj,fig.cap="Envelopes of virulence trajectories under all models",fig.width=6,cache=TRUE,dev="tikz">>=
+<<virtraj,fig.cap="Envelopes of virulence trajectories under all models",fig.width=6,cache=TRUE,message=FALSE,warning=FALSE,dev="tikz">>=
 gg_virtraj <- ggplot(sum_list[["vir_mat"]],
                      aes(tvec,mean,ymin=lwr,ymax=upr))+
     geom_line(aes(colour=model,linetype=model),lwd=1.5)+
     geom_ribbon(aes(fill=model),alpha=0.3)+
-    labs(x="time",y=vlab)
+    labs(x="time",y=vlab)+
+    scale_x_continuous(limits=c(0,2500))
 print(gg_virtraj)
 @ 
 
@@ -314,9 +316,9 @@ ggplot(mL2,aes(LHSval,sumval,colour=model))+
 Figure to-do:
 \begin{itemize}
 \item fig 1. tweak size? remove redundant y axes/labels?
-\item fig 2. add random-mixing model; remove x-axis label; rename factor to make strip labels prettier
-\item fig 3. re-order (reverse legend order), figure out how to tweak random density width
-\item fig 4. pairs plot
+\item fig 2. remove x-axis label; rename factor to make strip labels prettier.  Log scale?
+\item fig 3.
+\item fig 4. pairs plot; legend?
 \item fig 5. sensitivity plot (unscaled plot); take out plots that are not related ... implicit model doesn't use rho, cu or ce; random doesn't use rho, cmean?, cu, ce; instswitch doesn't have rho or cu or ce; models without epc don't have ce or cu; instswitch + epc doesn't have rho and cu (no uncoupled compartment)
 
 \end{itemize}
