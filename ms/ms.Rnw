@@ -63,6 +63,40 @@ load("../simdata/combine_ev_LHS4.rda")
 \begin{document}
 \maketitle
 
+\abstract{The evolutionary dynamics of parasite virulence over the
+  course of an emerging epidemic have important implications both for
+  our basic understanding of epidemiological dynamics and,
+  potentially, for the outcomes of public health interventions. In
+  general changes in fitness landscapes over the course of an epidemic
+  will select for higher virulence during the early,
+  exponential-growth phase of the epidemic, but quantitative outcomes
+  can depend sensitively on biological details and the structure of
+  mathematical models used to capture them.  Fraser, Shirreff, and
+  co-workers have proposed a series of models for eco-evolutionary
+  dynamics of HIV that are relatively detailed in their portrayal of
+  the tradeoffs between transmission and virulence (mediated by
+  set-point viral load, SPVL) and their heritability between
+  hosts. However, these models use very simple implicit
+  representations of the transmission process that ignore the
+  partnership dynamics that previous research has found to be critical
+  in predicting epidemics of sexually transmitted diseases.  We
+  explore models that combine HIV virulence tradeoffs with a range of
+  epidemiological structures, modeling partnership formation and
+  dissolution and allowing for individuals to transmit disease outside
+  of partnerships. We assess summary statistics such as the peak value
+  of virulence (SPVL) and the time at which the peak occurs across all
+  models and across a Latin hypercube sample that captures a realistic
+  range of partnership dynamic parameters for sub-Saharan Africa. In
+  order to account for the different interpretations of parameters
+  across model structures, we scale all parameter sets to constrain
+  the simulated epidemic growth rate to be identical, matching a
+  realistic baseline value. Our primary result is that, for this
+  particular model setting, the simplest random-mixing structure is
+  actually the best approximation to the most realistic model; this
+  surprising outcome occurs because the dominance of extra-pair
+  contact in the realistic model tends to mask the effects of
+  partnership structure.
+}
 \section{Introduction}
 
 How pathogen virulence evolves is a fundamental question in evolutionary biology, of both theoretical and (potentially) practical importance. The trade-off theory \citep{Ebert1999} --- which postulates that parasite virulence can be explained as the long-term evolutionary outcome of a saturating relationship between parasite clearance rate and transmission rate --- has been criticized \citep{EbertBull2003,alizon_adaptive_2015}, but has also been successfully applied in several important cases \citep{Dwyer+1990} \todo{others? de Roode and Altizer?}. One particularly interesting application of these ideas is the work by Fraser et al. showing that HIV appears to satisfy the prerequisites of the tradeoff theory: in a study of discordant couples (i.e. long-term sexual partnerships with one infected and one uninfected partner), HIV virulence as measured by the rate of progression to AIDS was both heritable and covaried with the set-point viral load (i.e., the characteristic virus load measured in blood during the intermediate stage of infection), which in turn predicted the probability of within-couple transmission \citep{Fraser+2007,fraser_virulence_2014}\todo{read/check fraser+ 2014!; check vs. \cite{herbeck_is_2012}}. Subsequent studies \citep{shirreff_transmission_2011,herbeck_hiv_2014} used these data to parameterize mechanistic models of HIV virulence evolution, suggesting that HIV invading a novel population would initially evolve increased virulence, peaking after approximately [XXX] years and then declining slightly to a long-stable virulence level.
@@ -295,6 +329,14 @@ ggp1$plots <- ggp1$plots[c(5:7,9:11,13:15)]
 print(ggp1)
 @
 
+pairs plot: instswitch +epc is the most different from others
+uncoupled mixing rate 1/5 to 5: rate of uncoupled contact relative
+to within-pair contact.  If it were much lower instswitch+epc would
+look more like instswitch *without* epc
+(uncoupled mixing acts like random mixing)
+
+instswitch is intermediate beween (pairform + implicit) 
+
 <<testrev,echo=FALSE,eval=FALSE>>=
 set.seed(101)
 zz <- data.frame(x=rnorm(3000),f=factor(rep(letters[1:3],each=1000)))
@@ -313,13 +355,13 @@ ggplot(mL2,aes(LHSval,sumval,colour=model))+
     scale_x_log10()
 @
 
-Figure to-do:
+Figure to-do: maybe go back to bw theme?
 \begin{itemize}
 \item fig 1. tweak size? remove redundant y axes/labels?
-\item fig 2. remove x-axis label; rename factor to make strip labels prettier.  Log scale?
-\item fig 3.
-\item fig 4. pairs plot; legend?
-\item fig 5. sensitivity plot (unscaled plot); take out plots that are not related ... implicit model doesn't use rho, cu or ce; random doesn't use rho, cmean?, cu, ce; instswitch doesn't have rho or cu or ce; models without epc don't have ce or cu; instswitch + epc doesn't have rho and cu (no uncoupled compartment)
+\item fig 2. 6-panel figure? log scale? boundary lines instead of ribbons for edges of envelopes? move labels away from axes?
+\item fig 3. change order (Random after pairform)
+\item fig 4. add legend, fix axis labels; maybe transparent
+\item fig 5. sensitivity plot (unscaled plot); take out plots that are not related ... implicit model doesn't use rho, cu or ce; random doesn't use rho, cmean?, cu, ce; instswitch doesn't have rho or cu or ce; models without epc don't have ce or cu; instswitch + epc doesn't have rho and cu (no uncoupled compartment). Maybe squash panels together, higher resolution
 
 \end{itemize}
 
