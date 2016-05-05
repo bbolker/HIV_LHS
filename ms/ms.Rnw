@@ -17,6 +17,7 @@
             marginparwidth=124pt]{geometry}
 %\usepackage[margin=1in]{geometry}
 
+\newcommand{\etal}{et al.}
 \newcommand{\shir}{Shirreff et al.}%{\citeauthor{shirreff_transmission_2011}}
 \newcommand{\champr}{Champredon et al.}%{\citeauthor{champredon_hiv_2013}}
 \newcommand{\tsub}[2]{#1_{{\small \textrm{#2}}}}
@@ -107,11 +108,9 @@ postulates that parasite virulence can be explained as the long-term
 evolutionary outcome of a saturating relationship between parasite
 clearance rate and transmission rate --- has been criticized
 \citep{EbertBull2003,alizon_adaptive_2015}, but has also been
-successfully applied in several important cases \citep{Dwyer+1990}
-\todo{others? de Roode and Altizer? maybe \cite{mackinnon1999genetic},
-  \cite{jensen2006empirical}, and \cite{de2008virulence}?}. One
+successfully applied in a variety of host-pathogen systems \citep{Dwyer+1990,mackinnon1999genetic,jensen2006empirical,deroode2008virulence}. One
 particularly interesting application of these ideas is the work by
-Fraser et al. showing that HIV appears to satisfy the prerequisites of
+Fraser \etal\ showing that HIV appears to satisfy the prerequisites of
 the tradeoff theory: in a study of discordant couples (i.e. long-term
 sexual partnerships with one infected and one uninfected partner), HIV
 virulence as measured by the rate of progression to AIDS was both
@@ -155,19 +154,12 @@ We add complexity to the epidemiological model following the general approach of
 
 \section{Methods}
 
-\begin{itemize}
-\item Since we assume that SPVL is determined by genoyype, we should probably mention papers like this:\cite{alizon2010phylogenetic}
-\item Do we need to mention things like heritability of SPVL or do we not have to mention it since it's already included in Shirreff et al's paper and our models are based on their model? It's an important assumption and maybe we need to cite source..?
-\end{itemize}
-
-\subsection{Model formulation}
+\todo{more papers on SPVL heritability (\emph{maybe} include): \cite{alizon_phylogenetic_2010,leventhal_potential_2016}}
 
 As our primary goal is to explore how different epidemiological structures (i.e. partnership dynamics and contact structures) affect our conclusions about the evolution of virulence, our models use a simplified description of within-host dynamics and heritability derived from 
 \shir's multi-strain evolutionary model. Like \shir, we use a simple susceptible-infected-susceptible demographic formulation; rather than modeling birth and death (or more specifically, recruitment into the sexually active population and death), we assume that whenever an individual dies from infection, another enters the susceptible compartment.
 
 \subsubsection{Infection dynamics}
-
-\todo{was going to call this ``within-host'' but it includes transmission}
 
 Like \shir, we focus on the evolution of mean $\log_{10}$ set-point viral load, SPVL (which we denote as $\alpha$), rather than virulence (i.e. rate of progression to AIDS) itself. 
 In contrast to \shir, we use a single-stage disease model instead of accounting explicitly for progression through the three main stages of HIV infection (primary, asymptomatic, and disease), and we use a simple exponentially distributed infectious period instead of a more realistic Weibull-distributed infectious period. We account for varying transmission rates and durations of each disease stage by summing the durations of three stages (again based on \shir's model) and taking the duration-weighted average of transmission rates of three stages. Thus the within-couple transmission rate, $\beta$, for our models is given by:
@@ -217,7 +209,7 @@ We developed six multi-strain evolutionary models, designed to cover a gamut bet
 
 Our first four models consider explicit partnership dynamics and are based on \champr's model. Model 1 and 2 assume non-instantaneous partnership formation (i.e. individuals spend some time uncoupled, outside of partnerships) and consist of five states that are classified by infection status and partnership status. $S$ is the number of single (uncoupled) susceptible individuals, and $I$ is the number of single infected individuals. $SS$ is the number of susceptible-susceptible couples, $SI$ is the number of serodiscordant (susceptible-infected) couples, and $II$ is the number of concordant positive (infected-infected) couples. Model 1 includes extra-partnership contact (with both uncoupled individuals and individuals in other partnerships) whereas model 2 only considers within-couple transmission. Models 3 and 4 assume instantaneous partnership formation and thus consist of only the three partnered states: $SS$, $SI$, and $II$. Parallel to model 1 and 2, model 3 includes extra-partnership contact (now only with individuals in other partnerships, since uncoupled individuals don't exist in this model) and model 4 only considers within-couple transmission.
 
-In contrast, models 5 and 6 are not explicitly structured.  Model 5 is an implicit serial monogamy model based on the epidemiological model used by \shir. It is actually a random mixing model that consist of only two states, $S$ and $I$, and does not consider explicit partnership dynamics. However, to simulate the effect of instantaneous partnership formation, it uses an adjusted transmission rate that is derived from approximated basic reproduction number of a serial monogamy model \cite{hollingsworth_hiv1_2008} \todo{is this the right ref? where does Shirreff's model originate?} \todo{Evolutionary dynamic (SPVL distribution, disease progression rate, mutation, and etc) comes from \cite{Fraser+2007} and serial monogamy approximation comes from \cite{hollingsworth_hiv1_2008}}. Finally, model 6 is a simple random-mixing model.
+In contrast, models 5 and 6 are not explicitly structured.  Model 5 is an implicit serial monogamy model based on the epidemiological model used by \shir. It is actually a random mixing model that consist of only two states, $S$ and $I$, and does not consider explicit partnership dynamics. However, to simulate the effect of instantaneous partnership formation, it uses an adjusted transmission rate that is derived from approximated basic reproduction number of a serial monogamy model \citep{hollingsworth_hiv1_2008}. Finally, model 6 is a simple random-mixing model.
 
 The base model (i.e. model 1) for the first four models is an extension of \champr's model. Individuals in single compartment acquire a partner at a rate, $\rho$, and partnerships dissolve at a rate, $c$. Infected individuals in a discordant partnership infect susceptible partner at a rate $\beta$ (within-couple transmission rate) and susceptible individuals outside the partnership at a rate $c_e$ (extra-couple transmission rate). Likewise, a single infected individual can infect any susceptible individuals at a rate $c_u$ through uncoupled mixing. Extra-couple and uncoupled transmission are modeled in a same way as \champr's model. All the details have been adapted to a multi-strain scenario. Model 2, 3, and 4 are derived from the base model by removing epidemiological details (partnership formation and uncoupled/extra-couple contact). Model details are explained in the appendix.
 
@@ -231,15 +223,13 @@ Despite considerable effort by many researchers \citep[e.g.][]{hollingsworth_hiv
 Latin hypercube sampling is done as in \champr. For each parameter, $z$, its range is divided into $N = 1000$ equal intervals on a log scale, where $N$ is the number of total runs:
 
 \begin{equation}
-z_i = \text{exp}(\log(z_{min}) + [\log(z_{max}) - \log(z_{min})] \frac{i-1}{N-1}) \qquad i = 1,...,N.
+z_i = \text{exp}(\log(\tsub{z}{min}) + [\log(\tsub{z}{max}) - \log(\tsub{z}{min})] \frac{i-1}{N-1}) \qquad i = 1,...,N.
 \end{equation}
 For simplicity, we assume that all parameters follow logarithmic distribution. Following the vectorization of a parameter range, a matrix is constructed so that each column contains a vector of a parameter series which it represents ($z_1$,...$z_N$). Then, each column is replaced with a random permutation series of itself. Now, each row contains a different parameter set that is used for each simulation run.
 
 Table~\ref{table:parmsTable} gives the ranges of the model parameters used for LHS. Parameters ranges regarding contact and partnership dynamics ($\rho$, $c$, and $c_e/c_w$) are taken from \champr, whereas those regarding infection ($\beta_P$, $D_P$, $\beta_D$, and $D_D$) are taken from \cite{hollingsworth_hiv1_2008}. Rest of the parameters are taken from \shir. 
 
 As we introduce a new parameter, $c_u/c_w$, to model uncoupled and extra-couple transmission dynamics more easily within multi-strain models (refer to appendix), it is important to pick a reasonable range for it. \champr assume that the effective within-couple contact rate and effective uncoupled contact rate have the same range of 0.05 - 0.25.  Given \champr's parameter range, it is trivial that the possible maximum and minimum values of $c_u/c_w$ are 5 and 1/5. Therefore, we use 1/5-5 as the range for the parameter $c_u/c_w$. Although this adds more uncertainty to the parameter $c_u$ --- \champr's range gives 5 fold difference whereas ours give 25 fold difference --- as there is not much known about the uncoupled transmission rate, it is reasonable to use a wider range.
-
-
 
 \todo{refer to Table 1 and describe where the new parameters come from; e.g. decisions we made about new scaling parameters}
 
