@@ -11,6 +11,7 @@
 \usepackage[colorlinks = true, linkcolor = blue, urlcolor=blue,citecolor = MidnightBlue]{hyperref}
 \usepackage{url}
 \usepackage{enumerate}
+%\usepackage[normalem]{ulem}
 \usepackage[left=50pt,
             textwidth=345pt,
             marginparsep=25pt,
@@ -171,8 +172,8 @@ of infection are independent of the host's SPVL. Following \shir, the duration o
 
 \begin{equation}
 \begin{split}
-D_A(\alpha) &= \frac{D_{\text{max}} D_{50} ^{D_k}}{V_\alpha ^{D_k} + D_{50}^{D_k}}, \\
-\beta_A(\alpha) &= \frac{\beta_{\text{max}} V_\alpha ^ {\beta_k}}%
+D_A(\alpha) &= \frac{\tsub{D}{max} D_{50} ^{D_k}}{V_\alpha ^{D_k} + D_{50}^{D_k}}, \\
+\beta_A(\alpha) &= \frac{\tsub{\beta}{max} V_\alpha ^ {\beta_k}}%
 {V_\alpha^{\beta_k} + \beta_{50} ^{\beta_k}},
 \end{split}
 \end{equation}
@@ -190,7 +191,7 @@ The mutational process in our model is directly taken from \shir. Over the cours
 Then, we construct an $n$ by $n$ mutational matrix, $M$ --- which is multiplied with the transmission term ---  so that $M_{ij}$ is the probability that a newly infected individual will have $\log_{10}$ SPVL of $\alpha_j$ given that the infector has $\log_{10}$ SPVL of $\alpha_i$. Finally, the probabilities are normalized so that each row sums to 1:
 
 \begin{equation}
-M_{ij} = \frac{\Phi(\alpha_j + d/2;i) - \Phi(\alpha_j - d/2;i)}{\Phi(\alpha_{max} + d/2;i) - \Phi(\alpha_{min} - d/2;i)},
+M_{ij} = \frac{\Phi(\alpha_j + d/2;i) - \Phi(\alpha_j - d/2;i)}{\Phi(\tsub{\alpha}{max} + d/2;i) - \Phi(\tsub{alpha}{min} - d/2;i)},
 \end{equation}
 
 where $\Phi(x;i)$ is the Gaussian cumulative distribution function with mean $\alpha_i$ and variance of $\sigma_M^2$, and $d = (\tsub{\alpha}{max} - \tsub{\alpha}{min})/(n-1)$. Transmission rate and disease induced mortality rates are discretized into a vector as well:
@@ -218,42 +219,39 @@ The base model (i.e. model 1) for the first four models is an extension of \cham
 
 \subsection{Latin hypercube sampling}
 
-Despite considerable effort by many researchers \citep[e.g.][]{hollingsworth_hiv1_2008,champredon_hiv_2013}, the parameters determining the rate and structure of sexual partnership change and contact are still very uncertain; this led \champr\ to adopt a Latin hypercube sampling (LHS) strategy \citep{blower_drugs_1991} that evaluates model outcomes over a range of parameter values. In order to make sure that our comparisons among models apply across the entire space of reasonable parameter values, and in order to evaluate the differential sensitivity of different model structures to parameter values, we follow a similar protocol and perform LHS over a parameter set including both the transmission and duration parameters ($\beta_P$, $D_P$, $\beta_D$, $D_D$) and contact/partnership parameters ($\rho$, $c$, $c_u/c_w$, and $c_e/c_w$). We do not allow for uncertainties in parameters that are directly related to evolutionary process ($\beta_{max}$, $\beta_{50}$, $\beta_k$, $D_{max}$, $D_{50}$, $D_k$, $\sigma_M$) \todo{i.e., ... ?}
+Despite considerable effort by many researchers \citep[e.g.][]{hollingsworth_hiv1_2008,champredon_hiv_2013}, the parameters determining the rate and structure of sexual partnership change and contact are still very uncertain; this led \champr\ to adopt a Latin hypercube sampling (LHS) strategy \citep{blower_drugs_1991} that evaluates model outcomes over a range of parameter values. In order to make sure that our comparisons among models apply across the entire space of reasonable parameter values, and in order to evaluate the differential sensitivity of different model structures to parameter values, we follow a similar protocol and perform LHS over a parameter set including both the transmission and duration parameters ($\beta_P$, $D_P$, $\beta_D$, $D_D$) and contact/partnership parameters ($\rho$, $c$, $c_u/c_w$, and $c_e/c_w$). We do not allow for uncertainties in parameters that are directly related to the evolutionary process ($\tsub{\beta}{max}$, $\beta_{50}$, $\beta_k$, $\tsub{D}{max}$, $D_{50}$, $D_k$, $\sigma_M$), using \shir's point estimates throughout.
 
-Latin hypercube sampling is done as in \champr. For each parameter, $z$, its range is divided into $N = 1000$ equal intervals on a log scale, where $N$ is the number of total runs:
+Latin hypercube sampling is done as in \champr. For each parameter, $z$, its range is divided into $N = 1000$ equal intervals on a log scale:
 
 \begin{equation}
-z_i = \text{exp}(\log(\tsub{z}{min}) + [\log(\tsub{z}{max}) - \log(\tsub{z}{min})] \frac{i-1}{N-1}) \qquad i = 1,...,N.
+z_i = \exp\left(\log(\tsub{z}{min}) + [\log(\tsub{z}{max}) - \log(\tsub{z}{min})] \frac{i-1}{N-1}\right) \qquad i = 1,...,N.
 \end{equation}
-For simplicity, we assume that all parameters follow logarithmic distribution. Following the vectorization of a parameter range, a matrix is constructed so that each column contains a vector of a parameter series which it represents ($z_1$,...$z_N$). Then, each column is replaced with a random permutation series of itself. Now, each row contains a different parameter set that is used for each simulation run.
+For simplicity, we assume that all parameters are uniformly distributed on the log scale. Following the vectorization of a parameter range, a matrix is constructed so that each column contains a vector of a parameter series which it represents ($z_1$,...$z_N$). Then, each column is replaced with a random permutation series of itself. Now, each row contains a different parameter set that is used for each simulation run.
 
-Table~\ref{table:parmsTable} gives the ranges of the model parameters used for LHS. Parameters ranges regarding contact and partnership dynamics ($\rho$, $c$, and $c_e/c_w$) are taken from \champr, whereas those regarding infection ($\beta_P$, $D_P$, $\beta_D$, and $D_D$) are taken from \cite{hollingsworth_hiv1_2008}. Rest of the parameters are taken from \shir. 
+Table~\ref{table:parmsTable} gives the ranges of the model parameters used for LHS. Parameter ranges regarding contact and partnership dynamics ($\rho$, $c$, and $c_e/c_w$) are taken from \champr, whereas those regarding infection ($\beta_P$, $D_P$, $\beta_D$, and $D_D$) are taken from \cite{hollingsworth_hiv1_2008}. The remaining parameters are taken from \shir \todo{check: redundant with description a couple of paras above?}
 
-As we introduce a new parameter, $c_u/c_w$, to model uncoupled and extra-couple transmission dynamics more easily within multi-strain models (refer to appendix), it is important to pick a reasonable range for it. \champr assume that the effective within-couple contact rate and effective uncoupled contact rate have the same range of 0.05 - 0.25.  Given \champr's parameter range, it is trivial that the possible maximum and minimum values of $c_u/c_w$ are 5 and 1/5. Therefore, we use 1/5-5 as the range for the parameter $c_u/c_w$. Although this adds more uncertainty to the parameter $c_u$ --- \champr's range gives 5 fold difference whereas ours give 25 fold difference --- as there is not much known about the uncoupled transmission rate, it is reasonable to use a wider range.
-
-\todo{refer to Table 1 and describe where the new parameters come from; e.g. decisions we made about new scaling parameters}
+The one completely new parameter in our model, the ratio of uncoupled to within-couple transmission $c_u/c_w$, is needed to more flexibly contrast uncoupled and extra-couple transmission dynamics within multi-strain models (Appendix); we need to pick a reasonable range for it. \champr\ assume that the effective within-couple contact rate and effective uncoupled contact rate have the same range of 0.05 - 0.25.  Given \champr's parameter range, the possible maximum and minimum values of $c_u/c_w$ are 5 and 1/5. Therefore, we use 1/5-5 as the range for the parameter $c_u/c_w$. Although this adds more uncertainty to the parameter $c_u$ --- \champr's range implies a 5-fold difference whereas ours gives a 25-fold difference --- as there is not much known about the uncoupled transmission rate, we consider the wider range appropriate.
 
 \subsection{Simulation runs}
 
-One of the most difficult parts of model comparison is finding parameter sets that are commensurate against many different model structures. For the most part, our models are too complex to easily derive analytical correspondences among them. Given a numerical criterion, such as $r$ (initial exponential growth rate) or $\rzero$ (intrinsic reproductive number), we can adjust one or more parameters by brute force to ensure that all of the models match according to that criterion. While $\rzero$ is often considered the most fundamental property of an epidemic, and might thus seem to be a natural goal, here we focus on matching the initial growth rate $r$ for several reasons. First, our primary interest is in the transient evolutionary dynamics of virulence, which are more strongly affected by $r$ than $\rzero$ (CITE?). Second, $r$ is in general more directly observable in real epidemics; $r$ can be estimated by simply fitting an exponential curve to the initial incidence or prevalence curves (CITE Ma et al.), while $\rzero$ typically requires either (1) knowledge of \emph{all} epidemic parameters or (2) relatively sophisticated back-calculation based on $r$ and knowledge of the serial interval or generation interval of the disease (CITE Wallinga, Teunis, Lipsitch, etc.) Thus, we scale a parameter so that every run has an equal exponential rate of growth rate.
+One of the most difficult parts of model comparison is finding parameter sets that are commensurate against many different model structures. For the most part, our models are too complex to easily derive analytical correspondences among them. Given a numerical criterion, such as $r$ (initial exponential growth rate) or $\rzero$ (intrinsic reproductive number), we can adjust one or more parameters by brute force to ensure that all of the models match according to that criterion. While $\rzero$ is often considered the most fundamental property of an epidemic, and might thus seem to be a natural goal, here we focus on matching the initial growth rate $r$ for several reasons. First, our primary interest is in the transient evolutionary dynamics of virulence, which are more strongly affected by $r$ than $\rzero$ \todo{CITE?}. Second, $r$ is in general more directly observable in real epidemics; $r$ can be estimated by simply fitting an exponential curve to the initial incidence or prevalence curves \todo{CITE Ma et al.}, while $\rzero$ typically requires either (1) knowledge of \emph{all} epidemic parameters or (2) relatively sophisticated back-calculation based on $r$ and knowledge of the serial interval or generation interval of the disease \todo{CITE Wallinga, Teunis, Lipsitch, etc.} Thus, we scale a parameter so that every run has the same initial exponential growth rate in the incidence.
 
 In order to allow for all models to have equal initial exponential growth rate, $r$, we need to pick a parameter, $s$, so that $\lim_{s\to 0} r(s) = 0$ and $\lim_{s\to\infty}  r(s) = \infty$. As adjusting either partnership change rate (i.e. partnership formation and dissolution rate) or transmission rate does not fulfill this requirement for certain models, we decided to scale partnership change rate and dissolution rate by the same factor of $\gamma$: $\tsub{\beta}{adj} =  \gamma \tsub{\beta}{base}$, $\tsub{c}{adj} = \gamma \tsub{c}{base}$, $\tsub{\rho}{adj} = \gamma \tsub{\rho}{base}$. Since transmission rate is adjusted by the scale of $\gamma$, uncoupled and extra-couple transmission rates are adjusted as well. For models 3, 4, and 5, all of which assume instantaneous partnership (and hence do not track single individuals), only the transmission rate and partnership dissolution rate (in this case equivalent to the partnership change rate) are adjusted.
 
-We run each model for 1000 times with different parameter sets calculated from Latin hypercube sampling [CITE Blower et al], with fixed starting conditions
-of mean $\log_{10}$ SPVL of 3 and epidemic size of $10^{-4}$ (refer to appendix). After each run, initial exponential growth rate is calculated. Then, parameters are scaled so that the initial exponential growth rate is scaled to 0.04, which is approximately equal to that of Shirreff et al's model.
+We run each model for each of 1000 parameter sets chosen by Latin hypercube sampling \todo{CITE Blower et al - or at first mention of LHS}, with fixed starting conditions
+of mean $\log_{10}$ SPVL of 3 and epidemic size of $10^{-4}$. After each run, initial exponential growth rate is calculated. Then, parameters are scaled so that the initial exponential growth rate is scaled to 0.04, which is approximately equal to that of Shirreff et al's model.
 
 For each model we derive the following summary statistics: peak virulence, peak time, equilibrium virulence, and relative peak virulence. The transient phase of an epidemic is often characterized by high virulence, and we define peak virulence as the maximum virulence during this phase. It is simply calculated by taking the maximum value from the virulence trajectory, and peak time is the time at which the maximum value is reached. Once the epidemic enters the endemic phase, evolution of virulence stabilizes and reaches equilibrium. Equilibrium virulence is calculated by taking the mean virulence at 4000 years. Although most simulations reach equilibrium much earlier, we set our time horizon at a much later date as some simulation runs have slow rate of evolution depending on the parameter set and model assumptions.
 
-We focus on these statistics for the following two reasons. First of all, knowing the possible ranges for the peak virulence allows us to estimate the worst-case scenario for the HIV and other sexually transmitted disease epidemics. When an epidemic begins, it is often the case that the pathogen has already evolved towards high virulence by the time it is observed [CITE]. Understanding how virulent a pathogen can evolve before an epidemic begins can be helpful for controlling the disease. Furthermore, knowing the initial virulence, peak virulence, timing of the peak virulence, and equilibrium virulence provide sufficient detail to identify the shape of the virulence trajectory. During an epidemic outbreak, it is difficult to observe virulence evolution. Specifically, in the case of HIV and other sexually transmitted diseases, slow evolutionary time-scale makes observing changes in the mean virulence even more challenging. Knowing the ranges of these statistics can help real-time virulence evolution prediction during an epidemic less troublesome.
+We focus on these statistics for the following two reasons. First of all, knowing the possible ranges for the peak virulence allows us to estimate the worst-case scenario for the HIV and other sexually transmitted disease epidemics. When an epidemic begins, it is often the case that the pathogen has already evolved towards high virulence by the time it is observed \todo{CITE}. Understanding how virulent a pathogen can evolve before an epidemic begins can be helpful for controlling the disease. Furthermore, knowing the initial virulence, peak virulence, timing of the peak virulence, and equilibrium virulence provide sufficient detail to identify the shape of the virulence trajectory. During an epidemic outbreak, it is difficult to observe virulence evolution. Specifically, in the case of HIV and other sexually transmitted diseases, slow evolutionary time-scale makes observing changes in the mean virulence even more challenging. Knowing the ranges of these statistics can help real-time virulence evolution prediction during an epidemic less troublesome.
 
 \section{Results}
 
-Our simplifications of \shir's model reproduce its qualitative behaviour reasonably well; as $r$ decreases from 0.084 to 0.42 (the latter value matching the initial rate of increase in prevalence in \shir's full model) the initial trajectory of increasing virulence brackets the rate from the original model (Figure~\ref{fig:panel3}a). However, our model produces lower peak virulence ($\approx ?$ vs. $\approx ?$) and equilibrium virulence $\approx ?$ vs. $\approx?$) than Shirreff's, even for matching initial incidence (i.e., $r=0.042$).
+Our simplifications of \shir's model reproduce its qualitative behaviour --- in particular, its predictions of virulence dynamics --- reasonably well. As $r$ decreases from 0.084 to 0.42 (the latter value matching the initial rate of increase in prevalence in \shir's full model) the initial trajectory of increasing virulence brackets the rate from the original model (Figure~\ref{fig:panel3}a). However, our model produces lower peak virulence \todo{fill in these numbers ...} ($\approx ?$ vs. $\approx ?$) and equilibrium virulence $\approx ?$ vs. $\approx?$) than Shirreff's, even for matching initial incidence trajectories (i.e., $r=0.042$).
 
-Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory, making the virulence peaks slightly later and larger as $I(0)$ decreases and allows a longer epidemic phase before the transition to endemic dynamics (Figure~\ref{fig:panel3}b). Decreasing the initial virulence similarly but more strongly leads to progressively later, larger peaks in virulence (Figure~\ref{fig:panel3}c).
+Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory, making the virulence peaks slightly later and larger as $I(0)$ decreases. Decreasing $I(0)$ allows a longer epidemic phase before the transition to endemic dynamics (Figure~\ref{fig:panel3}b). Decreasing the initial virulence similarly but more strongly leads to progressively later, larger peaks in virulence (Figure~\ref{fig:panel3}c).
 
-\todo{note that in Fig 1 we're using Shirreff's parameters}
-\todo{add Shir. params to table 1: Beta1=2.76, Dur1 = 0.25, Beta3 = 0.76, Dur3 = 0.75, c = 1.25, alpha=\{2,7,0.1\}}
+\todo{add Shirreff's parameters to table 1: (\sout{Beta1 = 2.76, Duration1 = 0.25}, Beta3 = 0.76, Duration3 = 0.75, \sout{cmeanbase = 1.25, alphaDist = c(min = 2, max = 7,  delta = 0.1)}).}
 
 <<setup2,echo=FALSE>>=
 orig_sum_labs <- c("peak_time","peak_vir","eq_vir","rel_peak")
@@ -263,7 +261,7 @@ fixfac2 <- function(x) factor(x,
                        labels=new_sum_labs)
 @
 
-<<panel3,fig.cap="Baseline dynamics. Time series of mean population virulence ($\\log_{10}$ SPVL). (a) Shirreff model, effects of varying $r$. (b) Effects of varying initial infectious density $I(0)$. (c) Effects of varying initial mean virulence $\\alpha(0)$",dev="tikz",fig.height=3,fig.width=8,cache=TRUE>>=
+<<panel3,fig.cap="Baseline dynamics. Time series of mean population virulence ($\\log_{10}$ SPVL). (a) Shirreff model, effects of varying $r$. (b) Effects of varying initial infectious density $I(0)$. (c) Effects of varying initial mean virulence $\\alpha(0)$. Parameters",dev="tikz",fig.height=3,fig.width=8,cache=TRUE>>=
 for (i in c("","2","3")) 
     load(sprintf("../simdata/ev_LHS_resS%s.rda",i))
 Ls <- load("../simdata/shirreff_data.rda")
@@ -325,18 +323,21 @@ w <- with(mL,which(model=="random" & variable=="eq_vir"))
 rval <- mean(mL$value[w])
 mLw <- droplevels(mL[-w,])
 mLw$variable <- fixfac2(mLw$variable)
-ggplot(mLw,aes(value,model,fill=model))+
+gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
     geom_violinh(width=1)+
     facet_wrap(~variable,scale="free_x")+
     guides(fill=guide_legend(reverse=TRUE))+
     labs(y="")+
     geom_point(data=data.frame(model="random",variable="equil virulence",
                                value=rval),pch=22,size=3,show.legend=FALSE)
+print(gg_univ)
 @
 
 <<pairplot,echo=FALSE,fig.cap="pairs plot",fig.width=7,fig.height=7>>=
-## names(sL)[na.omit(match(names(sL),orig_sum_labs))] <- paste0("`",new_sum_labs,"`")
-ggp1 <- ggpairs(sL,
+sL2 <- sL
+names(sL2)[na.omit(match(orig_sum_labs,names(sL)))] <- gsub(" ","_",new_sum_labs)
+    ## paste0("`",new_sum_labs,"`")
+ggp1 <- ggpairs(sL2,
         mapping = ggplot2::aes(color = model),
         columns=3:6,
         lower = list(continuous = wrap("points", alpha = 0.5,size=0.5)),
@@ -347,20 +348,36 @@ ggp1 <- ggpairs(sL,
 ## have to change plot one panel at a time
 cbscales <- list(scale_colour_brewer(palette = 'Dark2'),
                  scale_fill_brewer(palette = 'Dark2'))  ## DRY
-for (row in seq_len(ggp1$nrow))
-    for (col in seq_len(ggp1$ncol))
-        ggp1[row, col] <- ggp1[row, col] + cbscales[[(row==col)+1]]
+ggp2 <- ggp1
+for (row in seq_len(ggp2$nrow))
+    for (col in seq_len(ggp2$ncol))
+        ggp2[row, col] <- ggp2[row, col] + cbscales[[(row==col)+1]]
 ## hack to remove top row/right column
-ggp1$nrow <- ggp1$ncol <- 3
-ggp1$plots <- ggp1$plots[c(5:7,9:11,13:15)]
-print(ggp1)
+ggp3 <- ggp2
+ggp3$nrow <- ggp3$ncol <- 3
+ggp3$plots <- ggp3$plots[c(5:7,9:11,13:15)]
+ggp3$xAxisLabels <- ggp3$xAxisLabels[1:3]
+ggp3$yAxisLabels <- ggp3$yAxisLabels[2:4]
+print(ggp3)
 @
 
-pairs plot: instswitch +epc is the most different from others
-uncoupled mixing rate 1/5 to 5: rate of uncoupled contact relative
-to within-pair contact.  If it were much lower instswitch+epc would
-look more like instswitch *without* epc
-(uncoupled mixing acts like random mixing)
+Our chosen summary statistics (peak time, peak virulence, equilibrium
+virulence, and relative peak virulence) all vary considerably across models.
+We first consider the models of intermediate realism (implicit,
+instantaneous-switching with and without extra-pair contact, and
+pair formation without extra-pair contact). Some parameter
+sets for these models lead to low equilibrium virulence ($\approx 2.5 \log_{10} SPVL$)
+these same sets lead to correspondingly low
+peak virulence ($< 3.5 \log_{10} SPVL$) and early peak times (before 200 years), 
+but high relative peaks ($>1.3$)
+(Figure~\ref{fig:pairplot}, leftmost column) because the equilibrium virulence is low.
+At the opposite extreme, parameter sets that produce high equilibrium virulence 
+also produce late peaks ($> 200 \text{years}$), 
+high peak virulence, and low relative peaks ($\approx 1.05$).
+The pair-formation without extra-pair contact and implicit models
+occasionally have parameter sets that select for such low virulence across
+the board that they never exceed their initial virulence, leading to a tail
+of peak times near 0.
 
 instswitch is intermediate beween (pairform + implicit) 
 
@@ -374,7 +391,6 @@ grid.arrange(
     nrow=2)
 @
 
- Throughout Fig 1 we're using Shirreff's parameters (Beta1 = 2.76, Duration1 = 0.25, Beta3 = 0.76, Duration3 = 0.75, cmeanbase = 1.25, alphaDist = c(min = 2, max = 7,  delta = 0.1))
 
 <<plot_sens,dev="png",echo=FALSE,fig.width=10,fig.height=6>>=
 ggplot(mL2,aes(LHSval,sumval,colour=model))+
@@ -437,13 +453,13 @@ Single individuals acquire partners at rate $\rho$: $S' = - \rho S$ and $I_i' = 
 \begin{aligned}
 SS' &= \frac{\rho S \cdot S}{2 (S + \sum_k I_k)}\\
 SI_i' &= \frac{\rho S \cdot I_i}{S + \sum_k I_k}\\
-II_{ij}' &= (\frac{1}{2})^{\delta_{ij}} \cdot \frac{\rho I_i \cdot I_j}{S + \sum_k I_k}
+II_{ij}' &= \left(\frac{1}{2}\right)^{\delta_{ij}} \cdot \frac{\rho I_i \cdot I_j}{S + \sum_k I_k}
 \end{aligned}
 \end{equation}
-We introduce Kronecker delta above to differentiate the partnership formation rate for $II_{ij}$ 
-when $i = j$ from that of $I \neq j$. When $i = j$ --- like the partnership formation rate of $SS$ --- partnership formation rate becomes $II_{ii}' = \frac{\rho I_i \cdot I_i}{2(S + \sum_k I_k)}$ due to binomial distribution. On the other hand, when $i \neq j$, partnership formation rate becomes $II_{ij}' = \frac{\rho I_i I_j}{S + \sum_k I_k}$.
+We introduce the Kronecker delta above to differentiate the partnership formation rate for $II_{ij}$ 
+when $i = j$ from that of $I \neq j$. When $i = j$ --- e.g. in the $II_{ij}$ term --- the partnership formation rate becomes $II_{ii}' = \frac{\rho I_i \cdot I_i}{2(S + \sum_k I_k)}$ due to binomial distribution \todo{??}. On the other hand, when $i \neq j$, the partnership rate is $II_{ij}' = \frac{\rho I_i I_j}{S + \sum_k I_k}$.
 
-Partnerships dissolve at rate $c$: $SS' = -c SS$, $SI_i' = -c SI_i$, and $II_{ij} = - c II_{ij}$. Unlike single strain model, where both individuals leaving the $II$ partnership would enter $I$, we have to account for strains which the individuals in concordant partnership are infected with (i.e. both partners in $II_{ii}$ enter $I_i$ whereas only one partner in $II_{ij}$ enter $I_i$).
+Partnerships dissolve at rate $c$: $SS' = -c SS$, $SI_i' = -c SI_i$, and $II_{ij} = - c II_{ij}$. Unlike single strain model, where both individuals leaving the $II$ partnership would enter $I$, we have to account for strains which the individuals in concordant partnership are infected with (i.e. both partners in $II_{ii}$ enter $I_i$ whereas only one partner in $II_{ij}$ enters $I_i$).
 
 \begin{equation}
 \begin{aligned}
