@@ -214,7 +214,6 @@ In contrast, models 5 and 6 are not explicitly structured.  Model 5 is an implic
 
 The base model (i.e. model 1) for the first four models is an extension of \champr's model. Individuals in single compartment acquire a partner at a rate, $\rho$, and partnerships dissolve at a rate, $c$. Infected individuals in a discordant partnership infect susceptible partner at a rate $\beta$ (within-couple transmission rate) and susceptible individuals outside the partnership at a rate $c_e$ (extra-couple transmission rate). Likewise, a single infected individual can infect any susceptible individuals at a rate $c_u$ through uncoupled mixing. Extra-couple and uncoupled transmission are modeled in a same way as \champr's model. All the details have been adapted to a multi-strain scenario. Model 2, 3, and 4 are derived from the base model by removing epidemiological details (partnership formation and uncoupled/extra-couple contact). Model details are explained in the appendix.
 
-\todo{I think we need a section here to describe partnership dynamics/contact structure, i.e. define the $\rho$, $c_u$, $c_e$, $c_w$ parameters - will be similar to \champr}
 \input{ms_parms.tex}
 
 \subsection{Latin hypercube sampling}
@@ -228,7 +227,7 @@ z_i = \exp\left(\log(\tsub{z}{min}) + [\log(\tsub{z}{max}) - \log(\tsub{z}{min})
 \end{equation}
 For simplicity, we assume that all parameters are uniformly distributed on the log scale. Following the vectorization of a parameter range, a matrix is constructed so that each column contains a vector of a parameter series which it represents ($z_1$,...$z_N$). Then, each column is replaced with a random permutation series of itself. Now, each row contains a different parameter set that is used for each simulation run.
 
-Table~\ref{table:parmsTable} gives the ranges of the model parameters used for LHS. Parameter ranges regarding contact and partnership dynamics ($\rho$, $c$, and $c_e/c_w$) are taken from \champr, whereas those regarding infection ($\beta_P$, $D_P$, $\beta_D$, and $D_D$) are taken from \cite{hollingsworth_hiv1_2008}. The remaining parameters are taken from \shir \todo{check: redundant with description a couple of paras above?}
+Table~\ref{table:parmsTable} gives the ranges of the model parameters used for LHS. Parameter ranges regarding contact and partnership dynamics ($\rho$, $c$, and $c_e/c_w$) are taken from \champr, whereas those regarding infection ($\beta_P$, $D_P$, $\beta_D$, and $D_D$) are taken from \cite{hollingsworth_hiv1_2008}. The remaining parameters are taken from \shir.
 
 The one completely new parameter in our model, the ratio of uncoupled to within-couple transmission $c_u/c_w$, is needed to more flexibly contrast uncoupled and extra-couple transmission dynamics within multi-strain models (Appendix); we need to pick a reasonable range for it. \champr\ assume that the effective within-couple contact rate and effective uncoupled contact rate have the same range of 0.05 - 0.25.  Given \champr's parameter range, the possible maximum and minimum values of $c_u/c_w$ are 5 and 1/5. Therefore, we use 1/5-5 as the range for the parameter $c_u/c_w$. Although this adds more uncertainty to the parameter $c_u$ --- \champr's range implies a 5-fold difference whereas ours gives a 25-fold difference --- as there is not much known about the uncoupled transmission rate, we consider the wider range appropriate.
 
@@ -250,8 +249,6 @@ We focus on these statistics for the following two reasons. First of all, knowin
 Our simplifications of \shir's model reproduce its qualitative behaviour --- in particular, its predictions of virulence dynamics --- reasonably well. As $r$ decreases from 0.084 to 0.42 (the latter value matching the initial rate of increase in prevalence in \shir's full model) the initial trajectory of increasing virulence brackets the rate from the original model (Figure~\ref{fig:panel3}a). However, our model produces lower peak virulence \todo{fill in these numbers ...} ($\approx ?$ vs. $\approx ?$) and equilibrium virulence $\approx ?$ vs. $\approx?$) than Shirreff's, even for matching initial incidence trajectories (i.e., $r=0.042$).
 
 Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory, making the virulence peaks slightly later and larger as $I(0)$ decreases. Decreasing $I(0)$ allows a longer epidemic phase before the transition to endemic dynamics (Figure~\ref{fig:panel3}b). Decreasing the initial virulence similarly but more strongly leads to progressively later, larger peaks in virulence (Figure~\ref{fig:panel3}c).
-
-\todo{add Shirreff's parameters to table 1: (\sout{Beta1 = 2.76, Duration1 = 0.25}, Beta3 = 0.76, Duration3 = 0.75, \sout{cmeanbase = 1.25, alphaDist = c(min = 2, max = 7,  delta = 0.1)}).}
 
 <<setup2,echo=FALSE>>=
 orig_sum_labs <- c("peak_time","peak_vir","eq_vir","rel_peak")
@@ -367,13 +364,13 @@ virulence, and relative peak virulence) all vary considerably across models
 We first consider the models of intermediate realism (implicit,
 instantaneous-switching with and without extra-pair contact, and
 pair formation without extra-pair contact). Some parameter
-sets for these models lead to low equilibrium virulence ($\approx 2.5 \log_{10} SPVL$)
+sets for these models lead to low equilibrium virulence ($\approx 2.5 \log_{10}$ SPVL)
 these same sets lead to correspondingly low
-peak virulence ($< 3.5 \log_{10} SPVL$) and early peak times (before 200 years), 
+peak virulence ($< 3.5 \log_{10}$ SPVL) and early peak times (before 200 years), 
 but high relative peaks ($>1.3$)
 (Figure~\ref{fig:pairplot}, leftmost column) because the equilibrium virulence is low.
 At the opposite extreme, parameter sets that produce high equilibrium virulence 
-also produce late peaks ($> 200 \text{years}$), 
+also produce late peaks ($> 200 \text{ years}$), 
 high peak virulence, and low relative peaks ($\approx 1.05$).
 The pair-formation without extra-pair contact and implicit models
 occasionally have parameter sets that select for such low virulence across
@@ -383,6 +380,10 @@ of peak times near 0.
 The most striking aspect of the univariate comparisons in Figure~\ref{fig:unidist}
 is the similarity of the simplest (random mixing) and the most complex
 (pair formation with extra-pair contact) models,
+
+\emph{why implicit = pair formation? when we increased the unadjusted partnership
+mixing rates, the two models started to look different; so they may just be
+at some lower bound ...}
 
 <<testrev,echo=FALSE,eval=FALSE>>=
 set.seed(101)
@@ -396,6 +397,9 @@ grid.arrange(
 
 
 <<plot_sens,dev="png",echo=FALSE,fig.width=10,fig.height=6>>=
+subset(mL2,
+       !(model=="implicit" &
+           LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")))
 ggplot(mL2,aes(LHSval,sumval,colour=model))+
     geom_point(pch=".",alpha=0.5)+
     facet_grid(sumvar~LHSvar,scales="free")+
@@ -407,8 +411,8 @@ Figure to-do: maybe go back to bw theme?
 \begin{itemize}
 \item fig 1. tweak size? remove redundant y axes/labels?
 \item fig 2. 6-panel figure? log scale? boundary lines instead of ribbons for edges of envelopes? move labels away from axes?
-\item fig 3. change order (Random after pairform)
-\item fig 4. add legend, fix axis labels; maybe transparent
+\item fig 3. change order (flip instswitch and instswitch + epd)
+\item fig 4. add legend, maybe transparent
 \item fig 5. sensitivity plot (unscaled plot); take out plots that are not related ... implicit model doesn't use rho, cu or ce; random doesn't use rho, cmean?, cu, ce; instswitch doesn't have rho or cu or ce; models without epc don't have ce or cu; instswitch + epc doesn't have rho and cu (no uncoupled compartment). Maybe squash panels together, higher resolution
 
 \end{itemize}
