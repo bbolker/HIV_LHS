@@ -313,7 +313,7 @@ gg_virtraj <- ggplot(sum_list[["vir_mat"]],
 print(gg_virtraj)
 @ 
 
-<<unidist,fig.cap="Univariate distributions of summary statistics. Note: point for eqvir/random is a placeholder, will have to be explained",fig.width=8,fig.height=4.8>>=
+<<unidist,fig.cap="Univariate distributions of summary statistics. The distribution of equilibrium virulence for the random mixing model is very narrow, and has been replaced by a point in order to preserve the vertical axis scaling.",fig.width=8,fig.height=4.8>>=
 sL <- transform(sum_list[["sum_mat"]],rel_peak=peak_vir/eq_vir)
 mL <- melt(sL,id.vars=c("model","run"))
 ## horrible hack (but doesn't help); subsample
@@ -362,7 +362,8 @@ print(ggp3)
 @
 
 Our chosen summary statistics (peak time, peak virulence, equilibrium
-virulence, and relative peak virulence) all vary considerably across models.
+virulence, and relative peak virulence) all vary considerably across models
+\ref{fig:unidist}.
 We first consider the models of intermediate realism (implicit,
 instantaneous-switching with and without extra-pair contact, and
 pair formation without extra-pair contact). Some parameter
@@ -379,7 +380,9 @@ occasionally have parameter sets that select for such low virulence across
 the board that they never exceed their initial virulence, leading to a tail
 of peak times near 0.
 
-instswitch is intermediate beween (pairform + implicit) 
+The most striking aspect of the univariate comparisons in Figure~\ref{fig:unidist}
+is the similarity of the simplest (random mixing) and the most complex
+(pair formation with extra-pair contact) models,
 
 <<testrev,echo=FALSE,eval=FALSE>>=
 set.seed(101)
