@@ -21,7 +21,9 @@
 \newcommand{\etal}{et al.}
 \newcommand{\shir}{Shirreff et al.}%{\citeauthor{shirreff_transmission_2011}}
 \newcommand{\champr}{Champredon et al.}%{\citeauthor{champredon_hiv_2013}}
-\newcommand{\tsub}[2]{#1_{{\small \textrm{#2}}}}
+\newcommand{\tsub}[2]{#1_{{\textrm{\tiny #2}}}}
+\newcommand{\khalf}{\left(\frac{1}{2}\right)^{\delta_{ij}}}  % (1/2)^kronecker
+\newcommand{\Lspvl}{$\log_{10}$ SPVL}
 \newcommand{\rzero}{{\cal R}_0}
 \usepackage{changes}
 \usepackage[backgroundcolor=lightgray,textsize=small]{todonotes}
@@ -41,7 +43,8 @@ local({
 
 
 <<pkgs,warning=FALSE,message=FALSE>>=
-library("ggplot2"); theme_set(theme_classic())
+library("ggplot2"); theme_set(theme_bw())
+zero_margin <- theme(panel.margin=grid::unit(0,"lines"))
 library("MASS")
 ## use Dark2 rather than Set1 because colour #6 of Set1 is yellow (ugh/too light)
 scale_colour_discrete <- function(...,palette="Dark2") scale_colour_brewer(...,palette=palette)
@@ -183,15 +186,15 @@ The \textbf{u}ncoupled and \textbf{e}xtra-couple transmission rates are scaled b
 \subsubsection{Mutation}
 
 Like \shir\ we incorporate a between-host mutation process in the SPVL, but simplify \shir's evolutionary model slightly by using a one-to-one genotype-phenotype mapping. 
-The mutational process in our model is directly taken from \shir. Over the course of infection, mutation occurs within the host. However, it is assumed that SPVL of an infected individual is determined by the SPVL at the time of infection for simplicity (and is not further affected by within-host mutation). Instead, the mutational effect takes place when an infected individual transmits the virus to a susceptible individual. First, the distribution of $\log_{10}$ SPVL is discretized into a vector:
+The mutational process in our model is directly taken from \shir. Over the course of infection, mutation occurs within the host. However, it is assumed that SPVL of an infected individual is determined by the SPVL at the time of infection for simplicity (and is not further affected by within-host mutation). Instead, the mutational effect takes place when an infected individual transmits the virus to a susceptible individual. First, the distribution of \Lspvl\ is discretized into a vector:
 
 \begin{equation}
 \alpha_i =  (\tsub{\alpha}{max} - \tsub{\alpha}{min})\frac{(i-1)}{n-1} + \tsub{\alpha}{min} \qquad i = 1,2,3, \dots n.
 \end{equation}
-Then, we construct an $n$ by $n$ mutational matrix, $M$ --- which is multiplied with the transmission term ---  so that $M_{ij}$ is the probability that a newly infected individual will have $\log_{10}$ SPVL of $\alpha_j$ given that the infector has $\log_{10}$ SPVL of $\alpha_i$. Finally, the probabilities are normalized so that each row sums to 1:
+Then, we construct an $n$ by $n$ mutational matrix, $M$ --- which is multiplied with the transmission term ---  so that $M_{ij}$ is the probability that a newly infected individual will have \Lspvl\ of $\alpha_j$ given that the infector has \Lspvl\ of $\alpha_i$. Finally, the probabilities are normalized so that each row sums to 1:
 
 \begin{equation}
-M_{ij} = \frac{\Phi(\alpha_j + d/2;i) - \Phi(\alpha_j - d/2;i)}{\Phi(\tsub{\alpha}{max} + d/2;i) - \Phi(\tsub{alpha}{min} - d/2;i)},
+M_{ij} = \frac{\Phi(\alpha_j + d/2;i) - \Phi(\alpha_j - d/2;i)}{\Phi(\tsub{\alpha}{max} + d/2;i) - \Phi(\tsub{\alpha}{min} - d/2;i)},
 \end{equation}
 
 where $\Phi(x;i)$ is the Gaussian cumulative distribution function with mean $\alpha_i$ and variance of $\sigma_M^2$, and $d = (\tsub{\alpha}{max} - \tsub{\alpha}{min})/(n-1)$. Transmission rate and disease induced mortality rates are discretized into a vector as well:
@@ -206,9 +209,9 @@ where $\Phi(x;i)$ is the Gaussian cumulative distribution function with mean $\a
 
 \subsubsection{Contact structure and partnership dynamics}
 
-We developed six multi-strain evolutionary models, designed to cover a gamut between \champr's relatively realistic and \shir's relatively simplistic epidemiological structures, each of which is based on different assumptions regarding contact structure and partnership dynamics. Specifically, we focus on the effects of the assumptions of (1) instantaneous vs. non-instantaneous partnership formation and (2) zero vs. positive extra-partnership sexual contact and transmission on the evolution of mean $\log_{10}$ SPVL.
+We developed six multi-strain evolutionary models, designed to cover a gamut between \champr's relatively realistic and \shir's relatively simplistic epidemiological structures, each of which is based on different assumptions regarding contact structure and partnership dynamics. Specifically, we focus on the effects of the assumptions of (1) instantaneous vs. non-instantaneous partnership formation and (2) zero vs. positive extra-partnership sexual contact and transmission on the evolution of mean \Lspvl.
 
-Our first four models consider explicit partnership dynamics and are based on \champr's model. Model 1 and 2 assume non-instantaneous partnership formation (i.e. individuals spend some time uncoupled, outside of partnerships) and consist of five states that are classified by infection status and partnership status. $S$ is the number of single (uncoupled) susceptible individuals, and $I$ is the number of single infected individuals. $SS$ is the number of susceptible-susceptible couples, $SI$ is the number of serodiscordant (susceptible-infected) couples, and $II$ is the number of concordant positive (infected-infected) couples. Model 1 includes extra-partnership contact (with both uncoupled individuals and individuals in other partnerships) whereas model 2 only considers within-couple transmission. Models 3 and 4 assume instantaneous partnership formation and thus consist of only the three partnered states: $SS$, $SI$, and $II$. Parallel to model 1 and 2, model 3 includes extra-partnership contact (now only with individuals in other partnerships, since uncoupled individuals don't exist in this model) and model 4 only considers within-couple transmission.
+Our first four models consider explicit partnership dynamics and are based on \champr's model. Models 1 and 2 assume non-instantaneous partnership formation (i.e. individuals spend some time uncoupled, outside of partnerships) and consist of five states that are classified by infection status and partnership status. $S$ is the number of single (uncoupled) susceptible individuals, and $I$ is the number of single infected individuals. $SS$ is the number of susceptible-susceptible couples, $SI$ is the number of serodiscordant (susceptible-infected) couples, and $II$ is the number of concordant positive (infected-infected) couples. Model 1 includes extra-partnership contact (with both uncoupled individuals and individuals in other partnerships) whereas model 2 only considers within-couple transmission. Models 3 and 4 assume instantaneous partnership formation and thus consist of only the three partnered states: $SS$, $SI$, and $II$. Parallel to model 1 and 2, model 3 includes extra-partnership contact (now only with individuals in other partnerships, since uncoupled individuals don't exist in this model) and model 4 only considers within-couple transmission.
 
 In contrast, models 5 and 6 are not explicitly structured.  Model 5 is an implicit serial monogamy model based on the epidemiological model used by \shir. It is actually a random mixing model that consist of only two states, $S$ and $I$, and does not consider explicit partnership dynamics. However, to simulate the effect of instantaneous partnership formation, it uses an adjusted transmission rate that is derived from approximated basic reproduction number of a serial monogamy model \citep{hollingsworth_hiv1_2008}. Finally, model 6 is a simple random-mixing model.
 
@@ -233,20 +236,21 @@ The one completely new parameter in our model, the ratio of uncoupled to within-
 
 \subsection{Simulation runs}
 
-One of the most difficult parts of model comparison is finding parameter sets that are commensurate against many different model structures. For the most part, our models are too complex to easily derive analytical correspondences among them. Given a numerical criterion, such as $r$ (initial exponential growth rate) or $\rzero$ (intrinsic reproductive number), we can adjust one or more parameters by brute force to ensure that all of the models match according to that criterion. While $\rzero$ is often considered the most fundamental property of an epidemic, and might thus seem to be a natural goal, here we focus on matching the initial growth rate $r$ for several reasons. First, our primary interest is in the transient evolutionary dynamics of virulence, which are more strongly affected by $r$ than $\rzero$ \todo{CITE?}. Second, $r$ is in general more directly observable in real epidemics; $r$ can be estimated by simply fitting an exponential curve to the initial incidence or prevalence curves \todo{CITE Ma et al.}, while $\rzero$ typically requires either (1) knowledge of \emph{all} epidemic parameters or (2) relatively sophisticated back-calculation based on $r$ and knowledge of the serial interval or generation interval of the disease \todo{CITE Wallinga, Teunis, Lipsitch, etc.} Thus, we scale a parameter so that every run has the same initial exponential growth rate in the incidence.
+One of the most difficult parts of model comparison is finding parameter sets that are commensurate against many different model structures. For the most part, our models are too complex to easily derive analytical correspondences among them. Given a numerical criterion, such as $r$ (initial exponential growth rate) or $\rzero$ (intrinsic reproductive number), we can adjust one or more parameters by brute force to ensure that all of the models match according to that criterion. While $\rzero$ is often considered the most fundamental property of an epidemic, and might thus seem to be a natural goal, here we focus on matching the initial growth rate $r$ for several reasons. First, our primary interest is in the transient evolutionary dynamics of virulence, which are more strongly affected by $r$ than $\rzero$ \todo{CITE?}. Second, $r$ is in general more directly observable in real epidemics; $r$ can be estimated by simply fitting an exponential curve to the initial incidence or prevalence curves \citep{ma_estimating_2014}, while $\rzero$ typically requires either (1) knowledge of \emph{all} epidemic parameters or (2) relatively sophisticated back-calculation based on $r$ and knowledge of the serial interval or generation interval of the disease \citep{wallinga_how_2007}. Thus, we scale a parameter so that every run has the same initial exponential growth rate in the incidence.
 
 In order to allow for all models to have equal initial exponential growth rate, $r$, we need to pick a parameter, $s$, so that $\lim_{s\to 0} r(s) = 0$ and $\lim_{s\to\infty}  r(s) = \infty$. As adjusting either partnership change rate (i.e. partnership formation and dissolution rate) or transmission rate does not fulfill this requirement for certain models, we decided to scale partnership change rate and dissolution rate by the same factor of $\gamma$: $\tsub{\beta}{adj} =  \gamma \tsub{\beta}{base}$, $\tsub{c}{adj} = \gamma \tsub{c}{base}$, $\tsub{\rho}{adj} = \gamma \tsub{\rho}{base}$. Since transmission rate is adjusted by the scale of $\gamma$, uncoupled and extra-couple transmission rates are adjusted as well. For models 3, 4, and 5, all of which assume instantaneous partnership (and hence do not track single individuals), only the transmission rate and partnership dissolution rate (in this case equivalent to the partnership change rate) are adjusted.
 
 We run each model for each of 1000 parameter sets chosen by Latin hypercube sampling \todo{CITE Blower et al - or at first mention of LHS}, with fixed starting conditions
-of mean $\log_{10}$ SPVL of 3 and epidemic size of $10^{-4}$. After each run, initial exponential growth rate is calculated. Then, parameters are scaled so that the initial exponential growth rate is scaled to 0.04, which is approximately equal to that of Shirreff et al's model.
+of mean \Lspvl\ of 3 and epidemic size of $10^{-4}$. After each run, initial exponential growth rate is calculated. Then, parameters are scaled so that the initial exponential growth rate is scaled to 0.04, which is approximately equal to that of Shirreff et al's model.
 
 For each model we derive the following summary statistics: peak virulence, peak time, equilibrium virulence, and relative peak virulence. The transient phase of an epidemic is often characterized by high virulence, and we define peak virulence as the maximum virulence during this phase. It is simply calculated by taking the maximum value from the virulence trajectory, and peak time is the time at which the maximum value is reached. Once the epidemic enters the endemic phase, evolution of virulence stabilizes and reaches equilibrium. Equilibrium virulence is calculated by taking the mean virulence at 4000 years. Although most simulations reach equilibrium much earlier, we set our time horizon at a much later date as some simulation runs have slow rate of evolution depending on the parameter set and model assumptions.
 
-We focus on these statistics for the following two reasons. First of all, knowing the possible ranges for the peak virulence allows us to estimate the worst-case scenario for the HIV and other sexually transmitted disease epidemics. When an epidemic begins, it is often the case that the pathogen has already evolved towards high virulence by the time it is observed \todo{CITE}. Understanding how virulent a pathogen can evolve before an epidemic begins can be helpful for controlling the disease. Furthermore, knowing the initial virulence, peak virulence, timing of the peak virulence, and equilibrium virulence provide sufficient detail to identify the shape of the virulence trajectory. During an epidemic outbreak, it is difficult to observe virulence evolution. Specifically, in the case of HIV and other sexually transmitted diseases, slow evolutionary time-scale makes observing changes in the mean virulence even more challenging. Knowing the ranges of these statistics can help real-time virulence evolution prediction during an epidemic less troublesome.
+We focus on these statistics for the following two reasons. First of all, knowing the possible ranges for the peak virulence allows us to estimate the worst-case scenario for the HIV and other sexually transmitted disease epidemics. Pathogens may already have evolved towards high virulence during the early stages of an epidemic, by the time it is observed by public health authorities. Understanding how virulent a pathogen can evolve before an epidemic begins can be helpful for controlling the disease. Furthermore, knowing the initial virulence, peak virulence, timing of the peak virulence, and equilibrium virulence provide sufficient detail to identify the shape of the virulence trajectory. During an epidemic outbreak, it is difficult to observe virulence evolution. Specifically, in the case of HIV and other sexually transmitted diseases, slow evolutionary time-scale makes observing changes in the mean virulence even more challenging. Knowing the ranges of these statistics can help real-time virulence evolution prediction during an epidemic less troublesome.\todo{needs a bit of work}
 
 \section{Results}
 
-Our simplifications of \shir's model reproduce its qualitative behaviour --- in particular, its predictions of virulence dynamics --- reasonably well. As $r$ decreases from 0.084 to 0.42 (the latter value matching the initial rate of increase in prevalence in \shir's full model) the initial trajectory of increasing virulence brackets the rate from the original model (Figure~\ref{fig:panel3}a). However, our model produces lower peak virulence \todo{fill in these numbers ...} ($\approx ?$ vs. $\approx ?$) and equilibrium virulence $\approx ?$ vs. $\approx?$) than Shirreff's, even for matching initial incidence trajectories (i.e., $r=0.042$).
+Our simplifications of \shir's model reproduce its qualitative behaviour --- in particular, its predictions of virulence dynamics --- reasonably well. As $r$ decreases from 0.084 to 0.42 (the latter value matching the initial rate of increase in prevalence in \shir's full model) the initial trajectory of increasing virulence brackets the rate from the original model (Figure~\ref{fig:panel3}a). However, our model produces lower peak virulence ($\approx 4.3$ vs. $\approx 4.6$ \Lspvl) 
+and equilibrium virulence $\approx 4.25$ vs. $\approx 4.5$ \Lspvl) than Shirreff's, even for matching initial incidence trajectories (i.e., $r=0.042~\textrm{year}^{-1}$).
 
 Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory, making the virulence peaks slightly later and larger as $I(0)$ decreases. Decreasing $I(0)$ allows a longer epidemic phase before the transition to endemic dynamics (Figure~\ref{fig:panel3}b). Decreasing the initial virulence similarly but more strongly leads to progressively later, larger peaks in virulence (Figure~\ref{fig:panel3}c).
 
@@ -287,7 +291,7 @@ limits <- c(2.5,4.7)
 breaks <- seq(limits[1],limits[2], by = 0.5)
 afun <- function(label,size=8) {
     annotate(geom="text",label=label,x=-Inf,y=Inf,
-             size=size,vjust=1,hjust=0)
+             size=size,vjust=0.98,hjust=0.02)
 }
 g1.y <- g1 + scale_y_continuous(limits = limits, breaks = breaks)+
     scale_colour_discrete(name="run")+afun("a")
@@ -298,15 +302,16 @@ g3.y <- g3 + scale_y_continuous(limits = limits, breaks = breaks)+
 grid.arrange(g1.y, g2.y, g3.y, nrow=1)
 @ 
 
-Across the entire range of parameters covered by the LHS analysis, all of the classes of models we considered produce qualitatively similar virulence trajectories (Figure~\ref{fig:virtraj}). Although the speed of virulence evolution varies, leading to wide variation in the peak virulence (means ranging from approximately 3.75 to 4.5 $\log_{10}$ SPVL), virulence peaks in all models between 200 and 300 years.
+Across the entire range of parameters covered by the LHS analysis, all of the classes of models we considered produce qualitatively similar virulence trajectories (Figure~\ref{fig:virtraj}). Although the speed of virulence evolution varies, leading to wide variation in the peak virulence (means ranging from approximately 3.75 to 4.5 \Lspvl), virulence peaks in all models between 200 and 300 years.
 
-<<virtraj,fig.cap="Envelopes of virulence trajectories under all models",fig.width=6,cache=TRUE,message=FALSE,warning=FALSE,dev="tikz">>=
-gg_virtraj <- ggplot(sum_list[["vir_mat"]],
+<<virtraj,fig.cap="Envelopes of virulence trajectories under all models. All models were run until $t=4000~\\textrm{years}$; truncated series are shown here.",fig.width=6,cache=TRUE,message=FALSE,warning=FALSE,dev="tikz">>=
+ss <- subset(sum_list[["vir_mat"]],tvec<750)
+gg_virtraj <- ggplot(ss,
                      aes(tvec,mean,ymin=lwr,ymax=upr))+
     geom_line(aes(colour=model,linetype=model),lwd=1.5)+
     geom_ribbon(aes(fill=model),alpha=0.3)+
-    labs(x="time",y=vlab)+
-    scale_x_continuous(limits=c(0,2500))
+    labs(x="time (years)",y=vlab)
+## scale_x_continuous(limits=c(0,2500))
 print(gg_virtraj)
 @ 
 
@@ -330,32 +335,68 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 print(gg_univ)
 @
 
-<<pairplot,echo=FALSE,fig.cap="pairs plot",fig.width=7,fig.height=7>>=
+<<pairplot_funs,echo=FALSE>>=
+trim_gg <- function(gg) {
+    n <- gg$nrow
+    gg$nrow <- gg$ncol <- n-1
+    v <- 1:n^2
+    gg$plots <- gg$plots[v>n & v%%n!=0]
+    gg$xAxisLabels <- gg$xAxisLabels[-n]
+    gg$yAxisLabels <- gg$yAxisLabels[-1]
+    return(gg)
+}
+
+tweak_legends_gg <- function(gg,pos=1.5) {
+    n <- gg$nrow
+    for (i in 1:n) {
+        for (j in 1:n) {
+            inner <- getPlot(gg,i,j)
+            if (i==1 & j==1) {
+                inner <- inner + ggplot2::theme(legend.position=c(pos,0.5)) +
+                    guides(colour = guide_legend(override.aes = list(size=6)))
+            } else {
+                inner <- inner + ggplot2::theme(legend.position="none")
+            }
+            gg <- putPlot(gg,inner,i,j)
+        }
+    }
+    return(gg)
+}
+tweak_colours_gg <- function(gg) {
+    n <- gg$nrow
+    for (i in 1:n) {
+        for (j in 1:n) {
+            inner <- getPlot(gg,i,j)
+            inner <- inner+scale_colour_brewer(palette = 'Dark2')
+            gg <- putPlot(gg,inner,i,j)
+        }
+    }
+    return(gg)
+}
+@ 
+<<pairplot,echo=FALSE,fig.cap="Pairs plot: bivariate relationships among summary statistics for each model structure. Dashed line in equilibrium vs. peak virulence plot shows 1:1 line.",fig.width=7,fig.height=7>>=
 sL2 <- sL
 names(sL2)[na.omit(match(orig_sum_labs,names(sL)))] <- gsub(" ","_",new_sum_labs)
     ## paste0("`",new_sum_labs,"`")
 ggp1 <- ggpairs(sL2,
         mapping = ggplot2::aes(color = model),
         columns=3:6,
-        lower = list(continuous = wrap("points", alpha = 0.5,size=0.5)),
+        legends=TRUE,
+        lower = list(continuous = wrap("points",size=0.1)), ## alpha = 0.3,size=0.5)),
         diag = list(continuous = "blankDiag"),
-        upper = list(continuous = "blank"))+
-    theme(panel.margin=grid::unit(0,"lines"))
+        upper = list(continuous = "blank"))
 ## http://stackoverflow.com/questions/14711550/is-there-a-way-to-change-the-color-palette-for-ggallyggpairs-using-ggplot
 ## have to change plot one panel at a time
-cbscales <- list(scale_colour_brewer(palette = 'Dark2'),
-                 scale_fill_brewer(palette = 'Dark2'))  ## DRY
-ggp2 <- ggp1
-for (row in seq_len(ggp2$nrow))
-    for (col in seq_len(ggp2$ncol))
-        ggp2[row, col] <- ggp2[row, col] + cbscales[[(row==col)+1]]
-## hack to remove top row/right column
-ggp3 <- ggp2
-ggp3$nrow <- ggp3$ncol <- 3
-ggp3$plots <- ggp3$plots[c(5:7,9:11,13:15)]
-ggp3$xAxisLabels <- ggp3$xAxisLabels[1:3]
-ggp3$yAxisLabels <- ggp3$yAxisLabels[2:4]
-print(ggp3)
+ggp2 <- tweak_colours_gg(tweak_legends_gg(trim_gg(ggp1)))
+## add 1-to-1 line
+inner <- getPlot(ggp2,2,1)
+inner <- inner+geom_abline(intercept=0,slope=1,lty=2)
+ggp2 <- putPlot(ggp2,inner,2,1)
+## tweak scale
+inner <- getPlot(ggp2,3,1)
+inner <- inner+scale_x_continuous(breaks=seq(2.5,4.5,by=0.5))
+ggp2 <- putPlot(ggp2,inner,3,1)
+print(ggp2)
 @
 
 Our chosen summary statistics (peak time, peak virulence, equilibrium
@@ -375,15 +416,51 @@ high peak virulence, and low relative peaks ($\approx 1.05$).
 The pair-formation without extra-pair contact and implicit models
 occasionally have parameter sets that select for such low virulence across
 the board that they never exceed their initial virulence, leading to a tail
-of peak times near 0.
+of peak times near zero.
 
-The most striking aspect of the univariate comparisons in Figure~\ref{fig:unidist}
-is the similarity of the simplest (random mixing) and the most complex
-(pair formation with extra-pair contact) models,
+% \end{document}
 
-\emph{why implicit = pair formation? when we increased the unadjusted partnership
-mixing rates, the two models started to look different; so they may just be
-at some lower bound ...}
+The most striking aspect of the univariate comparisons in
+Figure~\ref{fig:unidist}, (and the bivariate comparisons in
+Figure~\ref{fig:pairplot}) is the match between the output of the
+least (random mixing) and the most complex (pair formation with
+extra-pair contact) models. The random-mixing model has lower
+variability, because it is unaffected by uncertainty in pair formation
+and extra-pair contact parameters, but otherwise the virulence
+dynamics of these two extreme models are remarkably similar.
+This phenomenon is driven by the strength of extra-pair contact in the
+pairform+epc model. When individuals spend time uncoupled between
+partnerships, and when these single individuals can transmit disease
+to coupled individuals, the resulting unstructured mixing overwhelms
+the effect of structured mixing within couples, leading to mixing
+that is effectively close to random.
+
+Plotting the bivariate result distributions (Figure~\ref{fig:pairplot})
+shows that most of the relationships among the summary statistics
+are monotonic, except those involving the relative peak virulence
+(bottom row). Changes in parameters that increase the equilibrium
+virulence initially increase the peak virulence even more, so
+that the relative peak virulence increases as well, but beyond
+an equilibrium virulence of about 2.5 \Lspvl\ the peak virulence
+increases slower than the equilibrium virulence, leading to a
+decrease in the relative peak virulence.
+
+The bivariate relationships also help distinguish the results of 
+different models with similar univariate distributions. While the
+relationship between equilibrium virulence and peak time is
+similar for all model structures (top left panel), the other
+relationships are more separate. In particular, the implicit
+and pair-formation (without extra-pair contact) are very similar
+to each other, but distinct from the other models. We still do
+not have a convincing explanation for this distinction; we
+would have expected the implicit model to be most similar to the
+the instantaneous-switching model without extra-pair contact,
+which most closely matches its derivation. However, we note
+that the implicit model derivation is based on defining
+the force of infection to match a scaled version of $\rzero$,
+and as such would be expected to match the equilibrium behaviour
+but not necessarily the epidemic-phase behaviour of a model
+with explicit partnership dynamics.
 
 <<testrev,echo=FALSE,eval=FALSE>>=
 set.seed(101)
@@ -395,42 +472,168 @@ grid.arrange(
     nrow=2)
 @
 
-
-<<plot_sens,dev="png",echo=FALSE,fig.width=10,fig.height=6>>=
-subset(mL2,
-       !(model=="implicit" &
-           LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")))
-ggplot(mL2,aes(LHSval,sumval,colour=model))+
+<<plot_sens,dev="png",echo=FALSE,out.width="\\textwidth",fig.width=8,fig.height=3.5,dpi=240,fig.cap="Sensitivity plot. For each parameter in the Latin hypercube sample and each summary statistic, shows the distribution (points) and trend (smooth line) of the summary statistic as a function of the \\emph{unscaled} parameter value, i.e. prior to adjusting the parameters to achieve the standard initial epidemic growth rate.">>=
+mL3 <- subset(mL2,
+       !((model=="implicit" &
+          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
+         (model=="random" &
+          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio","c_mean_base")) |
+         (model=="instswitch" &
+          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
+         (model=="instswitch+epc" &
+          LHSvar %in% c("rho_base","c_u_ratio")) |
+         (model=="pairform" &
+          LHSvar %in% c("c_u_ratio","c_e_ratio"))))
+## reorder factors
+mL3$LHSvar <- factor(mL3$LHSvar,
+                     levels=c("Beta1","Beta3",
+                              "Duration1","Duration3",
+                              "c_mean_base","c_e_ratio","rho_base",
+                              "c_u_ratio"))
+## FIXME: could also use labels argument to rename levels, labeller=label_parsed
+## in facet_grid to get pretty math
+ggplot(mL3,aes(LHSval,sumval,colour=model))+
     geom_point(pch=".",alpha=0.5)+
     facet_grid(sumvar~LHSvar,scales="free")+
     geom_smooth(se=FALSE)+labs(x="",y="")+
-    scale_x_log10()
+    scale_x_log10(expand=c(0,0.08))+  ## leave a little extra room?
+    zero_margin
 @
 
-Figure to-do: maybe go back to bw theme?
-\begin{itemize}
-\item fig 1. tweak size? remove redundant y axes/labels?
-\item fig 2. 6-panel figure? log scale? boundary lines instead of ribbons for edges of envelopes? move labels away from axes?
-\item fig 3. change order (flip instswitch and instswitch + epd)
-\item fig 4. add legend, maybe transparent
-\item fig 5. sensitivity plot (unscaled plot); take out plots that are not related ... implicit model doesn't use rho, cu or ce; random doesn't use rho, cmean?, cu, ce; instswitch doesn't have rho or cu or ce; models without epc don't have ce or cu; instswitch + epc doesn't have rho and cu (no uncoupled compartment). Maybe squash panels together, higher resolution
-
-\end{itemize}
-
+Finally, the sensitivity plots (Figure~\ref{fig:plot_sens}) show the effects 
+of each parameter on the summary statistics. In almost every case the
+effects of the parameters are monotonic; note that
+the plot shows the effects of the \emph{unscaled} parameters, i.e.
+before they have been adjusted to achieve a standard initial epidemic
+growth rate.
+The transmission rates ($\beta_P$, $\beta_D$)
+and durations ($D_P$, $D_D$) in the primary and disease stages generally
+decrease the equilibrium virulence, peak virulence, and peak time,
+although the random and pair-formation+epc models have high, relatively
+constant values with respect to these parameters. 
+\todo{I know you explained to me before why beta and Duration go in
+the same direction but I forget ...}
+The base contact rate increases virulence and peak time in almost all
+cases, although the pair-formation+epc model is again relatively insensitive.
+The ratio of extra-pair to within-pair contact ($c_e/c_w$) affects
+virulence in the instantaneous-switching+epc model, but not the pair-formation+epc
+model (probably because the uncoupled individuals present in the pair-formation+epc
+model make extra-pair contact by coupled individuals less important).
+Surprisingly, neither of the pair-formation models is particularly sensitive to the 
+rate of partnership formation ($\rho$); the rate of uncoupled contact
+increases virulence and peak time in the pair-formation+epc model, 
+which is the only model to which it applies\todo{is that right??}.
 
 \section{Discussion}
+
+All models must simplify the world.  Many constraints --- such as data
+availability, computation time, or code complexity --- drive the need
+for parsimony, with different constraints applying in different
+contexts. The critical question that modelers must ask is whether the
+simplified model gives adequate answers, or whether the
+simplifications have led to qualitatively or quantitatively incorrect
+conclusions.  This question is especially important for modelers who
+are hoping that their conclusions will guide management decisions.
+
+In the particular example of HIV virulence eco-evolutionary dynamics
+and epidemiological, we reach the slightly ironic conclusion that the
+effort put into building a more realistic model essentially cancels
+out, leaving us in the same position as if we had ignored the problem
+of epidemiological complexity entirely and used a naive random-mixing
+contact model.  \cite{herbeck_hiv_2014} build a
+network model of partnerships, but they set the ``partnership''
+duration to 1 day --- very unrealistic in epidemic terms, but perhaps
+actually more true to real-world HIV epidemiological dynamics than a
+model with realistic partnership durations that neglects extra-pair
+contact \citep{herbeck2016evolution}. Adding still further realism
+might push the results farther away from the random-mixing model. For
+example, our model forms partnerships randomly, and assumes that
+extra-pair contact is randomly mixing across the population;
+one could instead implement extra-pair contact as arising from
+multiple concurrent partnerships (some, such as contact with sex
+workers, of very short duration), or more structured partnership
+formation (by age, ethnicity, or behaviour group). The effects of
+other realistic complications such as explicit modeling of two
+sexes (both in contact structure and differential transmission
+probabilities), temporal and spatial variation in epidemic processes,
+or presence of genetic variation in hosts are harder to predict.
+
+Parameterization is one of the biggest challenges of epidemiological
+modeling. In addition to following \champr\ by doing Latin hypercube
+sampling across a wide range of epidemiological parameters, we 
+calibrated each set of parameters to the same initial epidemic
+growth rate, chosen to match the results of previous models
+\citep{shirreff_transmission_2011}.  The previous models drew their
+parameters from previous cohort studies from the 1980s
+\todo{check dates!} \citep{hollingsworth_hiv1_2008}
+rather than doing any explicit calibration to epidemic curves,
+but they give reasonable order-of-magnitude
+growth rates ($\approx 0.4~\textrm{year}^{-1}$) 
+for the early stages of the HIV epidemic (although considerably
+lower than estimates of $\approx 0.07-0.1~\textrm{year}^{-1}$
+based on population genetic reconstructions \citep{faria_early_2014}).
+\todo{do we know what $r$ Champredon et al. get??}
+However, our reason for calibrating was not to match any
+specific observed epidemic, but rather to make sure that
+we were making meaningful comparisons across a range of
+models with radically different epidemiological structures, and
+hence involving different interpretations of the same quantitative
+parameters.  For example, in models with instantaneous switching the
+partnership dissolution rate $c$ is identical to the partnership
+formation rate; in models with explicit partnership formation,
+the partnership formation rate is also $c$ at equilibrium,
+but might vary over the course of an epidemic.
+It is not obvious whether models with equal parameters but
+different structures should be directly compared; calibration
+solves this problem.
+
+More generally, any model that wants to be
+taken seriously for management and forecasting purposes should
+be calibrated to \emph{all} available data, using informative
+priors to incorporate both realistic distributions of uncertainty
+for all parameters from independent measurements \citep{elderd_uncertainty_2006}
+and calibration from population-level observations of epidemic
+trajectories. For practical (rather than exploratory) purposes,
+such a procedure would also be an improvement on the common --- although not universal --- %
+practice of assessing uncertainty over uniform ranges, rather than
+distributions that allow more continuous variation in support over
+the range of a parameter.
+
+Researchers have documented that HIV virulence and set-point viral
+load are changing, on time scales comparable to those portrayed here
+(e.g., compare Figure~\ref{fig:virtraj} to \cite{herbeck_is_2012}'s
+estimated rate of change of 1.3 \Lspvl\ per century [95\% CI -0.1 to
+  3]), and have begun to build relatively realistic models that
+attempt to describe how interventions such as mass antiretroviral
+therapy (ART) can be expected to change the trajectory of virulence
+evolution \citep{payne_impact_2014,herbeck2016evolution}.  While these
+efforts are well-intentioned, we caution that epidemiological and
+other structural details that are currently omitted from these models
+could significantly change their conclusions.
+
+
+
 
 \section{To do}
 \begin{itemize}
 \item clean up code and results
-\item incorporate pictures
 \item finish writing!
 \item hard parts of the results
 \begin{itemize}
 \item explaining similarities among the models: why does implicit look most like pair formation model? (see R0comparison HTML)
 \item explaining sensitivity plot
 \end{itemize}
+\item cite \cite{LipsitchNowak1995}
 \end{itemize}
+
+\begin{itemize}
+\item fig 1. tweak size? remove redundant y axes/labels?
+\item fig 2. 6-panel figure? log scale? boundary lines instead of ribbons for edges of envelopes? move labels away from axes?
+\item fig 3. change order (flip instswitch and instswitch + epd)
+\item fig 4. squash panels together?
+\item fig 5. sensitivity plot (unscaled plot); check we havetake out plots that are not related ... implicit model doesn't use rho, cu or ce; random doesn't use rho, cmean?, cu, ce; instswitch doesn't have rho or cu or ce; models without epc don't have ce or cu; instswitch + epc doesn't have rho and cu (no uncoupled compartment). Maybe squash panels together, higher resolution
+\end{itemize}
+
 
 \appendix
 
@@ -438,33 +641,22 @@ See \href{http://tinyurl.com/bolker-jrsi-cites}{Bolker JRSI Google scholar cites
 
 \section{Model details}
 
-Since we use multi-strain models, in which the distribution of $\log_{10}$ SPVL has been discretized into a vector, we use a matrix notation to describe our models. Five states described in the method section is replaced with the following notations: $S$, $I_i$, $SS$, $SI_i$, $II_{ij}$. Subscript indicates a strain that an individual is infected with. For example, $I_i$ is number of infected individuals with $\log_{10}$ SPVL of $\alpha_i$, and $II_{ij}$ is the number of concordant couples, in which two partners have $\log_{10}$ SPVL of $\alpha_i$ and $\alpha_j$. $II_{ij}$ is equivalent to $II_{ji}$. Lastly, we define Kronecker delta as follows: 
+Since we use multi-strain models, in which the distribution of \Lspvl\ has been discretized into a vector, we use a matrix notation to describe our models. The five states described in the Methods section are replaced with the following notations: $S$, $I_i$, $SS$, $SI_i$, $II_{ij}$, where the subscripts denote the strain that an individual is infected with. For example, $I_i$ is number of infected individuals with \Lspvl\ of $\alpha_i$, and $II_{ij}$ is the number of concordant, HIV-positive couples in which the two partners have \Lspvl\ of $\alpha_i$ and $\alpha_j$ (independent of order; $II_{ij}$ is synonymous with $II_{ji}$). 
+Below, we use the Kronecker delta (i.e. $\delta_{ij}=1$ if $i=j$ and 1 otherwise) in a slightly non-standard fashion as an exponent, e.g. $2^{\delta_{ij}}$, to set a value to 2 when $i=j$ and 1 otherwise.
 
-\begin{equation}
-\delta_{ij} = \left.\begin{aligned}
-0 & \quad \text{if} \quad i \neq j,\\
-1 & \quad \text{if} \quad i = j.
-\end{aligned}\right\rbrace
-\end{equation}
+\subsection*{Models 1 and 2: partnership dynamics}
 
-In our models, we introduce a non-standard use of Kronecker delta as exponent, such as $2^{\delta_{ij}}$. In a single-strain model, both individuals in a concordant partnership, $II$, enter single-infected compartment, $I$, when a partnership dissolves: $I' = 2 c II'$. However, this is not the case in a multi-strain model. If infected individuals in an $II$ partnership have different strains, they will enter different compartment. On the other hand, if both partners in an $II$ partnership are infected with same strains, both will enter the same compartment. Therefore, we use Kronecker delta as exponent to distinguish such difference. Further details are explain below.
-
-\todo{explain non-standard use of Kronecker delta as exponent!}
-
-\subsection*{Model 1 and 2 - Partnership dynamic}
-
-Single individuals acquire partners at rate $\rho$: $S' = - \rho S$ and $I_i' = - \rho I_i$. We follow Champredon et al's results and assume that single individuals are distributed into couple states through binomial distribution:
-
+Single individuals acquire partners at rate $\rho$: $S' = - \rho S$ and $I_i' = - \rho I_i$. We follow Champredon et al's results and assume that single individuals are distributed into coupled states through binomial distribution\todo{? don't understand this wording (ditto below)}:
+\todo{I think we need different notation for partnership formation (i.e. LHS is wrong)}
 
 \begin{equation}
 \begin{aligned}
-SS' &= \frac{\rho S \cdot S}{2 (S + \sum_k I_k)}\\
-SI_i' &= \frac{\rho S \cdot I_i}{S + \sum_k I_k}\\
-II_{ij}' &= \left(\frac{1}{2}\right)^{\delta_{ij}} \cdot \frac{\rho I_i \cdot I_j}{S + \sum_k I_k}
+(SS)' &= \frac{\rho S \cdot S}{2 (S + \sum_k I_k)}\\
+(SI_i)' &= \frac{\rho S \cdot I_i}{S + \sum_k I_k}\\
+(II_{ij})' &= \khalf \cdot \frac{\rho I_i \cdot I_j}{S + \sum_k I_k}
 \end{aligned}
 \end{equation}
-We introduce the Kronecker delta above to differentiate the partnership formation rate for $II_{ij}$ 
-when $i = j$ from that of $I \neq j$. When $i = j$ --- e.g. in the $II_{ij}$ term --- the partnership formation rate becomes $II_{ii}' = \frac{\rho I_i \cdot I_i}{2(S + \sum_k I_k)}$ due to binomial distribution \todo{??}. On the other hand, when $i \neq j$, the partnership rate is $II_{ij}' = \frac{\rho I_i I_j}{S + \sum_k I_k}$.
+In a single-strain model, both individuals in a concordant partnership, $II$, enter the single-infected compartment, $I$, when a partnership dissolves: $I' = 2 c II'$. However, this is not the case in a multi-strain model. If infected individuals in an $II$ partnership have different strains, they will enter different compartments; if they are both infected with the same strain, they both enter the same compartment. As described above, we use the Kronecker delta notation to implement this difference between the $i=j$ and $i\neq j$ cases.
 
 Partnerships dissolve at rate $c$: $SS' = -c SS$, $SI_i' = -c SI_i$, and $II_{ij} = - c II_{ij}$. Unlike single strain model, where both individuals leaving the $II$ partnership would enter $I$, we have to account for strains which the individuals in concordant partnership are infected with (i.e. both partners in $II_{ii}$ enter $I_i$ whereas only one partner in $II_{ij}$ enters $I_i$).
 
@@ -482,18 +674,18 @@ S' &= - \rho S + 2 c SS + \sum_k c SI_k \\
 I_i' &= - \rho I_i + c SI_i + \sum_k 2^{\delta_{ik}} c II_{ik}\\
 SS' &= \frac{\rho S \cdot S}{2 (S + \sum_k I_k)} - c SS\\
 SI_i' &= \frac{\rho S \cdot I_i}{S + \sum_k I_k} - c SI_i\\
-II_{ij}' &= (\frac{1}{2})^{\delta_{ij}} \cdot \frac{\rho I_i \cdot I_j}{S + \sum_k I_k} - c II_{ij}
+II_{ij}' &= \khalf \cdot \frac{\rho I_i \cdot I_j}{S + \sum_k I_k} - c II_{ij}
 \end{aligned}
 \end{equation}
 
-\subsection*{Model 1 and 2 - Infection}
+\subsection*{Models 1 and 2: infection}
 
 Within-couple transmission occurs in both models. An infected partner in $SI$ partnership transmits virus to a susceptible partner, and partnership state becomes $II$: $SI_i' = - \beta_i SI_i$. Since we assume that mutation occurs, $II_{ij}$, where $i \neq j$, can be formed from both $SI_i$ and $SI_j$ partnership: $II_{ij}' = M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j$. On the other hand, $II_{ii}$ can only be formed from an $SI_i$ partnership: $II_{ii}' = M_{ii} \beta_i SI_i$. Using the Kronecker delta notation, we obtain following set of equations that describe within-couple transmission dynamics:
 
 \begin{equation}
 \begin{aligned}
 SI_i' &= - \beta_i SI_i\\
-II_{ij} &=  (\frac{1}{2})^{\delta_{ij}} \cdot (M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j)
+II_{ij} &=  \khalf \cdot (M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j)
 \end{aligned}
 \end{equation}
 
@@ -502,23 +694,23 @@ Champredon et al define the proportion of infectious extra-couple and uncoupled 
 \begin{equation}
 P = \frac{c_u I + c_e (SI + 2 II)}{c_u (S + I) + 2 c_e(SS + SI + II)}.
 \end{equation}
-Effective uncoupled, $c_u$, and extra couple, $c_e$, contact rate can be divided into two terms: uncoupled/extra-couple contact rate $\times$ rate of transmission per contact. Therefore, transmission rate per contact term in $c_u$ and $c_e$ is canceled out in the equation above. Using this property, we modify the equation above as follows:
+Effective uncoupled, $c_u$, and extra couple, $c_e$, contact rate is the product of two terms: uncoupled/extra-couple contact rate $\times$ rate of transmission per contact. Therefore, the transmission rate per contact term in $c_u$ and $c_e$ is canceled out in the equation above. Using this property, we modify the equation above as follows:
 
 \begin{equation}
 P = \frac{r_u I + r_e (SI + 2 II)}{r_u (S + I) + 2 r_e(SS + SI + II)},
 \end{equation}
-where $r_u = c_u/c_w$ and $r_e = c_e/c_w$ are the relative uncoupled/extra-couple contact rates. This simplification is useful in a multi-strain model since we cannot multiply a vector with a single value (e.g. $c_u S$ in denominator) if we use Champredon et al's equation as it is. Extending the above equation to multi-strain model so that $P_i$ represents the proportion of the extra-couple and uncoupled contact of an infected individual with strain $i$, we obtain the following equation:
+where $r_u = c_u/c_w$ and $r_e = c_e/c_w$ are the relative uncoupled/extra-couple contact rates. This simplification is useful in a multi-strain model since we cannot multiply a vector with a single value (e.g. $c_u S$ in denominator) if we use Champredon et al's equation in its original form. Extending the above equation to multi-strain model so that $P_i$ represents the proportion of the extra-couple and uncoupled contact of an infected individual with strain $i$, we obtain:
 
 \begin{equation}
 P_i = \frac{r_u I_i + r_e (SI_i + \sum_k (II_{ik} + \delta_{ik} II_{ik}))}{r_u (S + \sum_k I_k) + r_e(2 SS + \sum_k 2 SI_k + \sum_l \sum_k (1 + \delta_{lk})II_{lk} )},
 \end{equation}
-Using the equation above, we can model uncoupled and extra-couple mixing. For convenience, uncoupled and extra-couple transmission rates, $c_u$ and $c_e$, will be replaced with $U_i = r_u \beta_i$ and $E_i = r_e \beta_i$ from now on.
+Using the equation above, we can model uncoupled and extra-couple mixing. For convenience, uncoupled and extra-couple transmission rates, $c_u$ and $c_e$, will be replaced with $U_i = r_u \beta_i$ and $E_i = r_e \beta_i$ hereafter.
 
-Single susceptible individuals become infected and enter single infected compartment at the total rate of $\sum_k P_k U_k S$. Through mutation, newly infected individuals are distributed into each single infected compartments with different strains: $I_i' = \sum_k M_{ki} P_k U_k S$. Either partners in $SS$ partnership can be infected and the partnership state can become $SI$ partnership at the total rate of $\sum_i 2 P_i E_i SS$. Formation of $SI_i$ partnership is similar to the process through which single susceptible individuals are distributed into single infected compartments: $SI_i' = \sum_k 2 M_{ki} P_k E_k SS$. Lastly, susceptible partner of an $SI$ partnership can be infected due to uncoupled/extra-couple contacts and partnership can move to an $II$ partnership. Like previous cases, $SI_i$ partnership moves out of the compartment at a rate of $\sum_k P_k E_k SI_i$. Mutation process is similar to that of within-couple transmission. The only difference is that the $\log_10$ SPVL of a newly infected partner is not determined by its original partner but from an extra couple partner (i.e. the term $P_i$): $II_{ij}' = (1 -\frac{\delta_{ij}}{2})(\sum_k (M_{kj} P_k E_k SI_i + M_{ki} P_k E_k SI_j))$. Combining these equations we get the following set of equations that describe all the transmission dynamics
+Single susceptible individuals become infected and enter single infected compartment at the total rate of $\sum_k P_k U_k S$. Through mutation, newly infected individuals are distributed into single infected compartments with different strains: $I_i' = \sum_k M_{ki} P_k U_k S$. Either partner in an $SS$ partnership can be infected, with the partnership state becoming $SI$, at the total rate of $\sum_i 2 P_i E_i SS$. The formation of $SI_i$ partnerships is similar to the process through which single susceptible individuals are distributed into single infected compartments: $SI_i' = \sum_k 2 M_{ki} P_k E_k SS$. Lastly, the susceptible partner in an $SI$ partnership can be infected due to uncoupled/extra-couple contacts and partnership can change to an $II$ partnership. As in the previous cases, $SI_i$ partnerships are lost at a rate of $\sum_k P_k E_k SI_i$. The mutation process is similar to that of within-couple transmission. The only difference is that the $\log_10$ SPVL of a newly infected partner is not determined by its social partner but from an extra-couple partner (i.e. the term $P_i$): $II_{ij}' = (1 -\frac{\delta_{ij}}{2})(\sum_k (M_{kj} P_k E_k SI_i + M_{ki} P_k E_k SI_j))$. Combining these equations we get the following set of equations that describe all the transmission dynamics \todo{something missing here?}
 
 \subsection*{Model 1 and 2 - Disease induced mortality}
 
-Disease induced death rate, $\lambda$, is given by taking the reciprocate of the total duration of the infection: $\lambda_i = 1/(D_A + D_P(\alpha_i) + D_D)$. Since we assume SIS formulation, where infected individuals that die from infection enter single susceptible compartment, we obtain the following equation for the single infected individuals:
+The disease induced death rate, $\lambda$, is given by taking the reciprocal of the total duration of the infection: $\lambda_i = 1/(D_A + D_P(\alpha_i) + D_D)$. Since we assume an SIS formulation, where infected individuals that die from infection are immediately replaced by an individual in the single susceptible compartment, we obtain the following equation for single infected individuals:
 
 \begin{equation}
 \begin{aligned}
@@ -527,7 +719,7 @@ I_i &= - \lambda_i I_i \\
 \end{aligned}
 \end{equation}
 
-If an infected individual in a partnership dies, partnership dissolves. Thus, an $SI_i$ partnership dissolves at a rate $-\lambda_i$, and the susceptible partner enters single susceptible compartment at rate $\lambda_i SI_i$ (infected partner that dies enter single susceptible compartment at an equal rate as well due to SIS formation):
+If an infected individual in a partnership dies, the partnership dissolves. Thus, an $SI_i$ partnership dissolves at a rate $-\lambda_i$, and the susceptible partner enters the single susceptible compartment at rate $\lambda_i SI_i$ (due to the SIS formulation the the infected partner that dies also gives rise, at an equal rate, to an individual entering the single susceptible compartment):
 
 \begin{equation}
 \begin{aligned}
@@ -536,7 +728,7 @@ SI_i &= - \lambda_i SI_i
 \end{aligned}
 \end{equation}
 
-Similarly, $II_{ij}$ partnership dissolves at a rate $-(\lambda_i + \lambda_j)$, but two cases, when $i \neq j$ and $i = j$, must be considered separately. When an $II_{ij}$ partnership dissolves due to disease induced mortality, where $i \neq j$, death of partner with strain $i$ causes its partner to enter $I_j$ compartment at rate $\lambda_j II_{ij}$, and vice versa. When an $II_ii$ partnership dissolves, death of either partner causes the other partner to enter $I_i$ compartment at rate $\lambda_i II_{ii}$, which sums up to $2\lambda_i II_{ii}$. Combining these dynamics yield the following equation:
+Similarly, $II_{ij}$ partnerships dissolve at a rate $-(\lambda_i + \lambda_j)$, but two cases, when $i \neq j$ and $i = j$, must be considered separately. When an $II_{ij}$ partnership dissolves due to disease-induced mortality, where $i \neq j$, the death of the partner with strain $i$ causes its partner to enter $I_j$ compartment at rate $\lambda_j II_{ij}$, and vice versa. When an $II_ii$ partnership dissolves, the death of either partner causes the other partner to enter the $I_i$ compartment at rate $\lambda_i II_{ii}$, which sums up to $2\lambda_i II_{ii}$. Combining these dynamics yields:
 
 \begin{equation}
 \begin{aligned}
@@ -546,7 +738,7 @@ II_{ij}' &= -(\lambda_i + \lambda_j) II_{ij}
 \end{aligned}
 \end{equation}
 
-Finally, combining all these equations give us the full model, which is model 1. We can simply take out the uncoupled and extra couple transmission term to obtain equation 2:
+Finally, combining all these equations give us the full model, which is Model 1. We can simply take out the uncoupled and extra couple transmission term to obtain equation 2\todo{?}:
 
 \begin{equation}
 \begin{aligned}
@@ -557,14 +749,14 @@ I_i' =&  - \rho I_i + c SI_i + \sum_k 2^{\delta_{ik}} c  II_{ik} + \sum_k M_{ki}
 SS' =& \frac{\rho S \cdot S}{2 (S + \sum_k I_k)} - c SS - \sum_i 2 P_i E_i SS \\
 SI_i' =& \frac{\rho S \cdot I_i}{S + \sum_k I_k} - c SI_i - \beta_i SI_i + \sum_k 2 M_{ki} P_k E_k SS - \sum_k P_k E_k SI_i   \\
 &- \lambda_i SI_i\\
-II_{ij}' =& (\frac{1}{2})^{\delta_{ij}} \cdot \frac{\rho I_i \cdot I_j}{(S + \sum_k I_k)} - c II_{ij} + (\frac{1}{2})^{\delta_{ij}} \cdot (M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j) \\
-&+ (\frac{1}{2})^{\delta_{ij}} \cdot (\sum_k (M_{kj} P_k E_k SI_i + M_{ki} P_k E_k SI_j)) -(\lambda_i + \lambda_j) II_{ij}
+II_{ij}' =& \khalf \cdot \frac{\rho I_i \cdot I_j}{(S + \sum_k I_k)} - c II_{ij} + \khalf \cdot (M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j) \\
+&+ \khalf \cdot (\sum_k (M_{kj} P_k E_k SI_i + M_{ki} P_k E_k SI_j)) -(\lambda_i + \lambda_j) II_{ij}
 \end{aligned}
 \end{equation}
 
-\subsection*{Model 3 and 4 - Partnership dynamic}
+\subsection*{Models 3 and 4: Partnership dynamics}
 
-Since model 3 and 4 assume instantaneous partnership formation, there are only three states: $SS$, $SI_i$, and $II_{ij}$. Partnership dissolution is equal to that of model 1 and 2: $SS' = -cSS$, $SI_i' = - cSI_i$, and $II_{ij}' = - II_{ij}$. Once the individuals leave partnership, they enter temporary compartments and are distributed into a partnership through binomial distribution:
+Since model 3 and 4 assume instantaneous partnership formation, there are only three states: $SS$, $SI_i$, and $II_{ij}$. Partnership dissolution rates are equal to those of model 1 and 2: $SS' = -cSS$, $SI_i' = - cSI_i$, and $II_{ij}' = - II_{ij}$. Once individuals leave a partnership, they enter temporary compartments and are distributed into a partnership through binomial distribution:
 
 \begin{equation}
 \begin{aligned}
@@ -572,7 +764,7 @@ X &= 2 c SS + \sum_k c SI_k \\
 Y_i &= c SI_i + \sum_k 2^{\delta_{ik}} c II_{ik} \\
 SS' &= - c SS + \frac{X^2}{2 (X + \sum_k Y_k)}\\
 SI_i' &= - c SI_i + \frac{X Y_i}{X + \sum_k Y_k}\\
-II_{ij}' &= - c II_{ij} +(\frac{1}{2})^{\delta_{ij}} \frac{Y_i Y_j}{X + \sum_k Y_k}.
+II_{ij}' &= - c II_{ij} +\khalf \frac{Y_i Y_j}{X + \sum_k Y_k}.
 \end{aligned}
 \end{equation}
 
@@ -595,7 +787,7 @@ X &= \sum_k 2 \lambda_k SI_k + \sum_l \sum_k 2^{\delta_{lk}}  \lambda_k II_{lk} 
 Y_i &=  \sum_k  2^{\delta_{ik}}  \lambda_k II_{ik} \\
 SS = &= \frac{X^2}{2 (X + \sum_k Y_k)}\\
 SI_i &= - \lambda_i SI_i + \frac{X Y_i}{X + \sum_k Y_k}\\
-II_{ij}' &= -(\lambda_i + \lambda_j) II_{ij} + (\frac{1}{2})^{\delta_{ij}} \cdot \frac{Y_i Y_j}{X + \sum_k Y_k}
+II_{ij}' &= -(\lambda_i + \lambda_j) II_{ij} + \khalf \cdot \frac{Y_i Y_j}{X + \sum_k Y_k}
 \end{aligned}
 \end{equation}
 
@@ -608,14 +800,14 @@ Y_i =& c SI_i + \sum_k 2^{\delta_{ik}}  c II_{ik} + \sum_k  2^{\delta_{ik}}  \la
 SS  =& - c SS + \frac{X^2}{2 (X + \sum_k Y_k)}  - \sum_i 2 P_i E_i SS\\
 SI_i =& - c SI_i + \frac{X Y_i}{X + \sum_k Y_k} - \beta_i SI_i + \sum_k 2 M_{ki} P_k E_k SS\\
 &- \sum_k P_k E_k SI_i - \lambda_i SI_i  \\
-II_{ij}& - c II_{ij} +(\frac{1}{2})^{\delta_{ij}} \frac{Y_i Y_j}{X + \sum_k Y_k} + (\frac{1}{2})^{\delta_{ij}} \cdot (M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j) \\
-&+ (\frac{1}{2})^{\delta_{ij}} \cdot (\sum_k (M_{kj} P_k E_k SI_i + M_{ki} P_k E_k SI_j)) -(\lambda_i + \lambda_j) II_{ij}
+II_{ij}& - c II_{ij} +\khalf \frac{Y_i Y_j}{X + \sum_k Y_k} + \khalf \cdot (M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j) \\
+&+ \khalf \cdot (\sum_k (M_{kj} P_k E_k SI_i + M_{ki} P_k E_k SI_j)) -(\lambda_i + \lambda_j) II_{ij}
 \end{aligned}
 \end{equation}
 
 \subsection*{Model 5}
 
-Model 5 is an implicit instantaneous partnership formation model, which uses adjusted transmission rate, $\beta'$, that is derived from Hollingsworth et al's approximated basic reproduction number:
+Following \cite{shirreff_transmission_2011}, Model 5 is an implicit instantaneous partnership formation model that uses an adjusted transmission rate, $\beta'$, that is derived from \cite{hollingsworth_hiv1_2008}'s approximate basic reproduction number:
 
 \begin{equation}
 \beta'_i = \frac{c \beta_i}{c + \beta_i + \lambda_i}.
@@ -643,7 +835,7 @@ I_i & = \sum_k M_{ki} \beta_k S I_k - \lambda_i I_i
 
 \subsection*{Initial distribution of infected individuals}
 
-We follow Champredon et al's result to calculate the initial distribution of infected individuals. For model 1 and 2, we have disease equilibrium state of $S^* = \frac{c}{c + \rho}$ and $SS^* = \frac{1-S^*}{2}$. We let $\epsilon = 10^{-4}$, which is the total number of infected individuals in the beginning of simulation and $D$ be the vector such that $D_i$ represent the proportion of individuals with $\log_{10}$ SPVL of $i$. $Y_i$ is taken from normal distribution with mean 3 and is normalized so that $\sum_i D_i = 1$. Then, we have the following initial distribution of each states:
+We follow Champredon et al's result to calculate the initial distribution of infected individuals. For model 1 and 2, we have disease equilibrium state of $S^* = \frac{c}{c + \rho}$ and $SS^* = \frac{1-S^*}{2}$. We let $\epsilon = 10^{-4}$, which is the total number of infected individuals in the beginning of simulation and $D$ be the vector such that $D_i$ represent the proportion of individuals with \Lspvl\ of $i$. $Y_i$ is taken from normal distribution with mean 3 and is normalized so that $\sum_i D_i = 1$. Then, we have the following initial distribution of each states:
 
 \begin{equation}
 \begin{aligned}
@@ -651,7 +843,7 @@ S(0) &= (1 - \epsilon) S^* \\
 SS(0) &= (1 - \epsilon)^2 SS^*\\
 SI_i(0) &= 2 \epsilon (1-\epsilon) SS^* D_i\\
 I_i(0) &=  \epsilon S^* D_i\\
-II_{ij}(0) &=  (\frac{1}{2})^{\delta_{ij}} 2\epsilon^2 SS^* D_i D_j.
+II_{ij}(0) &=  \khalf 2\epsilon^2 SS^* D_i D_j.
 \end{aligned}
 \end{equation}
 Since model 3 and 4 do not have single state, $SS^*=1$ at the disease free equilibrium and the initial distribution becomes as follows:
@@ -660,7 +852,7 @@ Since model 3 and 4 do not have single state, $SS^*=1$ at the disease free equil
 \begin{aligned}
 SS(0) &= (1 - \epsilon)^2 SS^*\\
 SI_i(0) &= 2 \epsilon (1-\epsilon) SS^* D_i\\
-II_{ij}(0) &=  (\frac{1}{2})^{\delta_{ij}} 2\epsilon^2 SS^* D_i D_j.
+II_{ij}(0) &=  \khalf 2\epsilon^2 SS^* D_i D_j.
 \end{aligned}
 \end{equation}
 Lastly, as model 5 is an implicit model, which does not consider different stages of partnership, we have the following initial distribution.
