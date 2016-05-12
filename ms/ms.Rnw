@@ -188,6 +188,8 @@ The \textbf{u}ncoupled and \textbf{e}xtra-couple transmission rates are scaled b
 Like \shir\ we incorporate a between-host mutation process in the SPVL, but simplify \shir's evolutionary model slightly by using a one-to-one genotype-phenotype mapping. 
 The mutational process in our model is directly taken from \shir. Over the course of infection, mutation occurs within the host. However, it is assumed that SPVL of an infected individual is determined by the SPVL at the time of infection for simplicity (and is not further affected by within-host mutation). Instead, the mutational effect takes place when an infected individual transmits the virus to a susceptible individual. First, the distribution of \Lspvl\ is discretized into a vector:
 
+\todo{shireff says that the interval between two strains is 0.05 but uses 0.1 in the code... Do we want to do a simulation with 101 strains or is it OK to keep it as 51? It wouldn't make any but I guess it's better to match what's written in the paper? Shirreff simulation that was used in figure 1 was done by using 51 strains.}
+
 \begin{equation}
 \alpha_i =  (\tsub{\alpha}{max} - \tsub{\alpha}{min})\frac{(i-1)}{n-1} + \tsub{\alpha}{min} \qquad i = 1,2,3, \dots n.
 \end{equation}
@@ -213,7 +215,7 @@ We developed six multi-strain evolutionary models, designed to cover a gamut bet
 
 Our first four models consider explicit partnership dynamics and are based on \champr's model. Models 1 and 2 assume non-instantaneous partnership formation (i.e. individuals spend some time uncoupled, outside of partnerships) and consist of five states that are classified by infection status and partnership status. $S$ is the number of single (uncoupled) susceptible individuals, and $I$ is the number of single infected individuals. $SS$ is the number of susceptible-susceptible couples, $SI$ is the number of serodiscordant (susceptible-infected) couples, and $II$ is the number of concordant positive (infected-infected) couples. Model 1 includes extra-partnership contact (with both uncoupled individuals and individuals in other partnerships) whereas model 2 only considers within-couple transmission. Models 3 and 4 assume instantaneous partnership formation and thus consist of only the three partnered states: $SS$, $SI$, and $II$. Parallel to model 1 and 2, model 3 includes extra-partnership contact (now only with individuals in other partnerships, since uncoupled individuals don't exist in this model) and model 4 only considers within-couple transmission.
 
-In contrast, models 5 and 6 are not explicitly structured.  Model 5 is an implicit serial monogamy model based on the epidemiological model used by \shir. It is actually a random mixing model that consist of only two states, $S$ and $I$, and does not consider explicit partnership dynamics. However, to simulate the effect of instantaneous partnership formation, it uses an adjusted transmission rate that is derived from approximated basic reproduction number of a serial monogamy model \citep{hollingsworth_hiv1_2008}. Finally, model 6 is a simple random-mixing model.
+In contrast, models 5 and 6 are not explicitly structured.  Model 5 is an implicit serial monogamy model based on the epidemiological model used by \shir \todo{cite?}. It is actually a random mixing model that consist of only two states, $S$ and $I$, and does not consider explicit partnership dynamics. However, to simulate the effect of instantaneous partnership formation, it uses an adjusted transmission rate that is derived from approximated basic reproduction number of a serial monogamy model \citep{hollingsworth_hiv1_2008}. Finally, model 6 is a simple random-mixing model.
 
 The base model (i.e. model 1) for the first four models is an extension of \champr's model. Individuals in single compartment acquire a partner at a rate, $\rho$, and partnerships dissolve at a rate, $c$. Infected individuals in a discordant partnership infect susceptible partner at a rate $\beta$ (within-couple transmission rate) and susceptible individuals outside the partnership at a rate $c_e$ (extra-couple transmission rate). Likewise, a single infected individual can infect any susceptible individuals at a rate $c_u$ through uncoupled mixing. Extra-couple and uncoupled transmission are modeled in a same way as \champr's model. All the details have been adapted to a multi-strain scenario. Model 2, 3, and 4 are derived from the base model by removing epidemiological details (partnership formation and uncoupled/extra-couple contact). Model details are explained in the appendix.
 
@@ -405,7 +407,7 @@ virulence, and relative peak virulence) all vary considerably across models
 We first consider the models of intermediate realism (implicit,
 instantaneous-switching with and without extra-pair contact, and
 pair formation without extra-pair contact). Some parameter
-sets for these models lead to low equilibrium virulence ($\approx 2.5 \log_{10}$ SPVL)
+sets for these models lead to low equilibrium virulence ($\approx 2.5 \log_{10}$ SPVL) \todo{period? semicolon?}
 these same sets lead to correspondingly low
 peak virulence ($< 3.5 \log_{10}$ SPVL) and early peak times (before 200 years), 
 but high relative peaks ($>1.3$)
@@ -429,7 +431,7 @@ variability, because it is unaffected by uncertainty in pair formation
 and extra-pair contact parameters, but otherwise the virulence
 dynamics of these two extreme models are remarkably similar.
 This phenomenon is driven by the strength of extra-pair contact in the
-pairform+epc model. When individuals spend time uncoupled between
+pairform+epc model \todo{might be better to call it something else?}. When individuals spend time uncoupled between
 partnerships, and when these single individuals can transmit disease
 to coupled individuals, the resulting unstructured mixing overwhelms
 the effect of structured mixing within couples, leading to mixing
@@ -477,7 +479,7 @@ mL3 <- subset(mL2,
        !((model=="implicit" &
           LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
          (model=="random" &
-          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio","c_mean_base")) |
+          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
          (model=="instswitch" &
           LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
          (model=="instswitch+epc" &
@@ -489,12 +491,13 @@ mL3$LHSvar <- factor(mL3$LHSvar,
                      levels=c("Beta1","Beta3",
                               "Duration1","Duration3",
                               "c_mean_base","c_e_ratio","rho_base",
-                              "c_u_ratio"))
+                              "c_u_ratio"),
+										 labels = c("beta[P]", "beta[D]", "D[P]", "D[D]", "c", "c[e]/c[w]", "rho", "c[u]/c[w]"))
 ## FIXME: could also use labels argument to rename levels, labeller=label_parsed
 ## in facet_grid to get pretty math
 ggplot(mL3,aes(LHSval,sumval,colour=model))+
     geom_point(pch=".",alpha=0.5)+
-    facet_grid(sumvar~LHSvar,scales="free")+
+    facet_grid(sumvar~LHSvar,scales="free", labeller = label_parsed)+
     geom_smooth(se=FALSE)+labs(x="",y="")+
     scale_x_log10(expand=c(0,0.08))+  ## leave a little extra room?
     zero_margin
@@ -522,7 +525,7 @@ model make extra-pair contact by coupled individuals less important).
 Surprisingly, neither of the pair-formation models is particularly sensitive to the 
 rate of partnership formation ($\rho$); the rate of uncoupled contact
 increases virulence and peak time in the pair-formation+epc model, 
-which is the only model to which it applies\todo{is that right??}.
+which is the only model to which it applies\todo{is that right?? Yes}.
 
 \section{Discussion}
 
@@ -559,20 +562,20 @@ probabilities), temporal and spatial variation in epidemic processes,
 or presence of genetic variation in hosts are harder to predict.
 
 Parameterization is one of the biggest challenges of epidemiological
-modeling. In addition to following \champr\ by doing Latin hypercube
+modeling. In addition to following \champr\ \todo{cite?} by doing Latin hypercube
 sampling across a wide range of epidemiological parameters, we 
 calibrated each set of parameters to the same initial epidemic
 growth rate, chosen to match the results of previous models
 \citep{shirreff_transmission_2011}.  The previous models drew their
 parameters from previous cohort studies from the 1980s
-\todo{check dates!} \citep{hollingsworth_hiv1_2008}
+\todo{check dates!} \citep{hollingsworth_hiv1_2008} \todo{That is the correct date. We need to cite \citep{Fraser+2007} as well. This is where the evolutionary parameters come from. \citep{wawer2005rates} might have to be cited as well since Hollingsworth et al base their study on this paper, and Shirreff get their partnership change rate from this paper.}
 rather than doing any explicit calibration to epidemic curves,
 but they give reasonable order-of-magnitude
-growth rates ($\approx 0.4~\textrm{year}^{-1}$) 
+growth rates ($\approx 0.4~\textrm{year}^{-1}$) \todo{0.04 not 0.4?}
 for the early stages of the HIV epidemic (although considerably
 lower than estimates of $\approx 0.07-0.1~\textrm{year}^{-1}$
 based on population genetic reconstructions \citep{faria_early_2014}).
-\todo{do we know what $r$ Champredon et al. get??}
+\todo{do we know what $r$ Champredon et al. get?? They give a really wide range of values so I'm not sure...}
 However, our reason for calibrating was not to match any
 specific observed epidemic, but rather to make sure that
 we were making meaningful comparisons across a range of
@@ -582,7 +585,7 @@ parameters.  For example, in models with instantaneous switching the
 partnership dissolution rate $c$ is identical to the partnership
 formation rate; in models with explicit partnership formation,
 the partnership formation rate is also $c$ at equilibrium,
-but might vary over the course of an epidemic.
+but might vary over the course of an epidemic. \todo{Not really sure what this example means...}
 It is not obvious whether models with equal parameters but
 different structures should be directly compared; calibration
 solves this problem.
@@ -868,5 +871,3 @@ Model 6 also shares the same distribution of initial infected individuals as mod
 \bibliographystyle{chicago}
 \bibliography{virulence}
 \end{document}
-
-
