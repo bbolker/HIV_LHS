@@ -284,11 +284,13 @@ g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run))+
 ###
 dimnames(vir_matS2) <- list(Time=tvec,
                run=c("$10^{-3}$", "$10^{-4}$", "$10^{-5}$"))
-g2 <- g1 %+% melt(vir_matS2,id.var="Time",value.name="Mean.VL")
+g2 <- g1 %+% melt(vir_matS2,id.var="Time",value.name="Mean.VL") +
+	labs(y = "")
 ###
 dimnames(vir_matS3) <- list(Time=tvec,
                             run=c("$2.5$", "$3$", "$3.5$"))
-g3 <- g1 %+% melt(vir_matS3,id.var="Time",value.name="Mean.VL")
+g3 <- g1 %+% melt(vir_matS3,id.var="Time",value.name="Mean.VL") +
+	labs(y = "")
 limits <- c(2.5,4.7)
 breaks <- seq(limits[1],limits[2], by = 0.5)
 afun <- function(label,size=8) {
@@ -308,17 +310,25 @@ Across the entire range of parameters covered by the LHS analysis, all of the cl
 
 <<virtraj,fig.cap="Envelopes of virulence trajectories under all models. All models were run until $t=4000~\\textrm{years}$; truncated series are shown here.",fig.width=6,cache=TRUE,message=FALSE,warning=FALSE,dev="tikz">>=
 ss <- subset(sum_list[["vir_mat"]],tvec<750)
+
+ss$model <- factor(ss$model, c("random","pairform+epc", "pairform","instswitch+epc","instswitch","implicit"))
+
 gg_virtraj <- ggplot(ss,
                      aes(tvec,mean,ymin=lwr,ymax=upr))+
-    geom_line(aes(colour=model,linetype=model),lwd=1.5)+
-    geom_ribbon(aes(fill=model),alpha=0.3)+
-    labs(x="time (years)",y=vlab)
+	geom_line(aes(colour=model,linetype=model),lwd=1.5)+
+	geom_ribbon(aes(fill = model), alpha=0.3)+
+	labs(x="time (years)",y=vlab) +
+	theme(axis.title.y = element_text(margin = margin(0,20,0,0)),
+		axis.title.x = element_text(margin = margin(10,0,0,0))) +
+	facet_wrap(~model, nrow = 2)
+	
 ## scale_x_continuous(limits=c(0,2500))
 print(gg_virtraj)
 @ 
 
 <<unidist,fig.cap="Univariate distributions of summary statistics. The distribution of equilibrium virulence for the random mixing model is very narrow, and has been replaced by a point in order to preserve the vertical axis scaling.",fig.width=8,fig.height=4.8>>=
 sL <- transform(sum_list[["sum_mat"]],rel_peak=peak_vir/eq_vir)
+sL$model <- factor(sL$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
 mL <- melt(sL,id.vars=c("model","run"))
 ## horrible hack (but doesn't help); subsample
 ## w <- which(mL$model=="random")
@@ -493,6 +503,9 @@ mL3$LHSvar <- factor(mL3$LHSvar,
                               "c_mean_base","c_e_ratio","rho_base",
                               "c_u_ratio"),
 										 labels = c("beta[P]", "beta[D]", "D[P]", "D[D]", "c", "c[e]/c[w]", "rho", "c[u]/c[w]"))
+
+mL3$model <- factor(mL3$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
+
 ## FIXME: could also use labels argument to rename levels, labeller=label_parsed
 ## in facet_grid to get pretty math
 ggplot(mL3,aes(LHSval,sumval,colour=model))+
