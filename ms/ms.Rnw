@@ -280,7 +280,8 @@ vlab <- "mean virulence ($\\log_{10}$ SPVL)"
 tlab <- "time (years)"
 g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run))+
     geom_line()+labs(x=tlab,y=vlab)+
-    theme(legend.position=c(0.8,0.2))
+    theme(legend.position=c(0.8,0.2),
+    axis.title.y = element_text(margin = margin(0,15,0,0)))
 ###
 dimnames(vir_matS2) <- list(Time=tvec,
                run=c("$10^{-3}$", "$10^{-4}$", "$10^{-5}$"))
@@ -318,8 +319,8 @@ gg_virtraj <- ggplot(ss,
 	geom_line(aes(colour=model,linetype=model),lwd=1.5)+
 	geom_ribbon(aes(fill = model), alpha=0.3)+
 	labs(x="time (years)",y=vlab) +
-	theme(axis.title.y = element_text(margin = margin(0,20,0,0)),
-		axis.title.x = element_text(margin = margin(10,0,0,0))) +
+	theme(axis.title.y = element_text(margin = margin(0,15,0,0)),
+		axis.title.x = element_text(margin = margin(15,0,0,0))) +
 	facet_wrap(~model, nrow = 2)
 	
 ## scale_x_continuous(limits=c(0,2500))
