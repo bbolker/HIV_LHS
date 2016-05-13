@@ -9,3 +9,6 @@
 
 ms%.pdf: ms$*.Rnw ms_parms.tex
 	echo "library(knitr); knit2pdf(\"ms$*.Rnw\")" | R --slave
+
+clean:
+	rm -f ms.html ms.tex .#* #*

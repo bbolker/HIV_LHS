@@ -440,7 +440,8 @@ variability, because it is unaffected by uncertainty in pair formation
 and extra-pair contact parameters, but otherwise the virulence
 dynamics of these two extreme models are remarkably similar.
 This phenomenon is driven by the strength of extra-pair contact in the
-pairform+epc model \todo{might be better to call it something else? \textbf{agreed. ideas?}}. When individuals spend time uncoupled between
+model with explicit pair formation and extra-pair contact 
+(``pairform+epc'' in Figures~\ref{fig:virtraj}-\ref{fig:plot_sens}). When individuals spend time uncoupled between
 partnerships, and when these single individuals can transmit disease
 to coupled individuals, the resulting unstructured mixing overwhelms
 the effect of structured mixing within couples, leading to mixing
@@ -521,15 +522,18 @@ effects of the parameters are monotonic; note that
 the plot shows the effects of the \emph{unscaled} parameters, i.e.
 before they have been adjusted to achieve a standard initial epidemic
 growth rate.
-The transmission rates ($\beta_P$, $\beta_D$)
+Increases in the transmission rates ($\beta_P$, $\beta_D$)
 and durations ($D_P$, $D_D$) in the primary and disease stages generally
 decrease the equilibrium virulence, peak virulence, and peak time,
-although the random and pair-formation+epc models have high, relatively
+although the random and pair-formation+extra-pair contact
+models have high, relatively
 constant values with respect to these parameters. 
-\todo{I know you explained to me before why beta and Duration go in
-the same direction but I forget ...}
+\todo{better explanation of why increasing $\beta$/$D$ and
+then scaling $r$ should lead to lower $\rzero$?}
+
 The base contact rate increases virulence and peak time in almost all
-cases, although the pair-formation+epc model is again relatively insensitive.
+cases, although the pair-formation+extra-pair contact
+model is again relatively insensitive.
 The ratio of extra-pair to within-pair contact ($c_e/c_w$) affects
 virulence in the instantaneous-switching+epc model, but not the pair-formation+epc
 model (probably because the uncoupled individuals present in the pair-formation+epc
@@ -644,10 +648,9 @@ could significantly change their conclusions.
 
 \begin{itemize}
 \item fig 1. tweak size? remove redundant y axes/labels?
-\item fig 2. 6-panel figure? log scale? boundary lines instead of ribbons for edges of envelopes? move labels away from axes?
-\item fig 3. change order (flip instswitch and instswitch + epd)
-\item fig 4. squash panels together?
-\item fig 5. sensitivity plot (unscaled plot); check we havetake out plots that are not related ... implicit model doesn't use rho, cu or ce; random doesn't use rho, cmean?, cu, ce; instswitch doesn't have rho or cu or ce; models without epc don't have ce or cu; instswitch + epc doesn't have rho and cu (no uncoupled compartment). Maybe squash panels together, higher resolution
+\item fig 3. add units to strip labels?
+\item fig 4. fix axis labels; squash panels together
+\item fig 5. sensitivity plot (unscaled plot); fix strip labels for summary statistics; fix x-axis labels
 \end{itemize}
 
 
