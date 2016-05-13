@@ -45,6 +45,8 @@ local({
 <<pkgs,warning=FALSE,message=FALSE>>=
 library("ggplot2"); theme_set(theme_bw())
 zero_margin <- theme(panel.margin=grid::unit(0,"lines"))
+zero_x_margin <-
+    theme(panel.margin.x=grid::unit(0, "lines"))
 library("MASS")
 ## use Dark2 rather than Set1 because colour #6 of Set1 is yellow (ugh/too light)
 scale_colour_discrete <- function(...,palette="Dark2") scale_colour_brewer(...,palette=palette)
@@ -187,27 +189,22 @@ The \textbf{u}ncoupled and \textbf{e}xtra-couple transmission rates are scaled b
 
 Like \shir\ we incorporate a between-host mutation process in the SPVL, but simplify \shir's evolutionary model slightly by using a one-to-one genotype-phenotype mapping. 
 The mutational process in our model is directly taken from \shir. Over the course of infection, mutation occurs within the host. However, it is assumed that SPVL of an infected individual is determined by the SPVL at the time of infection for simplicity (and is not further affected by within-host mutation). Instead, the mutational effect takes place when an infected individual transmits the virus to a susceptible individual. First, the distribution of \Lspvl\ is discretized into a vector:
-
-\todo{shireff says that the interval between two strains is 0.05 but uses 0.1 in the code... Do we want to do a simulation with 101 strains or is it OK to keep it as 51? It wouldn't make any but I guess it's better to match what's written in the paper? Shirreff simulation that was used in figure 1 was done by using 51 strains. \textbf{51 is OK, I think; maybe we should comment}}
-
 \begin{equation}
 \alpha_i =  (\tsub{\alpha}{max} - \tsub{\alpha}{min})\frac{(i-1)}{n-1} + \tsub{\alpha}{min} \qquad i = 1,2,3, \dots n.
 \end{equation}
-Then, we construct an $n$ by $n$ mutational matrix, $M$ --- which is multiplied with the transmission term ---  so that $M_{ij}$ is the probability that a newly infected individual will have \Lspvl\ of $\alpha_j$ given that the infector has \Lspvl\ of $\alpha_i$. Finally, the probabilities are normalized so that each row sums to 1:
+We have experimented with varying degrees of discretization in the strain distribution (i.e., values of $n$); in our model runs comparing results with \cite{shirreff_transmission_2011} (Figure~\ref{fig:panel3}) we use $n=51$ (i.e. a bin width of 0.05 \Lspvl\ for $\alpha$), but we find only small differences when reducing $n$ to 21 (bin width 0.25 \Lspvl), which we use for all other simulations.
 
+We construct an $n$ by $n$ mutational matrix, $M$ --- which is multiplied with the transmission term ---  so that $M_{ij}$ is the probability that a newly infected individual will have \Lspvl\ of $\alpha_j$ given that the infector has \Lspvl\ of $\alpha_i$. Finally, the probabilities are normalized so that each row sums to 1:
 \begin{equation}
 M_{ij} = \frac{\Phi(\alpha_j + d/2;i) - \Phi(\alpha_j - d/2;i)}{\Phi(\tsub{\alpha}{max} + d/2;i) - \Phi(\tsub{\alpha}{min} - d/2;i)},
 \end{equation}
-
 where $\Phi(x;i)$ is the Gaussian cumulative distribution function with mean $\alpha_i$ and variance of $\sigma_M^2$, and $d = (\tsub{\alpha}{max} - \tsub{\alpha}{min})/(n-1)$. Transmission rate and disease induced mortality rates are discretized into a vector as well:
-
 \begin{equation}
 \begin{aligned}
 \beta_i &= \beta(\alpha_i)\\
 \lambda_i &= \frac{1}{D_P + D_A (\alpha_i) + D_D}
 \end{aligned}
 \end{equation}
-
 
 \subsubsection{Contact structure and partnership dynamics}
 
@@ -320,7 +317,8 @@ gg_virtraj <- ggplot(ss,
 	labs(x="time (years)",y=vlab) +
 	theme(axis.title.y = element_text(margin = margin(0,20,0,0)),
 		axis.title.x = element_text(margin = margin(10,0,0,0))) +
-	facet_wrap(~model, nrow = 2)
+	facet_wrap(~model, nrow = 2)+
+    zero_margin
 	
 ## scale_x_continuous(limits=c(0,2500))
 print(gg_virtraj)
@@ -343,7 +341,8 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
     guides(fill=guide_legend(reverse=TRUE))+
     labs(y="")+
     geom_point(data=data.frame(model="random",variable="equil virulence",
-                               value=rval),pch=22,size=3,show.legend=FALSE)
+                               value=rval),pch=22,size=3,show.legend=FALSE)+
+    zero_x_margin
 print(gg_univ)
 @
 
@@ -581,8 +580,8 @@ sampling across a wide range of epidemiological parameters, we
 calibrated each set of parameters to the same initial epidemic
 growth rate, chosen to match the results of previous models
 \citep{shirreff_transmission_2011}.  The previous models drew their
-parameters from previous cohort studies from the 1980s
-\todo{check dates!} \citep{hollingsworth_hiv1_2008} \todo{That is the correct date. We need to cite \citep{Fraser+2007} as well. This is where the evolutionary parameters come from. \citep{wawer2005rates} might have to be cited as well since Hollingsworth et al base their study on this paper, and Shirreff get their partnership change rate from this paper.}
+parameters from previous cohort studies from the 1990s
+\citep{wawer2005rates,hollingsworth_hiv1_2008}
 rather than doing any explicit calibration to epidemic curves,
 but they give reasonable order-of-magnitude
 growth rates ($\approx 0.04~\textrm{year}^{-1}$)
