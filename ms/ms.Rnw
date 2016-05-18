@@ -623,9 +623,6 @@ efforts are well-intentioned, we caution that epidemiological and
 other structural details that are currently omitted from these models
 could significantly change their conclusions.
 
-
-
-
 \section{To do}
 \begin{itemize}
 \item use PLoS template for ms
