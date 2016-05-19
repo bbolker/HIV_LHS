@@ -358,6 +358,21 @@ In contrast, models 5 and 6 are not explicitly structured.  Model 5 is an implic
 
 The base model (i.e. model 1) for the first four models is an extension of Champredon text{et al.}'s model \cite{champredon_hiv_2013}. Individuals in single compartment acquire a partner at a rate, $\rho$, and partnerships dissolve at a rate, $c$. Infected individuals in a discordant partnership infect susceptible partner at a rate $\beta$ (within-couple transmission rate) and susceptible individuals outside the partnership at a rate $c_e$ (extra-couple transmission rate). Likewise, a single infected individual can infect any susceptible individuals at a rate $c_u$ through uncoupled mixing. Extra-couple and uncoupled transmission are modeled in a same way as Champredon text{et al.}'s model. All the details have been adapted to a multi-strain scenario. Model 2, 3, and 4 are derived from the base model by removing epidemiological details (partnership formation and uncoupled/extra-couple contact). Model details are explained in the appendix.
 
+
+\subsection*{Latin hypercube sampling}
+
+Despite considerable effort by many researchers \cite{hollingsworth_hiv1_2008,champredon_hiv_2013}, the parameters determining the rate and structure of sexual partnership change and contact are still very uncertain; this led Champredon \etal\ \cite{champredon_hiv_2013} to adopt a Latin hypercube sampling (LHS) strategy \cite{blower_drugs_1991} that evaluates model outcomes over a range of parameter values. In order to make sure that our comparisons among models apply across the entire space of reasonable parameter values, and in order to evaluate the differential sensitivity of different model structures to parameter values, we follow a similar protocol and perform LHS over a parameter set including both the transmission and duration parameters ($\beta_P$, $D_P$, $\beta_D$, $D_D$) and contact/partnership parameters ($\rho$, $c$, $c_u/c_w$, and $c_e/c_w$). We do not allow for uncertainties in parameters that are directly related to the evolutionary process ($\beta_{max}$, $\beta_{50}$, $\beta_k$, $D_{max}$, $D_{50}$, $D_k$, $\sigma_M$), using Shirreff \etal's point estimates throughout \cite{shirreff_transmission_2011}.
+
+Latin hypercube sampling is done as in Champredon \etal\ \cite{champredon_hiv_2013}. For each parameter, $z$, its range is divided into $N = 1000$ equal intervals on a log scale:
+
+\begin{equation}
+z_i = \exp\left(\log(z_{min}) + [\log(z_{max}) - \log(z_{min})] \frac{i-1}{N-1}\right) \qquad i = 1,...,N.
+\end{equation}
+For simplicity, we assume that all parameters are uniformly distributed on the log scale. Following the vectorization of a parameter range, a matrix is constructed so that each column contains a vector of a parameter series which it represents ($z_1$,...$z_N$). Then, each column is replaced with a random permutation series of itself. Now, each row contains a different parameter set that is used for each simulation run.
+
+Table~\ref{table:parmsTable} gives the ranges of the model parameters used for LHS. Parameter ranges regarding contact and partnership dynamics ($\rho$, $c$, and $c_e/c_w$) are taken from Champredon \etal\ \cite{champredon_hiv_2013}, whereas those regarding infection ($\beta_P$, $D_P$, $\beta_D$, and $D_D$) are taken from Hollingsworth \etal\ \cite{hollingsworth_hiv1_2008}. The remaining parameters are taken from Shirreff \etal\ \cite{shirreff_transmission_2011}.
+
+%Tables need to be placed after the first paragraph in which they are cited.
 \begin{table}[h!]
 \caption{Parameter ranges/values.  Note that $c$ and $\rho$ values are doubled from Champredon \etal\  because we keep track of individuals, while they keep track of couples. Starred (*) parameters (used in Figure~\ref{fig:panel3}) are from \cite{shirreff_transmission_2011}.}
 \centering
@@ -387,22 +402,6 @@ $n$ & Number of strains & 21 (51*) & Assumption\\
 \end{tabular}
 \label{table:parmsTable}
 \end{table}
-
-
-
-
-\subsection*{Latin hypercube sampling}
-
-Despite considerable effort by many researchers \cite{hollingsworth_hiv1_2008,champredon_hiv_2013}, the parameters determining the rate and structure of sexual partnership change and contact are still very uncertain; this led Champredon \etal\ \cite{champredon_hiv_2013} to adopt a Latin hypercube sampling (LHS) strategy \cite{blower_drugs_1991} that evaluates model outcomes over a range of parameter values. In order to make sure that our comparisons among models apply across the entire space of reasonable parameter values, and in order to evaluate the differential sensitivity of different model structures to parameter values, we follow a similar protocol and perform LHS over a parameter set including both the transmission and duration parameters ($\beta_P$, $D_P$, $\beta_D$, $D_D$) and contact/partnership parameters ($\rho$, $c$, $c_u/c_w$, and $c_e/c_w$). We do not allow for uncertainties in parameters that are directly related to the evolutionary process ($\beta_{max}$, $\beta_{50}$, $\beta_k$, $D_{max}$, $D_{50}$, $D_k$, $\sigma_M$), using Shirreff \etal's point estimates throughout \cite{shirreff_transmission_2011}.
-
-Latin hypercube sampling is done as in Champredon \etal\ \cite{champredon_hiv_2013}. For each parameter, $z$, its range is divided into $N = 1000$ equal intervals on a log scale:
-
-\begin{equation}
-z_i = \exp\left(\log(z_{min}) + [\log(z_{max}) - \log(z_{min})] \frac{i-1}{N-1}\right) \qquad i = 1,...,N.
-\end{equation}
-For simplicity, we assume that all parameters are uniformly distributed on the log scale. Following the vectorization of a parameter range, a matrix is constructed so that each column contains a vector of a parameter series which it represents ($z_1$,...$z_N$). Then, each column is replaced with a random permutation series of itself. Now, each row contains a different parameter set that is used for each simulation run.
-
-Table~\ref{table:parmsTable} gives the ranges of the model parameters used for LHS. Parameter ranges regarding contact and partnership dynamics ($\rho$, $c$, and $c_e/c_w$) are taken from Champredon \etal\ \cite{champredon_hiv_2013}, whereas those regarding infection ($\beta_P$, $D_P$, $\beta_D$, and $D_D$) are taken from Hollingsworth \etal\ \cite{hollingsworth_hiv1_2008}. The remaining parameters are taken from Shirreff \etal\ \cite{shirreff_transmission_2011}.
 
 The one completely new parameter in our model, the ratio of uncoupled to within-couple transmission $c_u/c_w$, is needed to more flexibly contrast uncoupled and extra-couple transmission dynamics within multi-strain models (Appendix); we need to pick a reasonable range for it. Champredon \etal\ \cite{champredon_hiv_2013} assume that the effective within-couple contact rate and effective uncoupled contact rate have the same range of 0.05 - 0.25.  Given Champredon \etal's parameter range, the possible maximum and minimum values of $c_u/c_w$ are 5 and 1/5. Therefore, we use 1/5-5 as the range for the parameter $c_u/c_w$. Although this adds more uncertainty to the parameter $c_u$ --- Champredon \etal's range implies a 5-fold difference whereas ours gives a 25-fold difference --- as there is not much known about the uncoupled transmission rate, we consider the wider range appropriate.
 
