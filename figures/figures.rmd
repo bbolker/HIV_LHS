@@ -6,7 +6,11 @@ output: html_document
 ```{r pkgs,warning=FALSE,message=FALSE, echo = FALSE}
 library("knitr")
 opts_chunk$set(echo=FALSE,error=FALSE)
-windowsFonts(Times=windowsFont("Times"))
+if (.Platform$OS.type=="windows") {
+    windowsFonts(Times=windowsFont("Times"))
+} else {
+    theme_update(text=element_text(family="Times"))
+}
 library("ggplot2"); theme_set(theme_bw(base_size = 12, base_family = "Times"))
 zero_margin <- theme(panel.margin=grid::unit(0,"lines"))
 zero_x_margin <-
@@ -35,16 +39,19 @@ load("../simdata/combine_ev_LHS4.rda")
 ```{r setup2,echo=FALSE}
 orig_sum_labs <- c("peak_time","peak_vir","eq_vir","rel_peak")
 new_sum_labs <- c("peak time","peak virulence","equilibrium virulence","relative peak")
-fixfac2 <- function(x) factor(x,
-                       levels=orig_sum_labs,
-                       labels=new_sum_labs)
+fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
+    if (atop) new_sum_labs <-
+                  gsub("(.*) (.*)","atop(\\1,\\2)",new_sum_labs)
+    factor(x,
+           levels=orig_sum_labs,
+           labels=new_sum_labs)
+}
 ```
 
 
 ### Figure 1
 
-```{r fig1,fig.height=3.5,fig.width=10, echo = FALSE, cache = TRUE,dpi = 600}
-
+```{r fig1,fig.height=3.5,fig.width=10, echo = FALSE, dpi = 600}
 for (i in c("","2","3")) 
     load(sprintf("../simdata/ev_LHS_resS%s.rda",i))
 Ls <- load("../simdata/shirreff_data.rda")
@@ -144,13 +151,19 @@ print(gg_univ)
 
 ```{r fig4_func, echo = FALSE}
 
-trim_gg <- function(gg) {
+trim_gg <- function(gg,hack_spaces=TRUE) {
     n <- gg$nrow
     gg$nrow <- gg$ncol <- n-1
     v <- 1:n^2
     gg$plots <- gg$plots[v>n & v%%n!=0]
     gg$xAxisLabels <- gg$xAxisLabels[-n]
     gg$yAxisLabels <- gg$yAxisLabels[-1]
+    ## ggpairs tries to parse labels, so this fails if they
+    ## have spaces in them ... maybe there's a better way?
+    if (hack_spaces) {
+        gg$xAxisLabels <- gsub("_"," ",gg$xAxisLabels)
+        gg$yAxisLabels <- gsub("_"," ",gg$yAxisLabels)
+    }
     return(gg)
 }
 
@@ -232,17 +245,55 @@ mL3$LHSvar <- factor(mL3$LHSvar,
                               "Duration1","Duration3",
                               "c_mean_base","c_e_ratio","rho_base",
                               "c_u_ratio"),
-										 labels = c("beta[P]", "beta[D]", "D[P]", "D[D]", "c", "c[e]/c[w]", "rho", "c[u]/c[w]"))
+                     labels = c("beta[P]", "beta[D]", "D[P]", "D[D]",
+                                "c", "c[e]/c[w]", "rho", "c[u]/c[w]"))
+
 ## FIXME: could also use labels argument to rename levels, labeller=label_parsed
 ## in facet_grid to get pretty math
 
 mL3$model <- factor(mL3$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
 
+mL3$sumvar <- fixfac2(mL3$sumvar)
+
+L <- function(labels,multi_line=TRUE) {
+    r <- if (all(grepl(" ",labels[[1]]))) {
+             list(as.character(gsub(" ","\n",labels[[1]])))
+    } else {
+        label_parsed(labels,multi_line=multi_line)
+    }
+    return(r)
+}
+
+brkfun <- function(x) {
+    nx <- 1
+    n <- 2
+    brks <- axisTicks(log(x), log=TRUE,  nint = n)
+    ## browser()
+    brks <- brks[brks>x[1] & brks<x[2]]
+    nx <- length(brks)
+    ## cat("brk1",brks,"\n")
+    while (nx<2 && n<10) {
+        n <- n+1
+        ## cat(n,"\n")
+        brks <- axisTicks(log10(x), log=TRUE,  nint = n)
+        brks <- brks[brks>x[1] & brks<x[2]]
+        ## cat("brk2",brks,"\n")
+        nx <- length(brks)
+    }
+    if (n==10) browser()
+    r <- brks[c(1,length(brks))]
+    ## hacks
+    if (all(r==c(0.01,1))) r <- c(0.02,0.5)
+    if (all(r==c(0.2,5))) r <- c(0.5,5)
+    return(r)
+}
+    
 ggplot(mL3,aes(LHSval,sumval,colour=model))+
     geom_point(pch=".",alpha=0.5)+
-    facet_grid(sumvar~LHSvar,scales="free", labeller = label_parsed)+
+    facet_grid(sumvar~LHSvar,scales="free",
+               labeller = L)+
     geom_smooth(se=FALSE)+labs(x="",y="")+
-    scale_x_log10(expand=c(0,0.08))+  ## leave a little extra room?
+    ## leave a little extra room?
+    scale_x_log10(expand=c(0,0.08),breaks=brkfun)+
     zero_margin
-
 ```

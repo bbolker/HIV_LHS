@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+```
+## Error in eval(expr, envir, enclos): could not find function "windowsFonts"
+```
 
 
 
