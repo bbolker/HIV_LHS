@@ -5,13 +5,12 @@ output: html_document
 
 ```{r pkgs,warning=FALSE,message=FALSE, echo = FALSE}
 library("knitr")
+library("ggplot2"); theme_set(theme_bw(base_size = 12,
+                                       base_family = "Times"))
 opts_chunk$set(echo=FALSE,error=FALSE)
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
-} else {
-    theme_update(text=element_text(family="Times"))
-}
-library("ggplot2"); theme_set(theme_bw(base_size = 12, base_family = "Times"))
+} 
 zero_margin <- theme(panel.margin=grid::unit(0,"lines"))
 zero_x_margin <-
     theme(panel.margin.x=grid::unit(0, "lines"))
@@ -23,17 +22,14 @@ library("gridExtra")
 library("plyr")  ## for ldply()
 library("dplyr") ## for full_join()
 library("reshape2")  ## for melt()
-library("GGally")
-library("knitr")
+library("GGally") ## need BMB version
+## devtools::install_github("bbolker/GGally")
 ## devtools::install_github("lionel-/ggstance")
 library("ggstance")
-
 ```
 
 ```{r load, echo = FALSE}
-
 load("../simdata/combine_ev_LHS4.rda")
-
 ```
 
 ```{r setup2,echo=FALSE}
@@ -84,8 +80,12 @@ g3 <- g1 %+% vir_matM3 +
 limits <- c(2.5,4.7)
 breaks <- seq(limits[1],limits[2], by = 0.5)
 afun <- function(label,size=8) {
-    annotate(geom="text",label=label,x=-Inf,y=Inf,
-             size=size,vjust=0.98,hjust=0.02)
+    annotate(geom="text",label=label,x=10,y=Inf,
+             ## http://stackoverflow.com/questions/20083700/how-to-have-annotated-text-style-to-inherit-from-theme-set-options
+             family= theme_get()$text[["family"]],
+             size=size,
+             vjust=1.5,hjust=0.1)
+             ## vjust=0.98,hjust=0.02)
 }
 g1.y <- g1 + scale_y_continuous(limits = limits, breaks = breaks)+
     scale_colour_discrete(name="run")+afun("a")
@@ -150,7 +150,6 @@ print(gg_univ)
 ```
 
 ```{r fig4_func, echo = FALSE}
-
 trim_gg <- function(gg,hack_spaces=TRUE) {
     n <- gg$nrow
     gg$nrow <- gg$ncol <- n-1
@@ -221,8 +220,7 @@ ggp2 <- putPlot(ggp2,inner,2,1)
 inner <- getPlot(ggp2,3,1)
 inner <- inner+scale_x_continuous(breaks=seq(2.5,4.5,by=0.5))
 ggp2 <- putPlot(ggp2,inner,3,1)
-print(ggp2)
-
+print(ggp2,spacingProportion=0)
 ```
 
 ### Figure 5
