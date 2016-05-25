@@ -149,6 +149,11 @@
 \newcommand{\rzero}{{\mathcal R}_0}
 \newcommand{\etal}{\textit{et al.}}
 \newcommand{\tsub}[2]{#1_{{\textrm{\tiny #2}}}}
+\newcommand{\PF}{\textrm{PF}}
+\newcommand{\DS}{\textrm{DS}}
+\newcommand{\WT}{\textrm{WT}}
+\newcommand{\ET}{\textrm{ET}}
+\newcommand{\DM}{\textrm{DM}}
 
 %% END MACROS SECTION
 
@@ -326,7 +331,7 @@ Shirreff \etal's multi-strain evolutionary model \cite{shirreff_transmission_201
 Like Shirreff \etal\ \cite{shirreff_transmission_2011}, we focus on the evolution of mean $\log_{10}$ set-point viral load, SPVL (which we denote as $\alpha$), rather than virulence (i.e. rate of progression to AIDS) itself. 
 In contrast to Shirreff \etal, we use a single-stage disease model instead of accounting explicitly for progression through the three main stages of HIV infection (primary, asymptomatic, and disease), and we use a simple exponentially distributed infectious period instead of a more realistic Weibull-distributed infectious period. We account for varying transmission rates and durations of each disease stage by summing the durations of three stages (again based on Shirreff \etal's model) and taking the duration-weighted average of transmission rates of three stages. Thus the within-couple transmission rate, $\beta$, for our models is given by:
 \begin{equation}
-\beta (\alpha) = \frac{D_P \beta_P + D_A (\alpha) \beta_A (\alpha) + D_D \beta_D}{D_P + D_A (\alpha) + D_D}
+\beta (\alpha) = \frac{D_P \beta_P + D_A (\alpha) \beta_A (\alpha) + D_D \beta_D}{D_P + D_A (\alpha) + D_D},
 \end{equation}
 where the duration of infection ($D_P$ and $D_D$) and rate of transmission ($\beta_P$ and $\beta_D$) of the \textbf{P}rimary and \textbf{D}isease stages
 of infection are independent of the host's SPVL. Following Shirreff \etal, the duration of infection ($D_A$) and rate of transmission ($\beta_A$) for the \textbf{A}symptomatic stage are Hill functions of the SPVL:
@@ -363,8 +368,8 @@ M_{ij} = \frac{\Phi(\alpha_j + d/2;i) - \Phi(\alpha_j - d/2;i)}{\Phi(\tsub{\alph
 where $\Phi(x;i)$ is the Gaussian cumulative distribution function with mean $\alpha_i$ and variance of $\sigma_M^2$, and $d = (\tsub{\alpha}{max} - \tsub{\alpha}{min})/(n-1)$. Transmission rate and disease induced mortality rates are discretized into a vector as well:
 \begin{equation}
 \begin{aligned}
-\beta_i &= \beta(\alpha_i)\\
-\lambda_i &= \frac{1}{D_P + D_A (\alpha_i) + D_D}
+\beta_i &= \beta(\alpha_i),\\
+\lambda_i &= \frac{1}{D_P + D_A (\alpha_i) + D_D}.
 \end{aligned}
 \end{equation}
 
@@ -660,24 +665,22 @@ Below, we use the Kronecker delta (i.e. $\delta_{ij}=1$ if $i=j$ and 1 otherwise
 
 \subsection*{Models 1 and 2: partnership dynamics}
 
-Single individuals acquire partners at rate $\rho$: $S' = - \rho S$ and $I_i' = - \rho I_i$. We follow Champredon \etal's results and assume that single individuals are distributed into coupled states with pair-formation (PF) rates as follows:
+Single individuals acquire partners at per-person rate $\rho$. Partnership formation rate for $S$, $I_i$ are $- \rho S$ and $-\rho I_i$, respectively. We follow Champredon \etal's results and assume that single individuals are distributed into coupled states with pair-formation (PF) rates as follows:
 
-\newcommand{\PF}{\textrm{PF}}
 \begin{equation}
 \begin{aligned}
-\PF(SS) &= \frac{\rho S \cdot S}{2 (S + \sum_k I_k)}\\
-\PF(SI_i) &= \frac{\rho S \cdot I_i}{S + \sum_k I_k}\\
-\PF(II_{ij}) &= \khalf \cdot \frac{\rho I_i \cdot I_j}{S + \sum_k I_k}
+\PF(SS) &= \frac{\rho S \cdot S}{2 (S + \sum_k I_k)},\\
+\PF(SI_i) &= \frac{\rho S \cdot I_i}{S + \sum_k I_k},\\
+\PF(II_{ij}) &= \khalf \cdot \frac{\rho I_i \cdot I_j}{S + \sum_k I_k}.
 \end{aligned}
 \end{equation}
-In a single-strain model, both individuals in a concordant partnership, $II$, enter the single-infected compartment, $I$, when a partnership dissolves: $I' = 2 c II'$. However, this is not the case in a multi-strain model. If infected individuals in an $II$ partnership have different strains, they will enter different compartments; if they are both infected with the same strain, they both enter the same compartment. As described above, we use the Kronecker delta notation to implement this difference between the $i=j$ and $i\neq j$ cases.
 
-Partnerships dissolve at per-partnership rate $c$: the dissolution rates for $SS$, $SI_i$, and $II_{ij}$ pairs are $c SS$, $c SI_i$, and $c II_{ij}$ respectively. Unlike single strain model, where both individuals leaving the $II$ partnership would enter $I$, we have to account for strains which the individuals in concordant partnership are infected with (i.e. both partners in $II_{ii}$ enter $I_i$ whereas one partner in $II_{ij}$ enters the $I_i$ compartment while the other enters $I_j$).
+Partnerships dissolve at per-partnership rate $c$: the dissolution rates for $SS$, $SI_i$, and $II_{ij}$ pairs are $c SS$, $c SI_i$, and $c II_{ij}$ respectively. Unlike single strain model, where both individuals leaving the $II$ partnership would enter $I$, we have to account for strains which the individuals in concordant partnership are infected with (i.e. both partners in $II_{ii}$ enter $I_i$ whereas one partner in $II_{ij}$ enters the $I_i$ compartment while the other enters $I_j$). Thus, coupled individuals are distributed into single states through partnership dissolution (DS):
 
 \begin{equation}
 \begin{aligned}
-S' &= 2 c SS + \sum_k c SI_k \\
-I_i' &= c SI_i + \sum_k 2^{\delta_{ik}} c II_{ik}\\
+\DS(S) &= 2 c SS + \sum_k c SI_k, \\
+\DS(I_i) &= c SI_i + \sum_k 2^{\delta_{ik}} c II_{ik}.\\
 \end{aligned}
 \end{equation}
 
@@ -695,12 +698,12 @@ II_{ij}' &= \khalf \cdot \frac{\rho I_i \cdot I_j}{S + \sum_k I_k} - c II_{ij}
 
 \subsection*{Models 1 and 2: infection}
 
-Within-couple transmission occurs in both models. An infected partner in $SI$ partnership transmits virus to a susceptible partner, and partnership state becomes $II$: $SI_i' = - \beta_i SI_i$. Since we assume that mutation occurs, $II_{ij}$, where $i \neq j$, can be formed from both $SI_i$ and $SI_j$ partnership: $II_{ij}' = M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j$. On the other hand, $II_{ii}$ can only be formed from an $SI_i$ partnership: $II_{ii}' = M_{ii} \beta_i SI_i$. Using the Kronecker delta notation, we obtain the following set of equations that describes within-couple transmission dynamics:
+Within-couple transmission (WT) occurs in both models. An infected partner in $SI$ partnership transmits virus to a susceptible partner, and partnership state becomes $II$: $\WT(SI_i) = - \beta_i SI_i$. Since we assume that mutation occurs, $II_{ij}$, where $i \neq j$, can be formed from both $SI_i$ and $SI_j$ partnership: $\WT(II_{ij}) = M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j$. On the other hand, $II_{ii}$ can only be formed from an $SI_i$ partnership: $\WT(II_{ii}) = M_{ii} \beta_i SI_i$. Using the Kronecker delta notation, we obtain the following set of equations that describes within-couple transmission dynamics:
 
 \begin{equation}
 \begin{aligned}
-SI_i' &= - \beta_i SI_i\\
-II_{ij} &=  \khalf \cdot (M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j)
+\WT(SI_i) &= - \beta_i SI_i,\\
+\WT(II_{ij}) &=  \khalf \cdot (M_{ij} \beta_i SI_i + M_{ji}. \beta_j SI_j)
 \end{aligned}
 \end{equation}
 
@@ -717,31 +720,31 @@ P = \frac{r_u I + r_e (SI + 2 II)}{r_u (S + I) + 2 r_e(SS + SI + II)},
 where $r_u = c_u/c_w$ and $r_e = c_e/c_w$ are the relative uncoupled/extra-couple contact rates. This simplification is useful in a multi-strain model since we cannot multiply a vector with a single value (e.g. $c_u S$ in denominator) if we use Champredon \etal's equation in its original form. Extending the above equation to multi-strain model so that $P_i$ represents the proportion of the extra-couple and uncoupled contact of an infected individual with strain $i$, we obtain:
 
 \begin{equation}
-P_i = \frac{r_u I_i + r_e (SI_i + \sum_k (II_{ik} + \delta_{ik} II_{ik}))}{r_u (S + \sum_k I_k) + r_e(2 SS + \sum_k 2 SI_k + \sum_l \sum_k 2^\delta_{lk} II_{lk} )},
+P_i = \frac{r_u I_i + r_e (SI_i + \sum_k (II_{ik} + \delta_{ik} II_{ik}))}{r_u (S + \sum_k I_k) + r_e(2 SS + \sum_k 2 SI_k + \sum_l \sum_k 2^\delta_{lk} II_{lk} )}.
 \end{equation}
-Using the equation above, we can model uncoupled and extra-couple mixing. For convenience, uncoupled and extra-couple transmission rates, $c_u$ and $c_e$, will be replaced with $U_i = r_u \beta_i$ and $E_i = r_e \beta_i$ hereafter.
+Using the equation above, we can model extra-pair transmission (ET). For convenience, uncoupled and extra-couple transmission rates, $c_u$ and $c_e$, will be replaced with $U_i = r_u \beta_i$ and $E_i = r_e \beta_i$ hereafter.
 
-Single susceptible individuals become infected and enter single infected compartment at the total rate of $\sum_k P_k U_k S$. Through mutation, newly infected individuals are distributed into single infected compartments with different strains: $I_i' = \sum_k M_{ki} P_k U_k S$. Either partner in an $SS$ partnership can be infected, with the partnership state becoming $SI$, at the total rate of $\sum_i 2 P_i E_i SS$. The formation of $SI_i$ partnerships is similar to the process through which single susceptible individuals are distributed into single infected compartments: $SI_i' = \sum_k 2 M_{ki} P_k E_k SS$. Lastly, the susceptible partner in an $SI$ partnership can be infected due to uncoupled/extra-couple contacts and partnership can change to an $II$ partnership. As in the previous cases, $SI_i$ partnerships are lost at a rate of $\sum_k P_k E_k SI_i$. The mutation process is similar to that of within-couple transmission. The only difference is that the \Lspvl\ of a newly infected partner is not determined by its social partner but from an extra-couple partner (i.e. the term $P_i$): $II_{ij}' = (\frac{1}{2})^{\delta_{ij}}(\sum_k (M_{kj} P_k E_k SI_i + M_{ki} P_k E_k SI_j))$. Combining these equations we get the following set of equations that describe all the transmission dynamics:
+Single susceptible individuals become infected and enter single infected compartment at the total rate of $\sum_k P_k U_k S$. Through mutation, newly infected individuals are distributed into single infected compartments with different strains: $\ET(I_i) = \sum_k M_{ki} P_k U_k S$. Either partner in an $SS$ partnership can be infected, with the partnership state becoming $SI$, at the total rate of $\sum_i 2 P_i E_i SS$. The formation of $SI_i$ partnerships is similar to the process through which single susceptible individuals are distributed into single infected compartments: $\ET(SI_i) = \sum_k 2 M_{ki} P_k E_k SS$. Lastly, the susceptible partner in an $SI$ partnership can be infected due to uncoupled/extra-couple contacts and partnership can change to an $II$ partnership. As in the previous cases, $SI_i$ partnerships are lost at a rate of $\sum_k P_k E_k SI_i$. The mutation process is similar to that of within-couple transmission. The only difference is that the \Lspvl\ of a newly infected partner is not determined by its social partner but from an extra-couple partner (i.e. the term $P_i$): $\ET(II_{ij}) = (\frac{1}{2})^{\delta_{ij}}(\sum_k (M_{kj} P_k E_k SI_i + M_{ki} P_k E_k SI_j))$. Combining these equations we get the following set of equations that describe all the transmission dynamics:
 
 \begin{equation}
 \begin{aligned}
-S' =& - \sum_k P_k U_k S\\
-I_i' =& \sum_k M_{ki} P_k U_k S\\
-SS' =&  - \sum_i 2 P_i E_i SS \\
-SI_i' =& \sum_k 2 M_{ki} P_k E_k SS - \beta_i SI_i - \sum_k P_k E_k SI_i\\
-II_{ij}' =& \khalf \cdot (M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j) + \khalf \cdot (\sum_k (M_{kj} P_k E_k SI_i\\
-&+ M_{ki} P_k E_k SI_j))
+S' =& - \sum_k P_k U_k S,\\
+I_i' =& \sum_k M_{ki} P_k U_k S,\\
+SS' =&  - \sum_i 2 P_i E_i SS, \\
+SI_i' =& \sum_k 2 M_{ki} P_k E_k SS - \beta_i SI_i - \sum_k P_k E_k SI_i,\\
+II_{ij}' =& \khalf \cdot (M_{ij} \beta_i SI_i + M_{ji}, \beta_j SI_j) + \khalf \cdot (\sum_k (M_{kj} P_k E_k SI_i\\
+&+ M_{ki} P_k E_k SI_j)).
 \end{aligned}
 \end{equation}
 
 \subsection*{Model 1 and 2 - Disease induced mortality}
 
-The disease induced death rate, $\lambda$, is given by taking the reciprocal of the total duration of the infection: $\lambda_i = 1/(D_A + D_P(\alpha_i) + D_D)$. Since we assume an SIS formulation, where infected individuals that die from infection are immediately replaced by an individual in the single susceptible compartment, we obtain the following equation for single infected individuals:
+The disease induced mortality (DM) rate, $\lambda$, is given by taking the reciprocal of the total duration of the infection: $\lambda_i = 1/(D_A + D_P(\alpha_i) + D_D)$. Since we assume an SIS formulation, where infected individuals that die from infection are immediately replaced by an individual in the single susceptible compartment, we obtain the following equation for single infected individuals:
 
 \begin{equation}
 \begin{aligned}
-S' &= \sum_k \lambda_k I_k \\
-I_i &= - \lambda_i I_i \\
+\DM(S) &= \sum_k \lambda_k I_k, \\
+\DM(I_i) &= - \lambda_i I_i. \\
 \end{aligned}
 \end{equation}
 
@@ -749,8 +752,8 @@ If an infected individual in a partnership dies, the partnership dissolves. Thus
 
 \begin{equation}
 \begin{aligned}
-S' &= \sum_k 2 \lambda_k SI_k \\
-SI_i &= - \lambda_i SI_i 
+\DM(S) &= \sum_k 2 \lambda_k SI_k, \\
+\DM(SI_i) &= - \lambda_i SI_i.
 \end{aligned}
 \end{equation}
 
@@ -758,9 +761,9 @@ Similarly, $II_{ij}$ partnerships dissolve at a rate $-(\lambda_i + \lambda_j)$,
 
 \begin{equation}
 \begin{aligned}
-S' &= \sum_l \sum_k  2^{\delta_{lk}} \lambda_k II_{lk} \\
-I_i' &=  \sum_k 2^{\delta_{ik}} \lambda_k II_{ik} \\
-II_{ij}' &= -(\lambda_i + \lambda_j) II_{ij}
+\DM(S) &= \sum_l \sum_k  2^{\delta_{lk}} \lambda_k II_{lk}, \\
+\DM(I_i) &=  \sum_k 2^{\delta_{ik}} \lambda_k II_{ik}, \\
+\DM(II_{ij}) &= -(\lambda_i + \lambda_j) II_{ij}.
 \end{aligned}
 \end{equation}
 
@@ -782,7 +785,7 @@ II_{ij}' =& \khalf \cdot \frac{\rho I_i \cdot I_j}{(S + \sum_k I_k)} - c II_{ij}
 
 \subsection*{Models 3 and 4: Partnership dynamics}
 
-Since model 3 and 4 assume instantaneous partnership formation, there are only three states: $SS$, $SI_i$, and $II_{ij}$. Partnership dissolution rates are equal to those of model 1 and 2: $SS' = -cSS$, $SI_i' = - cSI_i$, and $II_{ij}' = - II_{ij}$. Once individuals leave a partnership, they enter temporary compartments and are distributed into a partnership as follows:
+Since model 3 and 4 assume instantaneous partnership formation, there are only three states: $SS$, $SI_i$, and $II_{ij}$. Partnership dissolution rates are equal to those of model 1 and 2: $\DS(SS) = -cSS$, $\DS(SI_i) = - cSI_i$, and $\DS(II_{ij}) = - II_{ij}$. Once individuals leave a partnership, they enter temporary compartments and are distributed into a partnership as follows:
 
 \begin{equation}
 \begin{aligned}
@@ -809,11 +812,11 @@ Disease induced mortality is modeled similar to model 1 and 2. However, as singl
 
 \begin{equation}
 \begin{aligned}
-X &= \sum_k 2 \lambda_k SI_k + \sum_l \sum_k 2^{\delta_{lk}}  \lambda_k II_{lk} \\
-Y_i &=  \sum_k  2^{\delta_{ik}}  \lambda_k II_{ik} \\
-SS = &= \frac{X^2}{2 (X + \sum_k Y_k)}\\
-SI_i &= - \lambda_i SI_i + \frac{X Y_i}{X + \sum_k Y_k}\\
-II_{ij}' &= -(\lambda_i + \lambda_j) II_{ij} + \khalf \cdot \frac{Y_i Y_j}{X + \sum_k Y_k}
+X &= \sum_k 2 \lambda_k SI_k + \sum_l \sum_k 2^{\delta_{lk}}  \lambda_k II_{lk}, \\
+Y_i &=  \sum_k  2^{\delta_{ik}}  \lambda_k II_{ik}, \\
+SS' = &= \frac{X^2}{2 (X + \sum_k Y_k)},\\
+SI_i' &= - \lambda_i SI_i + \frac{X Y_i}{X + \sum_k Y_k},\\
+II_{ij}' &= -(\lambda_i + \lambda_j) II_{ij} + \khalf \cdot \frac{Y_i Y_j}{X + \sum_k Y_k}.
 \end{aligned}
 \end{equation}
 
@@ -821,13 +824,13 @@ Combining all these dynamics, we have equation 3. If we remove extra-couple tran
 
 \begin{equation}
 \begin{aligned}
-X =& 2 c SS + \sum_k c SI_k + \sum_k 2 \lambda_k SI_k + \sum_l \sum_k 2^{\delta_{lk}}  \lambda_k II_{lk}\\
-Y_i =& c SI_i + \sum_k 2^{\delta_{ik}}  c II_{ik} + \sum_k  2^{\delta_{ik}}  \lambda_k II_{ik} \\
-SS  =& - c SS + \frac{X^2}{2 (X + \sum_k Y_k)}  - \sum_i 2 P_i E_i SS\\
+X =& 2 c SS + \sum_k c SI_k + \sum_k 2 \lambda_k SI_k + \sum_l \sum_k 2^{\delta_{lk}}  \lambda_k II_{lk},\\
+Y_i =& c SI_i + \sum_k 2^{\delta_{ik}}  c II_{ik} + \sum_k  2^{\delta_{ik}}  \lambda_k II_{ik}, \\
+SS  =& - c SS + \frac{X^2}{2 (X + \sum_k Y_k)}  - \sum_i 2 P_i E_i SS,\\
 SI_i =& - c SI_i + \frac{X Y_i}{X + \sum_k Y_k} - \beta_i SI_i + \sum_k 2 M_{ki} P_k E_k SS\\
-&- \sum_k P_k E_k SI_i - \lambda_i SI_i  \\
-II_{ij}& - c II_{ij} +\khalf \frac{Y_i Y_j}{X + \sum_k Y_k} + \khalf \cdot (M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j) \\
-&+ \khalf \cdot (\sum_k (M_{kj} P_k E_k SI_i + M_{ki} P_k E_k SI_j)) -(\lambda_i + \lambda_j) II_{ij}
+&- \sum_k P_k E_k SI_i - \lambda_i SI_i,\\
+II_{ij}& - c II_{ij} +\khalf \frac{Y_i Y_j}{X + \sum_k Y_k} + \khalf \cdot (M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j)\\
+&+ \khalf \cdot (\sum_k (M_{kj} P_k E_k SI_i + M_{ki} P_k E_k SI_j)) -(\lambda_i + \lambda_j) II_{ij}.
 \end{aligned}
 \end{equation}
 
@@ -842,19 +845,19 @@ Thus, we get the following model:
 
 \begin{equation}
 \begin{aligned}
-S' & = \sum_k \lambda_k I_k - \sum_k \beta'_k S I_k\\
-I_i & = \sum_k M_{ki} \beta'_k S I_k - \lambda_i I_i
+S' & = \sum_k \lambda_k I_k - \sum_k \beta'_k S I_k.\\
+I_i & = \sum_k M_{ki} \beta'_k S I_k - \lambda_i I_i.
 \end{aligned}
 \end{equation}
 
 \subsection*{Model 6}
 
-Model 6 is a random mixing model. It is modeled in a same way as model 6 without the adjusted transmission rate:
+Model 6 is a random mixing model. It is modeled in a same way as model 5 without the adjusted transmission rate:
 
 \begin{equation}
 \begin{aligned}
-S' & = \sum_k \lambda_k I_k - \sum_k \beta_k S I_k\\
-I_i & = \sum_k M_{ki} \beta_k S I_k - \lambda_i I_i
+S' & = \sum_k \lambda_k I_k - \sum_k \beta_k S I_k,\\
+I_i & = \sum_k M_{ki} \beta_k S I_k - \lambda_i I_i.
 \end{aligned}
 \end{equation}
 
@@ -865,10 +868,10 @@ We follow Champredon \etal's result to calculate the initial distribution of inf
 
 \begin{equation}
 \begin{aligned}
-S(0) &= (1 - \epsilon) S^* \\
-SS(0) &= (1 - \epsilon)^2 SS^*\\
-SI_i(0) &= 2 \epsilon (1-\epsilon) SS^* D_i\\
-I_i(0) &=  \epsilon S^* D_i\\
+S(0) &= (1 - \epsilon) S^*, \\
+SS(0) &= (1 - \epsilon)^2 SS^*,\\
+SI_i(0) &= 2 \epsilon (1-\epsilon) SS^* D_i,\\
+I_i(0) &=  \epsilon S^* D_i,\\
 II_{ij}(0) &=  \khalf 2\epsilon^2 SS^* D_i D_j.
 \end{aligned}
 \end{equation}
@@ -876,8 +879,8 @@ Since model 3 and 4 do not have single state, $SS^*=1$ at the disease free equil
 
 \begin{equation}
 \begin{aligned}
-SS(0) &= (1 - \epsilon)^2 SS^*\\
-SI_i(0) &= 2 \epsilon (1-\epsilon) SS^* D_i\\
+SS(0) &= (1 - \epsilon)^2 SS^*,\\
+SI_i(0) &= 2 \epsilon (1-\epsilon) SS^* D_i,\\
 II_{ij}(0) &=  \khalf 2\epsilon^2 SS^* D_i D_j.
 \end{aligned}
 \end{equation}
@@ -885,7 +888,7 @@ Lastly, as model 5 is an implicit model, which does not consider different stage
 
 \begin{equation}
 \begin{aligned}
-S(0) &= 1 - \epsilon\\
+S(0) &= 1 - \epsilon,\\
 I_i(0) &=  \epsilon D_i.
 \end{aligned}
 \end{equation}
