@@ -1,0 +1,22 @@
+with imagemagick:
+
+identify <filename>
+
+> identify fig1.tif
+fig1.tif TIFF 12000x4200 12000x4200+0+0 8-bit DirectClass 1.608MB 0.000u 0:00.000
+
+so this is 12000x4200 pixels.  
+
+We can convert images to TIFF at a specified dpi (300 in this case) via:
+
+convert -density 300 <filename>.png <filename>.tif
+
+but that doesn't actually do anything because PNGs don't really have a physical size ...
+
+http://www.imagemagick.org/Usage/resize/#geometry
+
+-resize xx%
+-resize (pixelsize)x(pixelsize)
+
+but it might be easiest to set the resolution to whatever PLoS wants it to be in figures.rmd;
+then we just need "convert <filename>.png <filename>.tif"

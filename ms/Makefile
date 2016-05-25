@@ -4,6 +4,9 @@
 %.pdf: %.Rnw
 	echo "library(knitr); knit2pdf(\"$*.Rnw\")" | R --slave
 
+%.pdf: %.tex
+	texi2dvi -p $*.tex
+
 %.tex: %.Rnw
 	echo "library(knitr); knit(\"$*.Rnw\")" | R --slave
 
