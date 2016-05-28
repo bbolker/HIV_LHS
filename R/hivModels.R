@@ -21,20 +21,7 @@ gfun <- function(parameters, experimental=FALSE) {
   pp <- expand(parameters)
   attach(pp)
   
-  p <- matrix(NA, n.alpha, n.alpha)
-  
-  
-  for(i in 1:n.alpha){
-    x = alphaDist[["min"]] + (i-1)*d.alpha
-    
-    for(j in 1:n.alpha){
-      k = alphaDist[["min"]] + (j-1)*d.alpha
-      denom <- with(as.list(alphaDist),
-                    diff(pnorm(c(min-d.alpha/2,max+d.alpha/2), mean=x, sd=Vm)))
-      p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
-    }
-  }
-  
+  p <- makeMutMat(pp)
   
   detach(pp)
   
@@ -165,20 +152,7 @@ gfun2 <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
   
-  p <- matrix(NA, n.alpha, n.alpha)
-  
-  
-  for(i in 1:n.alpha){
-    x = alphaDist[["min"]] + (i-1)*d.alpha
-    
-    for(j in 1:n.alpha){
-      k = alphaDist[["min"]] + (j-1)*d.alpha
-      denom <- with(as.list(alphaDist),
-                    diff(pnorm(c(min-d.alpha/2,max+d.alpha/2), mean=x, sd=Vm)))
-      p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
-    }
-  }
-  
+  p <- makeMutMat(pp)
   
   detach(pp)
   
@@ -224,19 +198,7 @@ gfun3 <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
   
-  p <- matrix(NA, n.alpha, n.alpha)
-  
-  for(i in 1:n.alpha){
-    x = alphaDist[["min"]] + (i-1)*d.alpha
-    
-    for(j in 1:n.alpha){
-      k = alphaDist[["min"]] + (j-1)*d.alpha
-      denom <- with(as.list(alphaDist),
-                    diff(pnorm(c(min-d.alpha/2,max+d.alpha/2), mean=x, sd=Vm)))
-      p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
-    }
-  }
-  
+  p <- makeMutMat(pp)
   detach(pp)
   
   g <- function(t,yini,parameters) {
@@ -289,18 +251,7 @@ gfun4 <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
   
-  p <- matrix(NA, n.alpha, n.alpha)
-  
-  for(i in 1:n.alpha){
-    x = alphaDist[["min"]] + (i-1)*d.alpha
-    
-    for(j in 1:n.alpha){
-      k = alphaDist[["min"]] + (j-1)*d.alpha
-      denom <- with(as.list(alphaDist),
-                    diff(pnorm(c(min-d.alpha/2,max+d.alpha/2), mean=x, sd=Vm)))
-      p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
-    }
-  }
+  p <- makeMutMat(pp)
   
   detach(pp)
   
@@ -358,18 +309,7 @@ gfun5 <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
   
-  p <- matrix(NA, n.alpha, n.alpha)
-  
-  for(i in 1:n.alpha){
-    x = alphaDist[["min"]] + (i-1)*d.alpha
-    
-    for(j in 1:n.alpha){
-      k = alphaDist[["min"]] + (j-1)*d.alpha
-      denom <- with(as.list(alphaDist),
-                    diff(pnorm(c(min-d.alpha/2,max+d.alpha/2), mean=x, sd=Vm)))
-      p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
-    }
-  }
+  p <- makeMutMat(pp)
   
   detach(pp)
   
@@ -401,18 +341,7 @@ gfun_random <- function(parameters) {
   pp <- expand(parameters)
   attach(pp)
   
-  p <- matrix(NA, n.alpha, n.alpha)
-  
-  for(i in 1:n.alpha){
-    x = alphaDist[["min"]] + (i-1)*d.alpha
-    
-    for(j in 1:n.alpha){
-      k = alphaDist[["min"]] + (j-1)*d.alpha
-      denom <- with(as.list(alphaDist),
-                    diff(pnorm(c(min-d.alpha/2,max+d.alpha/2), mean=x, sd=Vm)))
-      p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
-    }
-  }
+  p <- makeMutMat(pp)
   
   detach(pp)
   
@@ -444,11 +373,6 @@ I_initialize <- function(parameters) {
     return(I)
   })
 }
-
-
-
-#I_ex <- I_initialize(pars_ex)
-#outer(I_ex, I_ex)
 
 calc_yini <- function(parameters){
   with(c(expand(parameters)),{

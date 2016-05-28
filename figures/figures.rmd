@@ -42,6 +42,7 @@ fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
            levels=orig_sum_labs,
            labels=new_sum_labs)
 }
+
 ```
 
 
@@ -122,6 +123,70 @@ print(gg_virtraj)
 
 ```
 
+### Figure 2.1 - Transmission rate
+
+```{r fig2.1, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400} 
+
+source("../R/hivFuns.R")
+source("../R/Param.R")
+
+returnBeta <- function(lSpvl, parameters){
+	with(as.list(c(parameters)),{
+		v = 10^lSpvl
+		return(hill(K,Bmax,v,a))
+	})
+}
+
+ss2 <- transform(ss, mean = returnBeta(mean,HIVpars.skeleton),
+								 lwr = returnBeta(lwr,HIVpars.skeleton),
+								 upr = returnBeta(upr,HIVpars.skeleton))
+
+
+gg_betatraj <- ggplot(ss2,
+                     aes(tvec,mean,ymin=lwr,ymax=upr))+
+	geom_line(aes(colour=model,linetype=model),lwd=1)+
+	geom_ribbon(aes(fill = model), alpha=0.3)+
+	labs(x="time (years)",y=expression(mean~transmission~rate~during~asymptomatic~stage)) +
+	theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
+		axis.title.x = element_text(margin = margin(10,0,0,0))) +
+	facet_wrap(~model, nrow = 2) +
+	zero_margin
+	
+## scale_x_continuous(limits=c(0,2500))
+print(gg_betatraj)
+
+```
+
+### Figure 2.2 - Duration
+
+```{r fig2.2, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400} 
+returnDur <- function(lSpvl, parameters){
+	with(as.list(c(parameters)),{
+		v = 10^lSpvl
+		return(hill(v,Dmax,D50,h))
+	})
+}
+
+ss3 <- transform(ss, mean = returnDur(mean,HIVpars.skeleton),
+								 lwr = returnDur(lwr,HIVpars.skeleton),
+								 upr = returnDur(upr,HIVpars.skeleton))
+
+gg_durtraj <- ggplot(ss3,
+                     aes(tvec,mean,ymin=lwr,ymax=upr))+
+	geom_line(aes(colour=model,linetype=model),lwd=1)+
+	geom_ribbon(aes(fill = model), alpha=0.3)+
+	labs(x="time (years)",y=expression(mean~duration~of~asymptomatic~stage)) +
+	theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
+		axis.title.x = element_text(margin = margin(10,0,0,0))) +
+	facet_wrap(~model, nrow = 2) +
+	zero_margin
+	
+## scale_x_continuous(limits=c(0,2500))
+print(gg_durtraj)
+
+
+```
+
 ### Figure 3
 
 ```{r fig3, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
@@ -146,6 +211,49 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
                                value=rval),pch=22,size=3,show.legend=FALSE) +
 	zero_x_margin
 print(gg_univ)
+
+```
+
+
+### Figure 3.1
+
+```{r fig3.1, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
+
+sL <- transform(sum_list[["sum_mat"]],rel_peak=peak_vir/eq_vir)
+sL$model <- factor(sL$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
+
+sL.epi <- transform(sL, eq_t = returnBeta(eq_vir,HIVpars.skeleton),
+										peak_t = returnBeta(peak_vir,HIVpars.skeleton),
+										eq_dur = returnDur(eq_vir,HIVpars.skeleton),
+										peak_dur = returnDur(peak_vir,HIVpars.skeleton))
+
+sL.epi <- sL.epi[,-c(3:6)]
+
+mL.epi <- melt(sL.epi,id.vars=c("model","run"))
+## horrible hack (but doesn't help); subsample
+## w <- which(mL$model=="random")
+## mLw <- mL[-sample(w,size=length(w)*9/10,replace=FALSE),]
+w.epi.t <- with(mL.epi,which(model=="random" & variable=="eq_t"))
+w.epi.d <- with(mL.epi,which(model=="random" & variable=="eq_dur"))
+rval.epi.t <- mean(mL.epi$value[w.epi.t])
+rval.epi.d <- mean(mL.epi$value[w.epi.d])
+mLw.epi <- droplevels(mL.epi[-c(w.epi.t,w.epi.d),])
+mLw.epi$variable <- factor(mLw.epi$variable, levels = c("eq_t", "peak_t", "eq_dur", "peak_dur"),
+													 labels = c("Equilbrium asymptomatic transmission rate",
+													 					 "Maximum transmission rate",
+													 					 "Equilibrium duration of asymptomatic stage",
+													 					 "Minimum duration of asymptomatic stage"))
+
+gg_univ.epi <- ggplot(mLw.epi,aes(value,model,fill=model))+
+	geom_violinh(width=1)+
+	facet_wrap(~variable,scale="free_x")+
+	guides(fill=guide_legend(reverse=TRUE))+
+	labs(y="")+
+	geom_point(data=data.frame(model="random",variable=c("Equilbrium asymptomatic transmission rate",
+																											 "Equilibrium duration of asymptomatic stage"),
+                               value=c(rval.epi.t, rval.epi.d)),pch=22,size=3,show.legend=FALSE) +
+	zero_x_margin
+print(gg_univ.epi)
 
 ```
 

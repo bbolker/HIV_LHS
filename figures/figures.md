@@ -4,9 +4,6 @@ output: html_document
 ---
 
 
-```
-## Error in eval(expr, envir, enclos): could not find function "windowsFonts"
-```
 
 
 
@@ -21,9 +18,22 @@ output: html_document
 
 ![plot of chunk fig2](figure/fig2-1.png)
 
+### Figure 2.1 - Transmission rate
+
+![plot of chunk fig2.1](figure/fig2.1-1.png)
+
+### Figure 2.2 - Duration
+
+![plot of chunk fig2.2](figure/fig2.2-1.png)
+
 ### Figure 3
 
 ![plot of chunk fig3](figure/fig3-1.png)
+
+
+### Figure 3.1
+
+![plot of chunk fig3.1](figure/fig3.1-1.png)
 
 
 
