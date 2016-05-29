@@ -31,30 +31,30 @@
 
 \setbeamercolor{footline}{fg=drexelgold, bg=d3gray}
 \setbeamerfont{footline}{size=\large,series=\tt}
-\setbeamercolor{separation line}{bg=ta2orange}
-\setbeamercolor{title in headline}{fg=drexelblue}
-\setbeamercolor{author in headline}{fg=drexelblue2}
-\setbeamercolor{institute in headline}{fg=drexelblue3}
+\setbeamercolor{separation line}{bg=macgold}
+\setbeamercolor{title in headline}{fg=macgrey1} % drexelblue
+\setbeamercolor{author in headline}{fg=macgrey1}
+\setbeamercolor{institute in headline}{fg=macgrey1}
 
 \setbeamercolor{framesubtitle}{fg=drexelgold, bg=d2gray}
-\setbeamercolor{author in head/foot}{fg=drexelgold, bg=drexelblue}
-\setbeamercolor{title in head/foot}{fg=drexelgold, bg=drexelblue}
+\setbeamercolor{author in head/foot}{fg=macgrey1, bg=macmaroon}
+\setbeamercolor{title in head/foot}{fg=macgrey1, bg=macmaroon}
 
 \setbeamercolor*{normal text}{fg=black, bg=white}
 %%\setbeamercolor*{block body}{bg=blockBackground,fg=black}
-\setbeamercolor*{block body}{fg=black}
-\setbeamercolor*{block title}{fg=drexelblue,bg=drexelgold}
+\setbeamercolor*{block body}{bg=macgrey4,fg=black}
+\setbeamercolor*{block title}{fg=macgrey1,bg=macmaroon}
 \setbeamerfont{block title}{size=\large,series=\bf}
-\setbeamercolor{upper separation line head}{fg=ta2orange}
+\setbeamercolor{upper separation line head}{fg=macgold}
 
 \setbeamercolor*{example body}{fg=ta3aluminium,bg=black}
 \setbeamercolor*{example text}{fg=ta3aluminium,bg=black}
-\setbeamercolor*{example title}{bg=taorange,fg=d2gray}
+\setbeamercolor*{example title}{bg=macgold,fg=d2gray}
 
 %\setbeamercolor{alerted text}{fg=d3gray}
 
 %\setbeamercolor{example text}{fg=taorange}
-\setbeamercolor{structure}{fg=ta3skyblue}
+\setbeamercolor{structure}{fg=macmaroon} % ta3skyblue}
 
 \setbeamertemplate{itemize items}[triangle]
 \setbeamertemplate{navigation symbols}{}  % no navigation on a poster
@@ -78,7 +78,7 @@
 %%
 \newenvironment{transbox}[1][blockBackground]{
 \begin{tikzpicture}
-\node[text width=\textwidth, fill opacity=0.85, text opacity=1, fill=#1, rounded corners, draw=drexelblue] \bgroup%
+\node[text width=\textwidth, fill opacity=0.85, text opacity=1, fill=#1, rounded corners, draw=macmaroon] \bgroup% draw=drexelblue
 }{\egroup;\end{tikzpicture}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -98,7 +98,7 @@
     %%     %~~ \vspace{-0.5em}\huge\color{orange}{\dotfill}\vspace{0.5em}~~
     %% \end{beamercolorbox}
     \begin{center}\begin{tikzpicture}
-      \node[text width=0.97\textwidth,inner sep=3mm,fill=drexelgold,draw=ta2orange,text=drexelblue,rounded corners,minimum height=\blocktitleheight] {\usebeamerfont*{block title}\insertblocktitle};
+      \node[text width=0.97\textwidth,inner sep=3mm,fill=macmaroon,draw=macgold,text=macgrey1,rounded corners,minimum height=\blocktitleheight] {\usebeamerfont*{block title}\insertblocktitle};
     \end{tikzpicture}\end{center}
     \vspace{3mm}
     \begin{beamercolorbox}[leftskip=9mm]{block body}
