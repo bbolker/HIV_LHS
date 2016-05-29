@@ -1,0 +1,486 @@
+%\documentclass[final,hyperref={pdfpagelabels=false}]{beamer}
+\documentclass{beamer}
+\usepackage{grffile}
+\mode<presentation>{\usetheme{drexel}}
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath,amsthm, amssymb, latexsym}
+\usefonttheme[onlymath]{serif}
+
+%% You can change the poster orientation (portrait vs. landscape) and the paper size (a0, a1, &c.) here:
+\usepackage[orientation=portrait,size=a0,scale=1.4,debug]{beamerposter}
+
+\usepackage{array,booktabs,tabularx}
+\newcolumntype{Z}{>{\centering\arraybackslash}X} % centered tabularx columns
+\newcommand{\pphantom}{\textcolor{ta3aluminium}} % phantom introduces a vertical space in p formatted table columns??!!
+
+
+%% MY MACROS %%
+\newcommand{\R}{{\mathcal R}}
+\newcommand{\Ro}{\mathcal{R}_0}
+\newcommand{\Ihat}{{\hat{I}}}
+\newcommand{\Imin}{I_{\rm min}}
+\newcommand{\etal}{\emph{et al.}}
+\newcommand{\fref}[1]{Figure~\ref{fig:#1}}
+
+<<pkgs,warning=FALSE,message=FALSE, echo = FALSE>>=
+library("knitr")
+library("ggplot2"); theme_set(theme_bw(base_size = 32,
+                                       base_family = "Times"))
+opts_chunk$set(echo=FALSE,error=FALSE)
+if (.Platform$OS.type=="windows") {
+    windowsFonts(Times=windowsFont("Times"))
+} 
+zero_margin <- theme(panel.margin=grid::unit(0,"lines"))
+zero_x_margin <-
+    theme(panel.margin.x=grid::unit(0, "lines"))
+library("MASS")
+## use Dark2 rather than Set1 because colour #6 of Set1 is yellow (ugh/too light)
+scale_colour_discrete <- function(...,palette="Dark2") scale_colour_brewer(...,palette=palette)
+scale_fill_discrete <- function(...,palette="Dark2") scale_fill_brewer(...,palette=palette)
+library("gridExtra")
+library("plyr")  ## for ldply()
+library("dplyr") ## for full_join()
+library("reshape2")  ## for melt()
+library("GGally") ## need BMB version
+## devtools::install_github("bbolker/GGally")
+## devtools::install_github("lionel-/ggstance")
+library("ggstance")
+@
+
+<<load, echo = FALSE>>=
+load("../simdata/combine_ev_LHS4.rda")
+@
+
+<<setup2,echo=FALSE>>=
+orig_sum_labs <- c("peak_time","peak_vir","eq_vir","rel_peak")
+new_sum_labs <- c("peak time","peak virulence","equilibrium virulence","relative peak")
+fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
+    if (atop) new_sum_labs <-
+                  gsub("(.*) (.*)","atop(\\1,\\2)",new_sum_labs)
+    factor(x,
+           levels=orig_sum_labs,
+           labels=new_sum_labs)
+}
+@
+
+<<setup3, echo=FALSE,dev="tikz",cache=TRUE>>=
+source("../R/hivFuns.R")
+source("../R/LHSparms3.R")
+Lspvl <- "$\\log_{10}~\\textrm{SPVL}$"
+pars <- expand(ltab_mean)
+dd <-with(pars,
+     melt(data.frame(alpha=alpha,"transmission probability"=Beta2,
+                     "duration (years)"=Duration2,check.names=FALSE),
+          id.vars="alpha"))
+gg_tradeoff <- ggplot(dd,aes(alpha,value))+facet_wrap(~variable,scale="free")+
+    geom_line()+
+    labs(x= Lspvl)
+@
+
+%%%\title{\huge On the Persistence of Invading Pathogens}
+\title{\LARGE HIV virulence evolution in structured epidemic models}
+
+\author{\href{http://www.math.mcmaster.ca/bolker/}{Ben Bolker and Sang Woo Park}}
+\email{\href{mailto:bolker@mcmaster.ca}{\texttt{bolker@mcmaster.ca}}}
+\institute[McMaster University]{McMaster University, Hamilton, Ontario, Canada %%\\\vspace{5mm}\texttt{earn@math.mcmaster.ca}
+}
+\date[June 2016]{June 2016}
+
+%% Uncomment the following line to define a custom logo (or to tweak the size of the logo)
+\DrexelLogo{\includegraphics[width=\WhenPortrait{1.75}{1}\linewidth]{images/Maclogo}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newlength{\columnheight}
+\setlength{\columnheight}{105cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\begin{frame}
+%\includegraphics[width=\textwidth]{images/photobanner.pdf}
+\vspace{0.5cm}
+  \noindent\begin{columns}
+    % ---------------------------------------------------------%
+    % Set up a column 
+    \begin{column}{.33\textwidth}
+      \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
+        \begin{minipage}[T]{.95\textwidth}  % tweaks the width, makes a new \textwidth
+          \parbox[t][\columnheight]{\textwidth}{ % must be some better way to set the the height, width and textwidth simultaneously
+            % Since all columns are the same length, it is all nice and tidy.  You have to get the height empirically
+            % ---------------------------------------------------------%
+            % fill each column with content            
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{block}{Summary}
+\noindent
+\hspace{-1.6cm}
+Pathogens can evolve rapidly in response to changing
+conditions (e.g., epidemic stage or public health interventions). 
+Models of \textbf{eco-evolutionary dynamics} often
+neglect important epidemiological processes, such as the formation and
+dissolution of sexual partnerships. We
+compared \textbf{models with a range of complexity} in their
+representation of partnership dynamics and extra-partnership contact.
+Simple random-mixing actually gave the closest match to the most realistic models; extra-pair contact washed out the effects
+of epidemiological structure. Nevertheless, the large differences
+in evolutionary dynamics among different epidemiological models
+suggests that researchers trying to predict the evolution of
+pathogens should proceed with caution.
+
+\end{block}
+
+\vspace{0.5cm}
+           
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+\begin{block}{Tradeoff theory}
+
+<<tradeoff_fig,echo=FALSE,fig.width=10>>=
+print(gg_tradeoff)
+@ 
+  \begin{itemize}
+    \item \textbf{tradeoff theory}: virulence evolution
+      mediated by transmission-vs-clearance tradeoff
+    \item still debated \cite{EbertBull2003,alizon_adaptive_2015}
+    \item HIV \cite{fraser_virulence_2014}: \textbf{set-point viral load}
+      correlated with transmission probability, rate of progression to AIDS
+    \item data from Rakai, Uganda
+    \item eco-evolutionary virulence dynamics: \cite{shirreff_transmission_2011}
+  \end{itemize}
+
+\end{block}
+
+%%\vfill
+\vspace{0.5cm}
+
+\begin{block}{Epidemiological structure}
+
+  %\vspace{-3cm}
+  \begin{center}
+    \includegraphics[width=\textwidth]{images/champ1.png}
+  \end{center}
+
+Spectrum of model complexity: 
+\begin{itemize}
+\item \textbf{pair formation}: instantaneous or delayed?
+\item \textbf{extra-pair contact} (\textbf{epc}): present or absent?
+\item \textbf{implicit model}: no explicit partnerships,
+  force of infection expression derived from $\Ro$ of pair-formation
+  model (without epc)
+\item \textbf{random-mixing model}: standard SIR model
+\end{itemize}
+
+Slightly simplified disease model (single stage only;
+genetic but not phenotypic variation)
+
+\end{block}
+
+}
+\end{minipage}
+\end{beamercolorbox}
+\end{column}
+    % ---------------------------------------------------------%
+    % end the column
+
+
+
+
+    % ---------------------------------------------------------%
+    % Set up a column 
+    \begin{column}{.33\textwidth}
+      \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
+        \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
+          \parbox[t][\columnheight]{\textwidth}{ % must be some better way to set the the height, width and textwidth simultaneously
+            % Since all columns are the same length, it is all nice and tidy.  You have to get the height empirically
+            % ---------------------------------------------------------%
+            % fill each column with content
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+\begin{block}{Basic evolutionary dynamics}
+
+\vspace{-1cm}
+
+<<virdyn,cache=TRUE,dev="tikz",fig.width=25,fig.height=30>>=
+ss <- subset(sum_list[["vir_mat"]],tvec<750)
+ss$model <- factor(ss$model, c("random",
+         "pairform+epc", "pairform","instswitch+epc","instswitch","implicit"))
+
+gg_virtraj <- ggplot(ss,
+                     aes(tvec,mean,ymin=lwr,ymax=upr))+
+    geom_line(aes(colour=model,linetype=model),lwd=1)+
+    geom_ribbon(aes(fill = model), alpha=0.3)+
+    labs(x="time (years)",y=Lspvl) +
+    ## theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
+    ##  axis.title.x = element_text(margin = margin(10,0,0,0))) +
+    facet_wrap(~model, nrow = 3) +
+    zero_margin+
+    theme(legend.text=element_text(size=16))
+## scale_x_continuous(limits=c(0,2500))
+print(gg_virtraj)
+@ 
+
+
+\vspace{0.5cm}
+
+\end{block}            
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            
+\begin{block}{Univariate summary}
+
+<<univ,cache=TRUE,dev="tikz",fig.width=45,fig.height=30>>=
+sL <- transform(sum_list[["sum_mat"]],rel_peak=peak_vir/eq_vir)
+sL$model <- factor(sL$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
+mL <- melt(sL,id.vars=c("model","run"))
+## horrible hack (but doesn't help); subsample
+## w <- which(mL$model=="random")
+## mLw <- mL[-sample(w,size=length(w)*9/10,replace=FALSE),]
+w <- with(mL,which(model=="random" & variable=="eq_vir"))
+rval <- mean(mL$value[w])
+mLw <- droplevels(mL[-w,])
+mLw$variable <- fixfac2(mLw$variable)
+
+gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
+	geom_violinh(width=1)+
+	facet_wrap(~variable,scale="free_x")+
+	guides(fill=guide_legend(reverse=TRUE))+
+	labs(y="")+
+	geom_point(data=data.frame(model="random",variable="equilibrium virulence",
+                               value=rval),pch=22,size=3,show.legend=FALSE) +
+	zero_x_margin
+print(gg_univ)
+@ 
+
+\end{block}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+         
+\vspace{0.5cm}
+
+\begin{block}{Bivariate summary}
+
+<<ggfuns,echo=FALSE>>=
+trim_gg <- function(gg,hack_spaces=TRUE) {
+    n <- gg$nrow
+    gg$nrow <- gg$ncol <- n-1
+    v <- 1:n^2
+    gg$plots <- gg$plots[v>n & v%%n!=0]
+    gg$xAxisLabels <- gg$xAxisLabels[-n]
+    gg$yAxisLabels <- gg$yAxisLabels[-1]
+    ## ggpairs tries to parse labels, so this fails if they
+    ## have spaces in them ... maybe there's a better way?
+    if (hack_spaces) {
+        gg$xAxisLabels <- gsub("_"," ",gg$xAxisLabels)
+        gg$yAxisLabels <- gsub("_"," ",gg$yAxisLabels)
+    }
+    return(gg)
+}
+
+tweak_legends_gg <- function(gg,pos=1.5) {
+    n <- gg$nrow
+    for (i in 1:n) {
+        for (j in 1:n) {
+            inner <- getPlot(gg,i,j)
+            if (i==1 & j==1) {
+                inner <- inner + ggplot2::theme(legend.position=c(pos,0.5)) +
+                    guides(colour = guide_legend(override.aes = list(size=6)))
+            } else {
+                inner <- inner + ggplot2::theme(legend.position="none")
+            }
+            gg <- putPlot(gg,inner,i,j)
+        }
+    }
+    return(gg)
+}
+
+
+tweak_colours_gg <- function(gg) {
+    n <- gg$nrow
+    for (i in 1:n) {
+        for (j in 1:n) {
+            inner <- getPlot(gg,i,j)
+            inner <- inner+scale_colour_brewer(palette = 'Dark2')
+            gg <- putPlot(gg,inner,i,j)
+        }
+    }
+    return(gg)
+}
+@ 
+
+
+<<ggpairs,echo=FALSE,fig.width=25,fig.height=25>>=
+sL2 <- sL
+names(sL2)[na.omit(match(orig_sum_labs,names(sL)))] <- gsub(" ","_",new_sum_labs)
+    ## paste0("`",new_sum_labs,"`")
+ggp1 <- ggpairs(sL2,
+        mapping = ggplot2::aes(color = model),
+        columns=3:6,
+        legends=TRUE,
+        lower = list(continuous = wrap("points",size=0.1)), ## alpha = 0.3,size=0.5)),
+        diag = list(continuous = "blankDiag"),
+        upper = list(continuous = "blank"))
+## http://stackoverflow.com/questions/14711550/is-there-a-way-to-change-the-color-palette-for-ggallyggpairs-using-ggplot
+## have to change plot one panel at a time
+ggp2 <- tweak_colours_gg(tweak_legends_gg(trim_gg(ggp1)))
+## add 1-to-1 line
+inner <- getPlot(ggp2,2,1)
+inner <- inner+geom_abline(intercept=0,slope=1,lty=2)
+ggp2 <- putPlot(ggp2,inner,2,1)
+## tweak scale
+inner <- getPlot(ggp2,3,1)
+inner <- inner+scale_x_continuous(breaks=seq(2.5,4.5,by=0.5))
+ggp2 <- putPlot(ggp2,inner,3,1)
+print(ggp2,spacingProportion=0)
+@   
+\end{block}
+
+}
+          % ---------------------------------------------------------%
+          % end the column
+        \end{minipage}
+      \end{beamercolorbox}
+   \end{column}
+
+    % ---------------------------------------------------------%
+    % end the column
+    \begin{column}{.33\textwidth}
+      \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
+        \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
+          \parbox[t][\columnheight]{\textwidth}{ % must be some better way to set the the height, width and textwidth simultaneously
+            % Since all columns are the same length, it is all nice and tidy.  You have to get the height empirically
+            % ---------------------------------------------------------%
+            % fill each column with content
+
+            \begin{block}{Sensivity}
+<<sens,dev="png",echo=FALSE>>=
+mL3 <- subset(mL2,
+       !((model=="implicit" &
+          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
+         (model=="random" &
+          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
+         (model=="instswitch" &
+          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
+         (model=="instswitch+epc" &
+          LHSvar %in% c("rho_base","c_u_ratio")) |
+         (model=="pairform" &
+          LHSvar %in% c("c_u_ratio","c_e_ratio"))))
+## reorder factors
+mL3$LHSvar <- factor(mL3$LHSvar,
+                     levels=c("Beta1","Beta3",
+                              "Duration1","Duration3",
+                              "c_mean_base","c_e_ratio","rho_base",
+                              "c_u_ratio"),
+                     labels = c("beta[P]", "beta[D]", "D[P]", "D[D]",
+                                "c", "c[e]/c[w]", "rho", "c[u]/c[w]"))
+
+## FIXME: could also use labels argument to rename levels, labeller=label_parsed
+## in facet_grid to get pretty math
+
+mL3$model <- factor(mL3$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
+
+mL3$sumvar <- fixfac2(mL3$sumvar)
+
+L <- function(labels,multi_line=TRUE) {
+    r <- if (all(grepl(" ",labels[[1]]))) {
+             list(as.character(gsub(" ","\n",labels[[1]])))
+    } else {
+        label_parsed(labels,multi_line=multi_line)
+    }
+    return(r)
+}
+
+brkfun <- function(x) {
+    nx <- 1
+    n <- 2
+    brks <- axisTicks(log(x), log=TRUE,  nint = n)
+    ## browser()
+    brks <- brks[brks>x[1] & brks<x[2]]
+    nx <- length(brks)
+    ## cat("brk1",brks,"\n")
+    while (nx<2 && n<10) {
+        n <- n+1
+        ## cat(n,"\n")
+        brks <- axisTicks(log10(x), log=TRUE,  nint = n)
+        brks <- brks[brks>x[1] & brks<x[2]]
+        ## cat("brk2",brks,"\n")
+        nx <- length(brks)
+    }
+    if (n==10) browser()
+    r <- brks[c(1,length(brks))]
+    ## hacks
+    if (all(r==c(0.01,1))) r <- c(0.02,0.5)
+    if (all(r==c(0.2,5))) r <- c(0.5,5)
+    return(r)
+}
+    
+ggplot(mL3,aes(LHSval,sumval,colour=model))+
+    geom_point(pch=".",alpha=0.5)+
+    facet_grid(sumvar~LHSvar,scales="free",
+               labeller = L)+
+    geom_smooth(se=FALSE)+labs(x="",y="")+
+    ## leave a little extra room?
+    scale_x_log10(expand=c(0,0.08),breaks=brkfun)+
+    zero_margin
+@               
+              \end{block}
+            \begin{block}{Conclusions}
+\end{block}
+\begin{block}{References}
+
+{\tiny
+%% Add numbered references
+\setbeamertemplate{bibliography item}[text]
+%% Stop line breaks
+\setbeamertemplate{bibliography entry title}{}
+\setbeamertemplate{bibliography entry location}{}
+\setbeamertemplate{bibliography entry note}{}
+%% Stop font color changes
+% \setbeamercolor*{bibliography item}{fg=black}
+% \setbeamercolor*{bibliography entry title}{fg=black}
+% \setbeamercolor*{bibliography entry author}{fg=black}
+% \setbeamercolor*{bibliography entry location}{fg=black}
+% \setbeamercolor*{bibliography entry note}{fg=black} 
+%% Generate bibliography
+\bibliographystyle{vancouver}
+\bibliography{../ms/virulence}
+}
+
+\end{block}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+         
+\vspace{0.5cm}
+             
+\begin{block}{Acknowledgements}
+
+We thank Christophe Fraser for providing access to code, and 
+the Natural Sciences and Engineering Research Council of Canada (NSERC)
+for funding.
+
+\end{block}
+
+          }
+        \end{minipage}
+      \end{beamercolorbox}
+   \end{column}
+
+ \end{columns}
+\end{frame}
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-PDF-mode: t
+%%% End:
