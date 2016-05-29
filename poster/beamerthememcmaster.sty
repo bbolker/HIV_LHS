@@ -1,4 +1,5 @@
-\ProvidesPackage{beamerthemedrexel}  % this style was created by Evan Sultanik
+\ProvidesPackage{beamerthememcmaster}  
+% this style was modified from one created by Evan Sultanik
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newif\if@dragon \@dragontrue
@@ -6,7 +7,7 @@
 \DeclareOption{nodragon}{\@dragonfalse}
 \ProcessOptions
 
-\RequirePackage{drexelcolors}
+\RequirePackage{mcmastercolors}
 \RequirePackage{tikz}
 %%\usetikzlibrary{shadows}
 
@@ -73,7 +74,7 @@
 %%\usebackgroundtemplate{\includegraphics[width=\paperwidth]{bigDragon-low.png}}
 
 %%
-%% This is the block environment that gives transparant blocks
+%% This is the block environment that gives transparent blocks
 %%
 \newenvironment{transbox}[1][blockBackground]{
 \begin{tikzpicture}

@@ -1,8 +1,10 @@
 %\documentclass[final,hyperref={pdfpagelabels=false}]{beamer}
 \documentclass{beamer}
 \usepackage{grffile}
-\mode<presentation>{\usetheme{drexel}}
+\mode<presentation>{\usetheme{mcmaster}}
 
+\usepackage{wrapfig}
+% \usepackage{picins} %% ??? screws up tikz ????
 \usepackage[english]{babel}
 \usepackage[latin1]{inputenc}
 \usepackage{amsmath,amsthm, amssymb, latexsym}
@@ -65,7 +67,7 @@ fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
 }
 @
 
-<<setup3,echo=FALSE,dev="tikz">>=
+<<setup3,echo=FALSE>>=
 source("../R/hivFuns.R")
 source("../R/Param.R")
 ltab_mean <- apply(HIVpars_range, 1, geom_mean)
@@ -96,6 +98,9 @@ gg_tradeoff <- ggplot(dd,aes(alpha,value))+facet_wrap(~variable,scale="free")+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newlength{\columnheight}
 \setlength{\columnheight}{105cm}
+
+\newlength{\shortcolumnheight}
+\setlength{\shortcolumnheight}{75cm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
@@ -136,17 +141,17 @@ of partnership dynamics and extra-partnership contact.
  
 \begin{block}{Tradeoff theory}
 
-<<tradeoff_fig,echo=FALSE,fig.width=10>>=
+<<tradeoff_fig,echo=FALSE,fig.height=14,fig.width=30,out.width="0.95\\textwidth",dev="tikz",cache=TRUE>>=
 print(gg_tradeoff)
 @ 
-  \begin{itemize}
-    \item \textbf{tradeoff theory}: virulence evolution
-      mediated by transmission-vs-clearance tradeoff
-    \item still debated \cite{EbertBull2003,alizon_adaptive_2015}
-    \item HIV \cite{fraser_virulence_2014}: \textbf{set-point viral load}
+
+\begin{itemize}
+\item \textbf{tradeoff theory}: virulence evolution mediated by transmission-vs-clearance tradeoff
+\item still debated \cite{EbertBull2003,alizon_adaptive_2015}
+\item HIV \cite{fraser_virulence_2014}: \textbf{set-point viral load}
       correlated with transmission probability, rate of progression to AIDS (data from Rakai, Uganda)
-    \item eco-evolutionary virulence dynamics: \cite{shirreff_transmission_2011}
-  \end{itemize}
+\item eco-evolutionary virulence dynamics: \cite{shirreff_transmission_2011}
+\end{itemize}
 
 \end{block}
 
@@ -157,24 +162,50 @@ print(gg_tradeoff)
 
   %\vspace{-3cm}
   \begin{center}
-    \includegraphics[width=\textwidth]{images/champ1.png}
+    \includegraphics[width=\textwidth]{images/champ1.png} \\
+    Champredon \etal\ 2013 \cite{champredon_hiv_2013}
   \end{center}
 
 Spectrum of model complexity: 
 \begin{itemize}
 \item \textbf{pair formation}: instantaneous or delayed?
-\item \textbf{extra-pair contact} (\textbf{epc}): present or absent?
+\item \textbf{extra-pair contact} (epc): present or absent?
 \item \textbf{implicit model}: no explicit partnerships,
   force of infection expression derived from $\Ro$ of pair-formation
   model (without epc)
 \item \textbf{random-mixing model}: standard SIR model
 \end{itemize}
 
-Slightly simplified disease model (single stage only;
-genetic but not phenotypic variation)
+Simplified disease model (single stage only)
 
 \end{block}
 
+\begin{block}{Sampling strategy}
+% https://www.sharelatex.com/learn/Wrapping_text_around_figures
+  \setlength{\abovecaptionskip}{0pt}
+  \setlength{\belowcaptionskip}{0pt}
+  \setlength{\intextsep}{0pt}
+  \setlength{\textfloatsep}{0pt}
+% \begin{wrapfigure}{l}{0.6\textwidth}
+%%\begin{columns}
+%%  \begin{column{0.5
+%%\begin{center}
+  
+%\pichskip{15pt}% Horizontal gap between picture and text
+%\parpic[l][t]{%
+%  \begin{minipage}{0.6\textwidth}
+    \includegraphics[width=0.55\textwidth]{images/LHScrop.png}
+%  \end{minipage}
+%}
+%%  \end{center}
+%\caption{}
+%\end{wrapfigure}
+\begin{itemize}
+  \item Latin hypercube sampling: parameters from
+    \cite{champredon_hiv_2013}
+  \item parameters calibrated across models to the same \textbf{initial epidemic growth rate} ($r$)
+\end{itemize}
+\end{block}
 }
 \end{minipage}
 \end{beamercolorbox}
@@ -182,15 +213,14 @@ genetic but not phenotypic variation)
     % ---------------------------------------------------------%
     % end the column
 
-
-
-
     % ---------------------------------------------------------%
     % Set up a column 
-    \begin{column}{.33\textwidth}
+\begin{column}{.65\textwidth}
+\begin{columns}
+    \begin{column}{.5\textwidth}
       \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
         \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
-          \parbox[t][\columnheight]{\textwidth}{ % must be some better way to set the the height, width and textwidth simultaneously
+          \parbox[t][\shortcolumnheight]{\textwidth}{ % must be some better way to set the the height, width and textwidth simultaneously
             % Since all columns are the same length, it is all nice and tidy.  You have to get the height empirically
             % ---------------------------------------------------------%
             % fill each column with content
@@ -199,9 +229,9 @@ genetic but not phenotypic variation)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
-\begin{block}{Basic evolutionary dynamics}
+\begin{block}{Basic eco-evolutionary dynamics}
 
-<<virdyn,cache=TRUE,dev="tikz",fig.width=25,fig.height=30>>=
+<<virdyn,dev="tikz",fig.width=25,fig.height=30,cache=TRUE,out.width="0.95\\textwidth">>=
 ss <- subset(sum_list[["vir_mat"]],tvec<750)
 ss$model <- factor(ss$model, c("random",
          "pairform+epc", "pairform","instswitch+epc","instswitch","implicit"))
@@ -224,7 +254,11 @@ print(gg_virtraj)
 \vspace{0.5cm}
 
 \begin{itemize}
-  
+\item significant variation across model structures
+\item least (random) and most (pairform+epc) models \textbf{most similar}:
+  single individuals and extra-pair contact wash out effects of structure
+\item implicit model is \textbf{most different}
+\item random-mixing model underestimates (?) variability
 \end{itemize}
 
 \end{block}            
@@ -233,7 +267,7 @@ print(gg_virtraj)
             
 \begin{block}{Univariate summary}
 
-<<univ,cache=TRUE,dev="tikz",fig.width=45,fig.height=30>>=
+<<univ,cache=TRUE,dev="tikz",fig.width=45,fig.height=40,out.width="0.95\\textwidth">>=
 sL <- transform(sum_list[["sum_mat"]],rel_peak=peak_vir/eq_vir)
 sL$model <- factor(sL$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
 mL <- melt(sL,id.vars=c("model","run"))
@@ -246,13 +280,16 @@ mLw <- droplevels(mL[-w,])
 mLw$variable <- fixfac2(mLw$variable)
 
 gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
-	geom_violinh(width=1)+
-	facet_wrap(~variable,scale="free_x")+
-	guides(fill=guide_legend(reverse=TRUE))+
-	labs(y="")+
-	geom_point(data=data.frame(model="random",variable="equilibrium virulence",
-                               value=rval),pch=22,size=3,show.legend=FALSE) +
-	zero_x_margin
+    geom_violinh(width=1)+
+    facet_wrap(~variable,scale="free_x")+
+    guides(fill=guide_legend(reverse=TRUE))+
+    labs(y="")+
+    geom_point(data=data.frame(model="random",
+                               variable="equilibrium virulence",
+                               value=rval),
+               pch=22,size=8,show.legend=FALSE) +
+    theme(legend.position="none")+
+    zero_x_margin
 print(gg_univ)
 @ 
 
@@ -263,8 +300,24 @@ print(gg_univ)
          
 \vspace{0.5cm}
 
-\begin{block}{Bivariate summary}
+}
+         % ---------------------------------------------------------%
+          % end the column
+        \end{minipage}
+      \end{beamercolorbox}
+   \end{column}
 
+    % ---------------------------------------------------------%
+    % end the column
+    \begin{column}{.5\textwidth}
+      \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
+        \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
+          \parbox[t][\shortcolumnheight]{\textwidth}{ % must be some better way to set the the height, width and textwidth simultaneously
+            % Since all columns are the same length, it is all nice and tidy.  You have to get the height empirically
+            % ---------------------------------------------------------%
+            % fill each column with content
+
+\begin{block}{Bivariate summary}
 <<ggfuns,echo=FALSE>>=
 trim_gg <- function(gg,hack_spaces=TRUE) {
     n <- gg$nrow
@@ -314,7 +367,7 @@ tweak_colours_gg <- function(gg) {
 @ 
 
 
-<<ggpairs,echo=FALSE,fig.width=25,fig.height=25>>=
+<<ggpairs,echo=FALSE,fig.width=10,fig.height=10>>=
 sL2 <- sL
 names(sL2)[na.omit(match(orig_sum_labs,names(sL)))] <- gsub(" ","_",new_sum_labs)
     ## paste0("`",new_sum_labs,"`")
@@ -338,27 +391,68 @@ inner <- inner+scale_x_continuous(breaks=seq(2.5,4.5,by=0.5))
 ggp2 <- putPlot(ggp2,inner,3,1)
 print(ggp2,spacingProportion=0)
 @   
+
+\end{block}
+
+\begin{block}{Conclusions and open questions}
+
+\begin{itemize}
+\item Random-mixing models gave the closest match to the most realistic models; extra-pair contact washed out the effects
+of epidemiological structure
+\item Variation among models (model structure) $\approx$ variation within models (parameter uncertainty)
+\item Large differences
+in evolutionary dynamics among different epidemiological models
+suggest caution in predicting evolutionary responses
+\end{itemize}
+
+\end{block}
+            
+\begin{block}{References}
+
+{\tiny
+%% Add numbered references
+\setbeamertemplate{bibliography item}[text]
+%% Stop line breaks
+\setbeamertemplate{bibliography entry title}{}
+\setbeamertemplate{bibliography entry location}{}
+\setbeamertemplate{bibliography entry note}{}
+%% Stop font color changes
+% \setbeamercolor*{bibliography item}{fg=black}
+% \setbeamercolor*{bibliography entry title}{fg=black}
+% \setbeamercolor*{bibliography entry author}{fg=black}
+% \setbeamercolor*{bibliography entry location}{fg=black}
+% \setbeamercolor*{bibliography entry note}{fg=black} 
+%% Generate bibliography
+\bibliographystyle{vancouver}
+\bibliography{../ms/virulence}
+}
+
+\end{block}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+         
+% \vspace{0.5cm}
+             
+\begin{block}{Acknowledgements}
+
+We thank Christophe Fraser for providing access to code, and 
+the Natural Sciences and Engineering Research Council of Canada (NSERC)
+for funding.
+
 \end{block}
 
 }
-          % ---------------------------------------------------------%
-          % end the column
         \end{minipage}
       \end{beamercolorbox}
-   \end{column}
+    \end{column}
+    \end{columns}
+     \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
+       \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
+         \parbox[t][30cm]{\textwidth}{ % must be some better way to set
 
-    % ---------------------------------------------------------%
-    % end the column
-    \begin{column}{.33\textwidth}
-      \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
-        \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
-          \parbox[t][\columnheight]{\textwidth}{ % must be some better way to set the the height, width and textwidth simultaneously
-            % Since all columns are the same length, it is all nice and tidy.  You have to get the height empirically
-            % ---------------------------------------------------------%
-            % fill each column with content
-
-            \begin{block}{Sensivity}
-<<sens,dev="png",echo=FALSE>>=
+\begin{block}{Sensitivity}
+<<sens,dev="png",echo=FALSE,fig.width=20,fig.height=10,cache=TRUE>>=
 mL3 <- subset(mL2,
        !((model=="implicit" &
           LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
@@ -427,61 +521,13 @@ ggplot(mL3,aes(LHSval,sumval,colour=model))+
     ## leave a little extra room?
     scale_x_log10(expand=c(0,0.08),breaks=brkfun)+
     zero_margin
-@               
-              \end{block}
-
-            \begin{block}{Conclusions}
-
-\begin{itemize}
-\item Random-mixing models gave the closest match to the most realistic models; extra-pair contact washed out the effects
-of epidemiological structure
-\item Large differences
-in evolutionary dynamics among different epidemiological models
-suggest caution in predicting evolutionary responses
-\end{itemize}
-
+@
 \end{block}
-\begin{block}{References}
-
-{\tiny
-%% Add numbered references
-\setbeamertemplate{bibliography item}[text]
-%% Stop line breaks
-\setbeamertemplate{bibliography entry title}{}
-\setbeamertemplate{bibliography entry location}{}
-\setbeamertemplate{bibliography entry note}{}
-%% Stop font color changes
-% \setbeamercolor*{bibliography item}{fg=black}
-% \setbeamercolor*{bibliography entry title}{fg=black}
-% \setbeamercolor*{bibliography entry author}{fg=black}
-% \setbeamercolor*{bibliography entry location}{fg=black}
-% \setbeamercolor*{bibliography entry note}{fg=black} 
-%% Generate bibliography
-\bibliographystyle{vancouver}
-\bibliography{../ms/virulence}
 }
-
-\end{block}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-         
-\vspace{0.5cm}
-             
-\begin{block}{Acknowledgements}
-
-We thank Christophe Fraser for providing access to code, and 
-the Natural Sciences and Engineering Research Council of Canada (NSERC)
-for funding.
-
-\end{block}
-
-          }
         \end{minipage}
-      \end{beamercolorbox}
-   \end{column}
-
- \end{columns}
+    \end{beamercolorbox}
+ \end{column}  % end right-hand 2/3 column
+ \end{columns}  % end overall columns
 \end{frame}
 \end{document}
 
