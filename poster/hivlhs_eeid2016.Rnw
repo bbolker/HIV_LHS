@@ -65,11 +65,13 @@ fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
 }
 @
 
-<<setup3, echo=FALSE,dev="tikz",cache=TRUE>>=
+<<setup3,echo=FALSE,dev="tikz">>=
 source("../R/hivFuns.R")
-source("../R/LHSparms3.R")
+source("../R/Param.R")
+ltab_mean <- apply(HIVpars_range, 1, geom_mean)
+HIVpars.base <- as.HIVvirparlist(ltab_mean)
 Lspvl <- "$\\log_{10}~\\textrm{SPVL}$"
-pars <- expand(ltab_mean)
+pars <- expand(HIVpars.base)
 dd <-with(pars,
      melt(data.frame(alpha=alpha,"transmission probability"=Beta2,
                      "duration (years)"=Duration2,check.names=FALSE),
@@ -121,16 +123,10 @@ gg_tradeoff <- ggplot(dd,aes(alpha,value))+facet_wrap(~variable,scale="free")+
 Pathogens can evolve rapidly in response to changing
 conditions (e.g., epidemic stage or public health interventions). 
 Models of \textbf{eco-evolutionary dynamics} often
-neglect important epidemiological processes, such as the formation and
-dissolution of sexual partnerships. We
-compared \textbf{models with a range of complexity} in their
-representation of partnership dynamics and extra-partnership contact.
-Simple random-mixing actually gave the closest match to the most realistic models; extra-pair contact washed out the effects
-of epidemiological structure. Nevertheless, the large differences
-in evolutionary dynamics among different epidemiological models
-suggests that researchers trying to predict the evolution of
-pathogens should proceed with caution.
-
+neglect important epidemiological processes, such as the 
+dynamics of sexual partnerships. We
+compared \textbf{models with a range of complexity} 
+of partnership dynamics and extra-partnership contact.
 \end{block}
 
 \vspace{0.5cm}
@@ -148,8 +144,7 @@ print(gg_tradeoff)
       mediated by transmission-vs-clearance tradeoff
     \item still debated \cite{EbertBull2003,alizon_adaptive_2015}
     \item HIV \cite{fraser_virulence_2014}: \textbf{set-point viral load}
-      correlated with transmission probability, rate of progression to AIDS
-    \item data from Rakai, Uganda
+      correlated with transmission probability, rate of progression to AIDS (data from Rakai, Uganda)
     \item eco-evolutionary virulence dynamics: \cite{shirreff_transmission_2011}
   \end{itemize}
 
@@ -206,8 +201,6 @@ genetic but not phenotypic variation)
  
 \begin{block}{Basic evolutionary dynamics}
 
-\vspace{-1cm}
-
 <<virdyn,cache=TRUE,dev="tikz",fig.width=25,fig.height=30>>=
 ss <- subset(sum_list[["vir_mat"]],tvec<750)
 ss$model <- factor(ss$model, c("random",
@@ -218,17 +211,21 @@ gg_virtraj <- ggplot(ss,
     geom_line(aes(colour=model,linetype=model),lwd=1)+
     geom_ribbon(aes(fill = model), alpha=0.3)+
     labs(x="time (years)",y=Lspvl) +
-    ## theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
-    ##  axis.title.x = element_text(margin = margin(10,0,0,0))) +
+    theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
+          axis.title.x = element_text(margin = margin(10,0,0,0))) +
     facet_wrap(~model, nrow = 3) +
     zero_margin+
-    theme(legend.text=element_text(size=16))
-## scale_x_continuous(limits=c(0,2500))
+    theme(legend.position="none")+
+    scale_x_continuous(breaks=c(0,600))
 print(gg_virtraj)
 @ 
 
 
 \vspace{0.5cm}
+
+\begin{itemize}
+  
+\end{itemize}
 
 \end{block}            
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -432,7 +429,17 @@ ggplot(mL3,aes(LHSval,sumval,colour=model))+
     zero_margin
 @               
               \end{block}
+
             \begin{block}{Conclusions}
+
+\begin{itemize}
+\item Random-mixing models gave the closest match to the most realistic models; extra-pair contact washed out the effects
+of epidemiological structure
+\item Large differences
+in evolutionary dynamics among different epidemiological models
+suggest caution in predicting evolutionary responses
+\end{itemize}
+
 \end{block}
 \begin{block}{References}
 
