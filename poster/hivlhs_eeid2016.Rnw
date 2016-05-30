@@ -1,6 +1,7 @@
 %\documentclass[final,hyperref={pdfpagelabels=false}]{beamer}
 \documentclass{beamer}
 \usepackage{ebgaramond}
+\newcommand{\fakebf}{\fontfamily{mdugm}\fontseries{b}\selectfont}
 %% reset default
 \renewcommand{\rmdefault}{cmss}
 \usepackage{grffile}
@@ -89,12 +90,14 @@ gg_tradeoff <- ggplot(dd,aes(alpha,value))+facet_wrap(~variable,scale="free")+
 @
 
 %%%\title{\huge On the Persistence of Invading Pathogens}
-\title{\LARGE HIV virulence evolution in structured epidemic models}
+\title{\fakebf{HIV virulence evolution in structured epidemic models}}
 
 \author{\href{http://www.math.mcmaster.ca/bolker/}{Ben Bolker and Sang Woo Park}}
 \email{\href{mailto:bolker@mcmaster.ca}{\texttt{bolker@mcmaster.ca}}}
-\institute[McMaster University]{McMaster University, Hamilton, Ontario, Canada %%\\\vspace{5mm}\texttt{earn@math.mcmaster.ca}
+\institute[McMaster University]{McMaster University, Hamilton, Ontario, Canada 
+%%\\\vspace{5mm}\texttt{earn@math.mcmaster.ca}
 }
+%\institute[]{}
 \date[June 2016]{June 2016}
 
 %% Uncomment the following line to define a custom logo (or to tweak the size of the logo)
@@ -123,6 +126,7 @@ gg_tradeoff <- ggplot(dd,aes(alpha,value))+facet_wrap(~variable,scale="free")+
       \begin{minipage}[T]{.95\textwidth}
         \parbox[t][\columnheight]{\textwidth}{ 
 
+\vspace{-2.4 cm} % shouldn't need this??
 \begin{block}{Summary}
 \noindent
 \hspace{-1.6cm}
@@ -161,7 +165,11 @@ of partnership dynamics and extra-partnership contact.
     Champredon \etal\ 2013 \cite{champredon_hiv_2013}
   \end{center}
 
-Spectrum of model complexity: 
+\textbf{infection} from (1) inf. partner (discordant couples);
+(2) other coupled inf.; (3) uncoupled inf.
+
+\vspace{0.2cm}
+Model choices:
 \begin{itemize}
 \item \textbf{pair formation}: instantaneous or delayed?
 \item \textbf{extra-pair contact} (epc): present or absent?
@@ -189,7 +197,7 @@ Simplified disease model (single stage only)
 %\pichskip{15pt}% Horizontal gap between picture and text
 %\parpic[l][t]{%
 %  \begin{minipage}{0.6\textwidth}
-    \includegraphics[width=0.55\textwidth]{images/LHScrop.png}
+    \includegraphics[width=0.25\textwidth]{images/LHScrop.png}
 %  \end{minipage}
 %}
 %%  \end{center}
@@ -240,7 +248,10 @@ Simplified disease model (single stage only)
       \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
         \parbox[t][\topcolumnheight]{\textwidth}{ 
             
-            \begin{block}{Univariate summary}
+            \begin{block}{Univariate summaries}
+              \includegraphics[width=0.7\textwidth]{figure/univ_scheme.pdf}
+
+              \vspace{1cm}
               \includegraphics[width=0.95\textwidth]{figure/univ.pdf}
             \end{block}
             \vspace{0.5cm}

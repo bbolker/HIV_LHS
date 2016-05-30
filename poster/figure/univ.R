@@ -23,6 +23,10 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
     theme(legend.position="none")+
     zero_x_margin
 
-tikz(file="univ.tikz",width=12,height=10,standAlone=TRUE)
+tikz(file="univ.tikz",w
+     ## width=12,height=10,
+     ## width=10,height=8,
+     width=9,height=9*5/6,
+     standAlone=TRUE)
 print(gg_univ)
 dev.off()
