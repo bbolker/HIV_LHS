@@ -1,5 +1,8 @@
 %\documentclass[final,hyperref={pdfpagelabels=false}]{beamer}
 \documentclass{beamer}
+\usepackage{ebgaramond}
+%% reset default
+\renewcommand{\rmdefault}{cmss}
 \usepackage{grffile}
 \mode<presentation>{\usetheme{mcmaster}}
 
@@ -17,6 +20,8 @@
 \newcolumntype{Z}{>{\centering\arraybackslash}X} % centered tabularx columns
 \newcommand{\pphantom}{\textcolor{ta3aluminium}} % phantom introduces a vertical space in p formatted table columns??!!
 
+% http://tex.stackexchange.com/questions/13423/how-to-change-the-color-of-href-links-for-real
+\hypersetup{colorlinks,linkcolor=}
 
 %% MY MACROS %%
 \newcommand{\R}{{\mathcal R}}
@@ -67,7 +72,7 @@ fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
 }
 @
 
-<<setup3,echo=FALSE>>=
+<<setup3,echo=FALSE,cache=TRUE>>=
 source("../R/hivFuns.R")
 source("../R/Param.R")
 ltab_mean <- apply(HIVpars_range, 1, geom_mean)
@@ -79,8 +84,8 @@ dd <-with(pars,
                      "duration (years)"=Duration2,check.names=FALSE),
           id.vars="alpha"))
 gg_tradeoff <- ggplot(dd,aes(alpha,value))+facet_wrap(~variable,scale="free")+
-    geom_line()+
-    labs(x= Lspvl)
+    geom_line(size=10)+
+    labs(x= Lspvl,y="")
 @
 
 %%%\title{\huge On the Persistence of Invading Pathogens}
@@ -141,12 +146,12 @@ of partnership dynamics and extra-partnership contact.
  
 \begin{block}{Tradeoff theory}
 
-<<tradeoff_fig,echo=FALSE,fig.height=14,fig.width=30,out.width="0.95\\textwidth",dev="tikz",cache=TRUE>>=
+<<tradeoff_fig,echo=FALSE,fig.height=14,fig.width=30,out.width="0.95\\textwidth",dev="tikz",cache=TRUE,dependson="setup3">>=
 print(gg_tradeoff)
 @ 
 
 \begin{itemize}
-\item \textbf{tradeoff theory}: virulence evolution mediated by transmission-vs-clearance tradeoff
+\item virulence evolution mediated by transmission-vs-clearance tradeoff
 \item still debated \cite{EbertBull2003,alizon_adaptive_2015}
 \item HIV \cite{fraser_virulence_2014}: \textbf{set-point viral load}
       correlated with transmission probability, rate of progression to AIDS (data from Rakai, Uganda)
@@ -229,7 +234,7 @@ Simplified disease model (single stage only)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
-\begin{block}{Basic eco-evolutionary dynamics}
+\begin{block}{Eco-evolutionary dynamics}
 
 <<virdyn,dev="tikz",fig.width=25,fig.height=30,cache=TRUE,out.width="0.95\\textwidth">>=
 ss <- subset(sum_list[["vir_mat"]],tvec<750)
@@ -267,7 +272,7 @@ print(gg_virtraj)
             
 \begin{block}{Univariate summary}
 
-<<univ,cache=TRUE,dev="tikz",fig.width=45,fig.height=40,out.width="0.95\\textwidth">>=
+<<univ,cache=TRUE,dev="tikz",fig.width=30,fig.height=30,out.width="0.95\\textwidth">>=
 sL <- transform(sum_list[["sum_mat"]],rel_peak=peak_vir/eq_vir)
 sL$model <- factor(sL$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
 mL <- melt(sL,id.vars=c("model","run"))
@@ -283,7 +288,7 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
     geom_violinh(width=1)+
     facet_wrap(~variable,scale="free_x")+
     guides(fill=guide_legend(reverse=TRUE))+
-    labs(y="")+
+    labs(y="",x="")+
     geom_point(data=data.frame(model="random",
                                variable="equilibrium virulence",
                                value=rval),
