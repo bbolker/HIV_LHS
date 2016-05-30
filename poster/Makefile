@@ -4,3 +4,5 @@ hivlhs_eeid2016.tex: hivlhs_eeid2016.Rnw
 
 hivlhs_eeid2016.pdf: hivlhs_eeid2016.tex
 	texi2dvi -p hivlhs_eeid2016.tex
+
+figures: figure/univ.R figure/tradeoff.R figure/

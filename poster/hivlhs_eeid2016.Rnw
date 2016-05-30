@@ -104,28 +104,24 @@ gg_tradeoff <- ggplot(dd,aes(alpha,value))+facet_wrap(~variable,scale="free")+
 \newlength{\columnheight}
 \setlength{\columnheight}{105cm}
 
-\newlength{\shortcolumnheight}
-\setlength{\shortcolumnheight}{75cm}
+\newlength{\topcolumnheight}
+\setlength{\topcolumnheight}{50cm}
+
+\newlength{\bottomcolumnheight}
+\setlength{\bottomcolumnheight}{30cm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \begin{frame}
 %\includegraphics[width=\textwidth]{images/photobanner.pdf}
-\vspace{0.5cm}
-  \noindent\begin{columns}
+  \vspace{0.5cm}
+  \noindent
+\begin{columns}
     % ---------------------------------------------------------%
-    % Set up a column 
-    \begin{column}{.33\textwidth}
-      \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
-        \begin{minipage}[T]{.95\textwidth}  % tweaks the width, makes a new \textwidth
-          \parbox[t][\columnheight]{\textwidth}{ % must be some better way to set the the height, width and textwidth simultaneously
-            % Since all columns are the same length, it is all nice and tidy.  You have to get the height empirically
-            % ---------------------------------------------------------%
-            % fill each column with content            
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{column}{.33\textwidth}
+    \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
+      \begin{minipage}[T]{.95\textwidth}
+        \parbox[t][\columnheight]{\textwidth}{ 
 
 \begin{block}{Summary}
 \noindent
@@ -140,15 +136,10 @@ of partnership dynamics and extra-partnership contact.
 \end{block}
 
 \vspace{0.5cm}
-           
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
+
 \begin{block}{Tradeoff theory}
 
-<<tradeoff_fig,echo=FALSE,fig.height=14,fig.width=30,out.width="0.95\\textwidth",dev="tikz",cache=TRUE,dependson="setup3">>=
-print(gg_tradeoff)
-@ 
+\includegraphics[width=0.95\textwidth]{figure/tradeoff.pdf}
 
 \begin{itemize}
 \item virulence evolution mediated by transmission-vs-clearance tradeoff
@@ -160,7 +151,6 @@ print(gg_tradeoff)
 
 \end{block}
 
-%%\vfill
 \vspace{0.5cm}
 
 \begin{block}{Epidemiological structure}
@@ -215,46 +205,18 @@ Simplified disease model (single stage only)
 \end{minipage}
 \end{beamercolorbox}
 \end{column}
-    % ---------------------------------------------------------%
-    % end the column
 
-    % ---------------------------------------------------------%
-    % Set up a column 
 \begin{column}{.65\textwidth}
+
 \begin{columns}
-    \begin{column}{.5\textwidth}
-      \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
-        \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
-          \parbox[t][\shortcolumnheight]{\textwidth}{ % must be some better way to set the the height, width and textwidth simultaneously
-            % Since all columns are the same length, it is all nice and tidy.  You have to get the height empirically
-            % ---------------------------------------------------------%
-            % fill each column with content
+  \begin{column}{.5\textwidth}
+    \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
+      \begin{minipage}[T]{.95\textwidth}
+        \parbox[t][\topcolumnheight]{\textwidth}{ 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
 \begin{block}{Eco-evolutionary dynamics}
 
-<<virdyn,dev="tikz",fig.width=25,fig.height=30,cache=TRUE,out.width="0.95\\textwidth">>=
-ss <- subset(sum_list[["vir_mat"]],tvec<750)
-ss$model <- factor(ss$model, c("random",
-         "pairform+epc", "pairform","instswitch+epc","instswitch","implicit"))
-
-gg_virtraj <- ggplot(ss,
-                     aes(tvec,mean,ymin=lwr,ymax=upr))+
-    geom_line(aes(colour=model,linetype=model),lwd=1)+
-    geom_ribbon(aes(fill = model), alpha=0.3)+
-    labs(x="time (years)",y=Lspvl) +
-    theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
-          axis.title.x = element_text(margin = margin(10,0,0,0))) +
-    facet_wrap(~model, nrow = 3) +
-    zero_margin+
-    theme(legend.position="none")+
-    scale_x_continuous(breaks=c(0,600))
-print(gg_virtraj)
-@ 
-
+\includegraphics[width=0.95\textwidth]{figure/virtraj.pdf}
 
 \vspace{0.5cm}
 
@@ -266,195 +228,33 @@ print(gg_virtraj)
 \item random-mixing model underestimates (?) variability
 \end{itemize}
 
-\end{block}            
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            
-\begin{block}{Univariate summary}
-
-<<univ,cache=TRUE,dev="tikz",fig.width=30,fig.height=30,out.width="0.95\\textwidth">>=
-sL <- transform(sum_list[["sum_mat"]],rel_peak=peak_vir/eq_vir)
-sL$model <- factor(sL$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
-mL <- melt(sL,id.vars=c("model","run"))
-## horrible hack (but doesn't help); subsample
-## w <- which(mL$model=="random")
-## mLw <- mL[-sample(w,size=length(w)*9/10,replace=FALSE),]
-w <- with(mL,which(model=="random" & variable=="eq_vir"))
-rval <- mean(mL$value[w])
-mLw <- droplevels(mL[-w,])
-mLw$variable <- fixfac2(mLw$variable)
-
-gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
-    geom_violinh(width=1)+
-    facet_wrap(~variable,scale="free_x")+
-    guides(fill=guide_legend(reverse=TRUE))+
-    labs(y="",x="")+
-    geom_point(data=data.frame(model="random",
-                               variable="equilibrium virulence",
-                               value=rval),
-               pch=22,size=8,show.legend=FALSE) +
-    theme(legend.position="none")+
-    zero_x_margin
-print(gg_univ)
-@ 
-
-\end{block}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-         
-\vspace{0.5cm}
-
-}
-         % ---------------------------------------------------------%
-          % end the column
+\end{block}       
+     
+        } % end parbox
         \end{minipage}
-      \end{beamercolorbox}
-   \end{column}
+    \end{beamercolorbox}
+  \end{column}
 
-    % ---------------------------------------------------------%
-    % end the column
-    \begin{column}{.5\textwidth}
-      \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
-        \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
-          \parbox[t][\shortcolumnheight]{\textwidth}{ % must be some better way to set the the height, width and textwidth simultaneously
-            % Since all columns are the same length, it is all nice and tidy.  You have to get the height empirically
-            % ---------------------------------------------------------%
-            % fill each column with content
-
-\begin{block}{Bivariate summary}
-<<ggfuns,echo=FALSE>>=
-trim_gg <- function(gg,hack_spaces=TRUE) {
-    n <- gg$nrow
-    gg$nrow <- gg$ncol <- n-1
-    v <- 1:n^2
-    gg$plots <- gg$plots[v>n & v%%n!=0]
-    gg$xAxisLabels <- gg$xAxisLabels[-n]
-    gg$yAxisLabels <- gg$yAxisLabels[-1]
-    ## ggpairs tries to parse labels, so this fails if they
-    ## have spaces in them ... maybe there's a better way?
-    if (hack_spaces) {
-        gg$xAxisLabels <- gsub("_"," ",gg$xAxisLabels)
-        gg$yAxisLabels <- gsub("_"," ",gg$yAxisLabels)
-    }
-    return(gg)
-}
-
-tweak_legends_gg <- function(gg,pos=1.5) {
-    n <- gg$nrow
-    for (i in 1:n) {
-        for (j in 1:n) {
-            inner <- getPlot(gg,i,j)
-            if (i==1 & j==1) {
-                inner <- inner + ggplot2::theme(legend.position=c(pos,0.5)) +
-                    guides(colour = guide_legend(override.aes = list(size=6)))
-            } else {
-                inner <- inner + ggplot2::theme(legend.position="none")
-            }
-            gg <- putPlot(gg,inner,i,j)
-        }
-    }
-    return(gg)
-}
-
-
-tweak_colours_gg <- function(gg) {
-    n <- gg$nrow
-    for (i in 1:n) {
-        for (j in 1:n) {
-            inner <- getPlot(gg,i,j)
-            inner <- inner+scale_colour_brewer(palette = 'Dark2')
-            gg <- putPlot(gg,inner,i,j)
-        }
-    }
-    return(gg)
-}
-@ 
-
-
-<<ggpairs,echo=FALSE,fig.width=10,fig.height=10>>=
-sL2 <- sL
-names(sL2)[na.omit(match(orig_sum_labs,names(sL)))] <- gsub(" ","_",new_sum_labs)
-    ## paste0("`",new_sum_labs,"`")
-ggp1 <- ggpairs(sL2,
-        mapping = ggplot2::aes(color = model),
-        columns=3:6,
-        legends=TRUE,
-        lower = list(continuous = wrap("points",size=0.1)), ## alpha = 0.3,size=0.5)),
-        diag = list(continuous = "blankDiag"),
-        upper = list(continuous = "blank"))
-## http://stackoverflow.com/questions/14711550/is-there-a-way-to-change-the-color-palette-for-ggallyggpairs-using-ggplot
-## have to change plot one panel at a time
-ggp2 <- tweak_colours_gg(tweak_legends_gg(trim_gg(ggp1)))
-## add 1-to-1 line
-inner <- getPlot(ggp2,2,1)
-inner <- inner+geom_abline(intercept=0,slope=1,lty=2)
-ggp2 <- putPlot(ggp2,inner,2,1)
-## tweak scale
-inner <- getPlot(ggp2,3,1)
-inner <- inner+scale_x_continuous(breaks=seq(2.5,4.5,by=0.5))
-ggp2 <- putPlot(ggp2,inner,3,1)
-print(ggp2,spacingProportion=0)
-@   
-
-\end{block}
-
-\begin{block}{Conclusions and open questions}
-
-\begin{itemize}
-\item Random-mixing models gave the closest match to the most realistic models; extra-pair contact washed out the effects
-of epidemiological structure
-\item Variation among models (model structure) $\approx$ variation within models (parameter uncertainty)
-\item Large differences
-in evolutionary dynamics among different epidemiological models
-suggest caution in predicting evolutionary responses
-\end{itemize}
-
-\end{block}
+  \begin{column}{.5\textwidth}
+    \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
+      \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
+        \parbox[t][\topcolumnheight]{\textwidth}{ 
             
-\begin{block}{References}
+            \begin{block}{Univariate summary}
+              \includegraphics[width=0.95\textwidth]{figure/univ.pdf}
+            \end{block}
+            \vspace{0.5cm}
 
-{\tiny
-%% Add numbered references
-\setbeamertemplate{bibliography item}[text]
-%% Stop line breaks
-\setbeamertemplate{bibliography entry title}{}
-\setbeamertemplate{bibliography entry location}{}
-\setbeamertemplate{bibliography entry note}{}
-%% Stop font color changes
-% \setbeamercolor*{bibliography item}{fg=black}
-% \setbeamercolor*{bibliography entry title}{fg=black}
-% \setbeamercolor*{bibliography entry author}{fg=black}
-% \setbeamercolor*{bibliography entry location}{fg=black}
-% \setbeamercolor*{bibliography entry note}{fg=black} 
-%% Generate bibliography
-\bibliographystyle{vancouver}
-\bibliography{../ms/virulence}
-}
-
-\end{block}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-         
-% \vspace{0.5cm}
-             
-\begin{block}{Acknowledgements}
-
-We thank Christophe Fraser for providing access to code, and 
-the Natural Sciences and Engineering Research Council of Canada (NSERC)
-for funding.
-
-\end{block}
-
-}
+        } % end parbox
         \end{minipage}
       \end{beamercolorbox}
     \end{column}
-    \end{columns}
-     \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
-       \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
-         \parbox[t][30cm]{\textwidth}{ % must be some better way to set
+
+\end{columns}
+
+\begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
+  \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
+    \parbox[t][30cm]{\textwidth}{ % must be some better way to set
 
 \begin{block}{Sensitivity}
 <<sens,dev="png",echo=FALSE,fig.width=20,fig.height=10,cache=TRUE>>=
@@ -531,8 +331,70 @@ ggplot(mL3,aes(LHSval,sumval,colour=model))+
 }
         \end{minipage}
     \end{beamercolorbox}
+
+\begin{columns}
+    \begin{column}{.5\textwidth}
+      \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
+        \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
+          \parbox[t][\bottomcolumnheight]{\textwidth}{ 
+
+\begin{block}{Conclusions and open questions}
+
+\begin{itemize}
+\item Random-mixing models gave the closest match to the most realistic models; extra-pair contact washed out the effects
+of epidemiological structure
+\item Variation among models (model structure) $\approx$ variation within models (parameter uncertainty)
+\item Large differences
+in evolutionary dynamics among different epidemiological models
+suggest caution in predicting evolutionary responses
+\end{itemize}
+
+\end{block}
+}
+        \end{minipage}
+      \end{beamercolorbox}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
+        \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
+          \parbox[t][\bottomcolumnheight]{\textwidth}{ 
+
+\begin{block}{References}
+
+{\tiny
+%% Add numbered references
+\setbeamertemplate{bibliography item}[text]
+%% Stop line breaks
+\setbeamertemplate{bibliography entry title}{}
+\setbeamertemplate{bibliography entry location}{}
+\setbeamertemplate{bibliography entry note}{}
+%% Stop font color changes
+% \setbeamercolor*{bibliography item}{fg=black}
+% \setbeamercolor*{bibliography entry title}{fg=black}
+% \setbeamercolor*{bibliography entry author}{fg=black}
+% \setbeamercolor*{bibliography entry location}{fg=black}
+% \setbeamercolor*{bibliography entry note}{fg=black} 
+%% Generate bibliography
+\bibliographystyle{vancouver}
+\bibliography{../ms/virulence}
+}
+\end{block}
+
+\begin{block}{Acknowledgements}
+
+We thank Christophe Fraser for providing access to code, and 
+the Natural Sciences and Engineering Research Council of Canada (NSERC)
+for funding.
+
+\end{block}
+
+}
+        \end{minipage}
+      \end{beamercolorbox}
+    \end{column}
+    \end{columns}
  \end{column}  % end right-hand 2/3 column
- \end{columns}  % end overall columns
+ \end{columns}  % end 50/50 columns
 \end{frame}
 \end{document}
 
