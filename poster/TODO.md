@@ -1,27 +1,18 @@
 
-- restructure??? separate figures??
+- tradeoff theory: lighten lines (clearance/mortality)?
+  show abbreviation for SPVL
+- sampling strategy -> model exploration
+   - move text next to picture?
+- virtraj: "set point viral load" in axis label?
+- univariate summary: bigger?
+    - add some words!
+	
+- conclusions: add something!	
 
-- reorganize - sensitivity to middle, drop bivariate,
-conclusions/refs/acknowledgments to bottom?
-- tradeoff theory:
-    - drop "tradeoff theory" in text
-    - thicken line, drop y-axis label
-    - x-axis margin?
+- get rid of red hyperref boxes/hyperrefs entirely
+- get rid of institution?
 
-- epidemiological structure:
-  - new picture?
-
-- sampling strategy:
-   - smaller picture? no picture? other stuff to say?
-
-- eco-evolutionary dynamics: no "basic in title
-  - move y-axis label
-
-- univariate summary: bigger
-    - schematic figure
-
-- get rid of red hyperref boxes
-
+- title: 
 
 mcmaster poster theme: clean up?
   don't hard-code URL link?
