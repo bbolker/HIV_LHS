@@ -6,8 +6,14 @@ model = sL$model
 eqV = sL$eq_vir
 peakV = sL$peak_vir
 
-lmer(eqV ~ 1 + (1|model), data = sL, REML=FALSE)
-lmer(peakV ~ 1 + (1|model), data = sL, REML=FALSE) 
+m_peakV <- lmer(peakV ~ 1 + (1|model), data = sL, REML=FALSE)
+v_among <- VarCorr(m_peakV)[[1]]
+v_within <- sigma(m_peakV)^2
+v_among/(v_among+v_within)
+
+
+library(nlme)
+lme(eqV~1,random=~1|model,data=sL,method="ML")
 
 findSSQ <- function(var){
 	wSSQ = sum((var-ave(var, model))^2) ##within

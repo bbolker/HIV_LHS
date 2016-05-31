@@ -172,6 +172,10 @@ of partnership dynamics and extra-partnership contact.
 
 \vspace{0.4cm}
 
+Simplified disease model (single stage only)
+
+\vspace{0.4cm}
+
 \begin{itemize}
 \item \textbf{pair formation}: instantaneous or delayed?
 \item \textbf{extra-pair contact} (epc): present or absent?
@@ -180,8 +184,6 @@ of partnership dynamics and extra-partnership contact.
   model (without epc)
 \item \textbf{random-mixing model}: standard SIR model
 \end{itemize}
-
-Simplified disease model (single stage only)
 
 \end{block}
 
@@ -231,7 +233,7 @@ Simplified disease model (single stage only)
 \vspace{0.5cm}
 
 \begin{itemize}
-
+\item \textbf{80\% of total variability} in peak SPVL is among- vs. within-model
 \item least (random) and most (pairform+epc) models \textbf{most similar}:
   single individuals and extra-pair contact wash out effects of structure
 \item implicit model is \textbf{most different}
@@ -276,7 +278,7 @@ Simplified disease model (single stage only)
     \parbox[t][30cm]{\textwidth}{ % must be some better way to set
 
 \begin{block}{Sensitivity}
-<<sens,dev="png",echo=FALSE,fig.width=20,fig.height=10,cache=TRUE>>=
+<<sens,dev="png",echo=FALSE,fig.width=20,fig.height=10,cache=TRUE,out.width="0.95\\textwidth">>=
 mL3 <- subset(mL2,
        !((model=="implicit" &
           LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
