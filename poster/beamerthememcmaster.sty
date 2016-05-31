@@ -15,14 +15,18 @@
 \mode<presentation>
 
 \newcommand{\email}[1]{
-  \def\@beamerthemedrexel@email{#1}
+  \def\@beamerthememcmaster@email{#1}
 }
-\gdef\@beamerthemedrexel@email{}
+\newcommand{\projurl}[1]{
+  \def\@beamerthememcmaster@projurl{#1}
+}
+\gdef\@beamerthememcmaster@email{}
+\gdef\@beamerthememcmaster@projurl{}
 
-\newcommand{\DrexelLogo}[1]{
-  \def\@beamerthemedrexel@logo{#1}
+\newcommand{\McMasterLogo}[1]{
+  \def\@beamerthememcmaster@logo{#1}
 }
-\gdef\@beamerthemedrexel@logo{\includegraphics[width=\WhenPortrait{.95}{0.5}\linewidth]{images/Maclogo}}
+\gdef\@beamerthememcmaster@logo{\includegraphics[width=\WhenPortrait{.95}{0.5}\linewidth]{images/Maclogo}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -128,7 +132,7 @@
       \end{column}
       \begin{column}{.1\paperwidth}
         \begin{center}
-          \@beamerthemedrexel@logo
+          \@beamerthememcmaster@logo
         \end{center}
       \end{column}
       \begin{column}{.8\paperwidth}
@@ -179,9 +183,10 @@
   
   \leavevmode%
   \begin{beamercolorbox}[ht=4ex,leftskip=1em,rightskip=1em]{author in head/foot}%
-    \url{http://www.math.mcmaster.ca/bolker/}
+    \usebeamerfont{author in head/foot}\@beamerthememcmaster@projurl
+%\expandafter\beamer@ifempty
     \hfill
-    \@beamerthemedrexel@email
+    \@beamerthememcmaster@email
     \vskip1ex
   \end{beamercolorbox}
   \vskip0pt%

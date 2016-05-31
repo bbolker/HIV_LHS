@@ -1,4 +1,4 @@
-%\documentclass[final,hyperref={pdfpagelabels=false}]{beamer}
+%\documentclass[final,hyperref={hidelinks,pdfpagelabels=false}]{beamer}
 \documentclass{beamer}
 \usepackage{ebgaramond}
 \newcommand{\fakebf}{\fontfamily{mdugm}\fontseries{b}\selectfont}
@@ -22,7 +22,7 @@
 \newcommand{\pphantom}{\textcolor{ta3aluminium}} % phantom introduces a vertical space in p formatted table columns??!!
 
 % http://tex.stackexchange.com/questions/13423/how-to-change-the-color-of-href-links-for-real
-\hypersetup{colorlinks,linkcolor=}
+\hypersetup{hidelinks}
 
 %% MY MACROS %%
 \newcommand{\R}{{\mathcal R}}
@@ -92,8 +92,10 @@ gg_tradeoff <- ggplot(dd,aes(alpha,value))+facet_wrap(~variable,scale="free")+
 %%%\title{\huge On the Persistence of Invading Pathogens}
 \title{\fakebf{HIV virulence evolution in structured epidemic models}}
 
-\author{\href{http://www.math.mcmaster.ca/bolker/}{Ben Bolker and Sang Woo Park}}
+\author{\fakebf\href{http://www.math.mcmaster.ca/bolker/}{Ben Bolker and Sang Woo Park}}
 \email{\href{mailto:bolker@mcmaster.ca}{\texttt{bolker@mcmaster.ca}}}
+%% URL for project (footer)
+\projurl{\texttt{https://github.com/bbolker/HIV\_LHS/}}
 \institute[McMaster University]{McMaster University, Hamilton, Ontario, Canada 
 %%\\\vspace{5mm}\texttt{earn@math.mcmaster.ca}
 }
@@ -101,7 +103,7 @@ gg_tradeoff <- ggplot(dd,aes(alpha,value))+facet_wrap(~variable,scale="free")+
 \date[June 2016]{June 2016}
 
 %% Uncomment the following line to define a custom logo (or to tweak the size of the logo)
-\DrexelLogo{\includegraphics[width=\WhenPortrait{1.75}{1}\linewidth]{images/Maclogo}}
+\McMasterLogo{\includegraphics[width=\WhenPortrait{1.75}{1}\linewidth]{images/Maclogo}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newlength{\columnheight}
@@ -148,7 +150,7 @@ of partnership dynamics and extra-partnership contact.
 \begin{itemize}
 \item virulence evolution mediated by transmission-vs-clearance tradeoff
 \item still debated \cite{EbertBull2003,alizon_adaptive_2015}
-\item HIV \cite{fraser_virulence_2014}: \textbf{set-point viral load}
+\item HIV \cite{fraser_virulence_2014}: \textbf{set-point viral load} ($\approx$ ``virulence'')
       correlated with transmission probability, rate of progression to AIDS (data from Rakai, Uganda)
 \item eco-evolutionary virulence dynamics: \cite{shirreff_transmission_2011}
 \end{itemize}
@@ -165,11 +167,11 @@ of partnership dynamics and extra-partnership contact.
     Champredon \etal\ 2013 \cite{champredon_hiv_2013}
   \end{center}
 
-\textbf{infection} from (1) inf. partner (discordant couples);
+\textbf{infection} from (1) infected partner ($SI$ couples);
 (2) other coupled inf.; (3) uncoupled inf.
 
-\vspace{0.2cm}
-Model choices:
+\vspace{0.4cm}
+
 \begin{itemize}
 \item \textbf{pair formation}: instantaneous or delayed?
 \item \textbf{extra-pair contact} (epc): present or absent?
@@ -183,7 +185,7 @@ Simplified disease model (single stage only)
 
 \end{block}
 
-\begin{block}{Sampling strategy}
+\begin{block}{Parameter uncertainty/exploration}
 % https://www.sharelatex.com/learn/Wrapping_text_around_figures
   \setlength{\abovecaptionskip}{0pt}
   \setlength{\belowcaptionskip}{0pt}
@@ -229,11 +231,11 @@ Simplified disease model (single stage only)
 \vspace{0.5cm}
 
 \begin{itemize}
-\item significant variation across model structures
+
 \item least (random) and most (pairform+epc) models \textbf{most similar}:
   single individuals and extra-pair contact wash out effects of structure
 \item implicit model is \textbf{most different}
-\item random-mixing model underestimates (?) variability
+\item random-mixing model underestimates variability
 \end{itemize}
 
 \end{block}       
@@ -253,6 +255,12 @@ Simplified disease model (single stage only)
 
               \vspace{1cm}
               \includegraphics[width=0.95\textwidth]{figure/univ.pdf}
+\begin{itemize}
+\item peak timing: epc $>$ finite pair-formation effects
+\item equilibrium virulence: interaction
+\item low-equilibrium outcomes for intermediate-complexity models
+\end{itemize}
+
             \end{block}
             \vspace{0.5cm}
 
@@ -352,12 +360,15 @@ ggplot(mL3,aes(LHSval,sumval,colour=model))+
 \begin{block}{Conclusions and open questions}
 
 \begin{itemize}
-\item Random-mixing models gave the closest match to the most realistic models; extra-pair contact washed out the effects
+\item Random-mixing models best matched the most realistic models; extra-pair and uncoupled individuals washed out the effects
 of epidemiological structure
+\item Implicit models did worst
 \item Variation among models (model structure) $\approx$ variation within models (parameter uncertainty)
 \item Large differences
 in evolutionary dynamics among different epidemiological models
-suggest caution in predicting evolutionary responses
+$\to$ caution in predicting evolutionary responses
+\item \textbf{neglected:} disease life history details, sex workers, age-structured mixing \dots
+agent-based models?
 \end{itemize}
 
 \end{block}
@@ -393,7 +404,7 @@ suggest caution in predicting evolutionary responses
 
 \begin{block}{Acknowledgements}
 
-We thank Christophe Fraser for providing access to code, and 
+We thank C. Fraser and D. Champredon for code access and 
 the Natural Sciences and Engineering Research Council of Canada (NSERC)
 for funding.
 
