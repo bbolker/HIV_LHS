@@ -15,7 +15,9 @@
 \usefonttheme[onlymath]{serif}
 
 %% You can change the poster orientation (portrait vs. landscape) and the paper size (a0, a1, &c.) here:
-\usepackage[orientation=portrait,size=a0,scale=1.4,debug]{beamerposter}
+
+\usepackage[orientation=portrait,size=custom,width=71,height=102,scale=1.2,debug]{beamerposter}
+%## size=a0,
 
 \usepackage{array,booktabs,tabularx}
 \newcolumntype{Z}{>{\centering\arraybackslash}X} % centered tabularx columns
@@ -107,10 +109,10 @@ gg_tradeoff <- ggplot(dd,aes(alpha,value))+facet_wrap(~variable,scale="free")+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newlength{\columnheight}
-\setlength{\columnheight}{105cm}
+\setlength{\columnheight}{100cm}
 
 \newlength{\topcolumnheight}
-\setlength{\topcolumnheight}{50cm}
+\setlength{\topcolumnheight}{37cm}
 
 \newlength{\bottomcolumnheight}
 \setlength{\bottomcolumnheight}{30cm}
@@ -128,7 +130,7 @@ gg_tradeoff <- ggplot(dd,aes(alpha,value))+facet_wrap(~variable,scale="free")+
       \begin{minipage}[T]{.95\textwidth}
         \parbox[t][\columnheight]{\textwidth}{ 
 
-\vspace{-2.4 cm} % shouldn't need this??
+\vspace{-1 cm} % shouldn't need this??
 \begin{block}{Summary}
 \noindent
 \hspace{-1.6cm}
@@ -218,13 +220,15 @@ Simplified disease model (single stage only)
 \end{beamercolorbox}
 \end{column}
 
-\begin{column}{.65\textwidth}
+%\newcommand{\topfudge}{-5cm}
 
+\begin{column}{.65\textwidth}
 \begin{columns}
   \begin{column}{.5\textwidth}
     \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
       \begin{minipage}[T]{.95\textwidth}
         \parbox[t][\topcolumnheight]{\textwidth}{ 
+          \vspace{-4.5cm} % shouldn't need this??
 
 \begin{block}{Eco-evolutionary dynamics}
 
@@ -236,7 +240,7 @@ Simplified disease model (single stage only)
 \item \textbf{80\% of total variability} in peak SPVL is among- vs. within-model
 \item least (random) and most (pairform+epc) models \textbf{most similar}:
   single individuals and extra-pair contact wash out effects of structure
-\item implicit model is \textbf{most different}
+%\item implicit model is \textbf{most different}
 \item random-mixing model underestimates variability
 \end{itemize}
 
@@ -252,6 +256,7 @@ Simplified disease model (single stage only)
       \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
         \parbox[t][\topcolumnheight]{\textwidth}{ 
             
+\vspace{-4.5cm} % shouldn't need this??
             \begin{block}{Univariate summaries}
               \includegraphics[width=0.7\textwidth]{figure/univ_scheme.pdf}
 
@@ -260,7 +265,7 @@ Simplified disease model (single stage only)
 \begin{itemize}
 \item peak timing: epc $>$ finite pair-formation effects
 \item equilibrium virulence: interaction
-\item low-equilibrium outcomes for intermediate-complexity models
+%\item low-equilibrium outcomes for intermediate-complexity models
 \end{itemize}
 
             \end{block}
@@ -275,7 +280,7 @@ Simplified disease model (single stage only)
 
 \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
   \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
-    \parbox[t][30cm]{\textwidth}{ % must be some better way to set
+    \parbox[t][26cm]{\textwidth}{ % must be some better way to set
 
 \begin{block}{Sensitivity}
 \includegraphics[width=0.9\textwidth]{figure/sens-1.png}
