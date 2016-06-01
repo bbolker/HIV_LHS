@@ -278,7 +278,8 @@ Simplified disease model (single stage only)
     \parbox[t][30cm]{\textwidth}{ % must be some better way to set
 
 \begin{block}{Sensitivity}
-<<sens,dev="png",echo=FALSE,fig.width=20,fig.height=10,cache=TRUE,out.width="0.95\\textwidth">>=
+\includegraphics[width=0.9\textwidth]{figure/sens-1.png}
+<<sens,dev="png",echo=FALSE,fig.width=20,fig.height=10,cache=TRUE,out.width="0.95\\textwidth",eval=FALSE>>=
 mL3 <- subset(mL2,
        !((model=="implicit" &
           LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
@@ -348,6 +349,9 @@ ggplot(mL3,aes(LHSval,sumval,colour=model))+
     scale_x_log10(expand=c(0,0.08),breaks=brkfun)+
     zero_margin
 @
+\begin{itemize}
+\item {\small $\beta_{P,D}$: early/late-stage transmission probability; $D_{P,D}$: early/late-stage duration; $c$: partnership dissolution rate; $c_e/c_w$: extra- vs within-pair contact ratio; $\rho$: partnership formation rate; $c_u/c_w$: uncoupled contact rate ratio}
+\end{itemize}
 \end{block}
 }
         \end{minipage}
@@ -365,7 +369,7 @@ ggplot(mL3,aes(LHSval,sumval,colour=model))+
 \item Random-mixing models best matched the most realistic models; extra-pair and uncoupled individuals washed out the effects
 of epidemiological structure
 \item Implicit models did worst
-\item Variation among models (model structure) $\approx$ variation within models (parameter uncertainty)
+\item Variation among models (model structure) $\gtrsim$ variation within models (parameter uncertainty)
 \item Large differences
 in evolutionary dynamics among different epidemiological models
 $\to$ caution in predicting evolutionary responses

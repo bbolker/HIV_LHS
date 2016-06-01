@@ -1,3 +1,8 @@
+- lighten gray background
+- add parameter defs to 
+- take out sampling picture??
+-
+
 
 - tradeoff theory: lighten lines (clearance/mortality)?
   show abbreviation for SPVL
