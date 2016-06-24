@@ -644,18 +644,16 @@ and epidemiological, we reach the slightly ironic conclusion that the
 effort put into building a more realistic model essentially cancels
 out, leaving us in the same position as if we had ignored the problem
 of epidemiological complexity entirely and used a naive random-mixing
-contact model. Herbeck \etal\ \cite{herbeck_hiv_2014} build a
-network model of partnerships, but they set the ``partnership''
-duration to 1 day --- very unrealistic in epidemic terms, but perhaps
+contact model. In Herbeck \etal's \cite{herbeck_hiv_2014} network model of partnerships, the partnership duration is set to 1 day --- very unrealistic in epidemic terms, but perhaps
 actually more true to real-world HIV epidemiological dynamics than a
 model with realistic partnership durations that neglects extra-pair
-contact \cite{herbeck2016evolution}. Adding still further realism
-might push the results farther away from the random-mixing model. For
+contact \cite{herbeck2016evolution}. Making the model even more realistic
+might make the random-mixing model less appropriate. For
 example, our model forms partnerships randomly, and assumes that
 extra-pair contact is randomly mixing across the population;
-one could instead implement extra-pair contact as arising from
+one could instead model extra-pair contact as arising from
 multiple concurrent partnerships (some, such as contact with sex
-workers, of very short duration), or more structured partnership
+workers, of very short duration) and/or more structured partnership
 formation (by age, ethnicity, or behaviour group). The effects of
 other realistic complications such as explicit modeling of two
 sexes (both in contact structure and differential transmission
@@ -668,8 +666,9 @@ by doing Latin hypercube
 sampling across a wide range of epidemiological parameters, we 
 calibrated each set of parameters to the same initial epidemic
 growth rate, chosen to match the results of previous models
-\cite{shirreff_transmission_2011}.  The previous models drew their
-parameters from previous cohort studies from the 1990s
+\cite{shirreff_transmission_2011}.  Previous models 
+in this area have drawn their
+parameters from cohort studies from the 1990s
 \cite{wawer2005rates,hollingsworth_hiv1_2008}
 rather than doing any explicit calibration to epidemic curves,
 but they give reasonable order-of-magnitude
@@ -697,10 +696,10 @@ be calibrated to \emph{all} available data, using informative
 priors to incorporate both realistic distributions of uncertainty
 for all parameters from independent measurements \cite{elderd_uncertainty_2006}
 and calibration from population-level observations of epidemic
-trajectories. For practical (rather than exploratory) purposes,
-such a procedure would also be an improvement on the common --- although not universal --- %
-practice of assessing uncertainty over uniform ranges, rather than
-distributions that allow more continuous variation in support over
+trajectories. Such a procedure would also be an improvement on the common --- although not universal --- %
+practice, which we have followed here,
+of assessing uncertainty over uniform ranges rather than
+using distributions that allow more continuous variation in support over
 the range of a parameter.
 
 Researchers have documented that HIV virulence and set-point viral
