@@ -221,7 +221,6 @@ print(gg_univ)
 
 ```{r fig3.1, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
 
-sL <- transform(sum_list[["sum_mat"]],rel_peak=peak_vir/eq_vir)
 sL$model <- factor(sL$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
 
 sL.epi <- transform(sL, eq_t = returnBeta(eq_vir,HIVpars.skeleton),
