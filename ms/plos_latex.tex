@@ -509,9 +509,9 @@ All models were run until $t=4000~\textrm{years}$; truncated series are shown he
 Our chosen summary statistics (peak time, peak virulence, equilibrium
 virulence, and relative peak virulence) all vary considerably across models
 \ref{fig:unidist}.
-We first consider the models of intermediate realism (implicit,
-instantaneous-switching with and without extra-pair contact (``epc'' hereafter), and
-pair formation without extra-pair contact). Some parameter
+We first consider the models of intermediate realism: implicit,
+instantaneous-switching with and without extra-pair contact, and
+pair formation without extra-pair contact. Some parameter
 sets for these models lead to low equilibrium virulence ($\approx 2.5 \log_{10}$ SPVL);
 these same sets lead to correspondingly low
 peak virulence ($< 3.5 \log_{10}$ SPVL) and early peak times (before 200 years), 
@@ -539,19 +539,34 @@ Dashed line in equilibrium vs. peak virulence plot shows 1:1 line.}
 
 The most striking aspect of the univariate comparisons in
 Fig.~\ref{fig:unidist}, (and the bivariate comparisons in
-Fig.~\ref{fig:pairplot}) is the match between the output of the
+Fig.~\ref{fig:pairplot}) is the similarity between the results of the
 least (random mixing) and the most complex (pair formation with
 extra-pair contact) models. The random-mixing model has lower
 variability, because it is unaffected by uncertainty in pair formation
 and extra-pair contact parameters, but otherwise the virulence
 dynamics of these two extreme models are remarkably similar.
-This phenomenon is driven by the strength of extra-pair contact in the
+This phenomenon is driven by the strong effects of extra-pair contact in the
 model with explicit pair formation and extra-pair contact 
 (``pairform+epc'' in Figures~\ref{fig:virtraj}-\ref{fig:plot_sens}). When individuals spend time uncoupled between
 partnerships, and when these single individuals can transmit disease
 to coupled individuals, the resulting unstructured mixing overwhelms
 the effect of structured mixing within couples, leading to mixing
 that is effectively close to random.
+
+Expressing these results in terms of more directly interpretable epidemic
+parameters, i.e. using the Hill functions to translate \Lspvl\ to
+within-couple transmission probabilities and average time of progression
+to AIDS, shows that these differences are practically as well as 
+scientifically important. The random-mixing and pairform+epc models
+predict minimimum times to progression (at the virulence peak) of
+5.7 (95\% CI 6.1-6.3) and 6.0 (5.0-7.7) years respectively, while
+the implicit model gives progression times about twice as long:
+12.5 (9.5-15.6) years. The corresponding differences in 
+within-couple transmission
+probability are even more extreme, about a fourfold difference:
+0.249 (0.24-0.26) and 0.252 (0.19-0.28) per year for the 
+random and pairform+epc models vs. 0.059 (0.02-0.13) per year
+for the implicit model.
 
 \begin{figure}[!h]
 \caption{{\bf Sensitivity plot.}
@@ -560,8 +575,8 @@ For each parameter in the Latin hypercube sample and each summary statistic, sho
 \end{figure}
 
 Plotting the bivariate result distributions (Fig.~\ref{fig:pairplot})
-shows that most of the relationships among the summary statistics
-are monotonic, except those involving the relative peak virulence
+shows that most of the summary statistics
+are monotonically related, except those involving the relative peak virulence
 (bottom row). Changes in parameters that increase the equilibrium
 virulence initially increase the peak virulence even more, so
 that the relative peak virulence increases as well, but beyond
@@ -570,7 +585,7 @@ increases slower than the equilibrium virulence, leading to a
 decrease in the relative peak virulence.
 
 The bivariate relationships also help distinguish the results of 
-different models with similar univariate distributions. While the
+different models with similar univariate dynamical summaries. While the
 relationship between equilibrium virulence and peak time is
 similar for all model structures (top left panel), the other
 relationships are more separate. In particular, the implicit
@@ -590,17 +605,19 @@ Finally, the sensitivity plots (Fig.~\ref{fig:plot_sens}) show the effects
 of each parameter on the summary statistics. In almost every case the
 effects of the parameters are monotonic; note that
 the plot shows the effects of the \emph{unscaled} parameters, i.e.
-before they have been adjusted to achieve a standard initial epidemic
+before they have been calibrated to achieve a standard initial epidemic
 growth rate.
 Increases in the transmission rates ($\beta_P$, $\beta_D$)
 and durations ($D_P$, $D_D$) in the primary and disease stages generally
 decrease the equilibrium virulence, peak virulence, and peak time,
-although the random and pair-formation+extra-pair contact
+although the random and pair-formation+epc 
 models have high, relatively
 constant values with respect to these parameters. 
 
-The base contact rate increases virulence and peak time in almost all
-cases, although the pair-formation+extra-pair contact
+The partnership dissolution rate ($c$), which essentially
+acts as a contact rate in the model,
+increases virulence and peak time in almost all
+cases, although the pair-formation+epc
 model is again relatively insensitive.
 The ratio of extra-pair to within-pair contact ($c_e/c_w$) affects
 virulence in the instantaneous-switching+epc model, but not the pair-formation+epc
@@ -618,8 +635,8 @@ availability, computation time, or code complexity --- drive the need
 for parsimony, with different constraints applying in different
 contexts. The critical question that modelers must ask is whether the
 simplified model gives adequate answers, or whether the
-simplifications have led to qualitatively or quantitatively incorrect
-conclusions.  This question is especially important for modelers who
+simplifications lead to qualitative or quantitative errors.
+This question is especially important for modelers who
 are hoping that their conclusions will guide management decisions.
 
 In the particular example of HIV virulence eco-evolutionary dynamics
