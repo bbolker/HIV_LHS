@@ -1,5 +1,8 @@
 library("lme4")
 load("../simdata/combine_ev_LHS4.rda")
+source("hivFuns.R")
+source("Param.R")
+
 sL <- sum_list[["sum_mat"]]
 
 model = sL$model
@@ -7,6 +10,7 @@ eqV = sL$eq_vir
 peakV = sL$peak_vir
 
 m_peakV <- lmer(peakV ~ 1 + (1|model), data = sL, REML=FALSE)
+
 v_among <- c(VarCorr(m_peakV)[[1]])  ## c() dumps extra information
 v_within <- sigma(m_peakV)^2
 v_among/(v_among+v_within)

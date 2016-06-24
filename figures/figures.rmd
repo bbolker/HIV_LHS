@@ -7,6 +7,8 @@ output: html_document
 library("knitr")
 library("ggplot2"); theme_set(theme_bw(base_size = 12,
                                        base_family = "Times"))
+library("dplyr")
+library("tidyr")
 opts_chunk$set(echo=FALSE,error=FALSE)
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
@@ -257,6 +259,32 @@ print(gg_univ.epi)
 
 ```
 
+```{r sumtab,as.is=TRUE}
+rq <- function(x,q,digits=3) {
+    round(quantile(x,q),digits)
+}
+mLtab <- mL.epi %>% group_by(model,variable) %>%
+    summarise(lwr=rq(value,0.025),
+              med=rq(value,0.5),
+              upr=rq(value,0.975)) %>%
+    mutate(variable=abbreviate(variable,30)) %>%
+    ungroup() %>%
+    arrange(variable,model)
+kable(mLtab)
+```
+```{r sumvals,echo=FALSE}
+ff <- function(model,variable,r=3) {
+    mm <- mLtab[mLtab$model==model & mLtab$variable==variable,3:5]
+    round(unlist(mm),r)
+}
+mindur_random <- ff("random","peak_dur",1)
+mindur_pfepc <-  ff("pairform+epc","peak_dur",1)
+mindur_implicit  <- ff("implicit","peak_dur",1)
+maxt_random <- ff("random","peak_t",2)
+maxt_pfepc <- ff("pairform+epc","peak_t",2)
+maxt_implicit  <- ff("implicit","peak_t",2)
+save(list=ls(pattern="^(maxt|mindur)"),file="../ms/maxminstats.RData")
+```
 ```{r fig4_func, echo = FALSE}
 trim_gg <- function(gg,hack_spaces=TRUE) {
     n <- gg$nrow
