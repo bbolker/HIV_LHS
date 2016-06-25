@@ -64,7 +64,7 @@ shirreff_df_m$run <- "Shirreff"
 df_tot <- rbind(shirreff_df_m,d_littleR_m)
 tlab <- "time (years)"
 g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run))+
-    geom_line()+labs(x=tlab,y=expression(mean~virulence~(log[10]~SPVL)))+
+    geom_line()+labs(x=tlab,y=expression(population~mean~set-point~viral~load~(log[10])))+
     theme(legend.position=c(0.75,0.25))
 ###
 dimnames(vir_matS2) <- list(Time=tvec,
@@ -114,9 +114,10 @@ gg_virtraj <- ggplot(ss,
                      aes(tvec,mean,ymin=lwr,ymax=upr))+
 	geom_line(aes(colour=model,linetype=model),lwd=1)+
 	geom_ribbon(aes(fill = model), alpha=0.3)+
-	labs(x="time (years)",y=expression(mean~virulence~(log[10]~SPVL))) +
+	labs(x="time (years)",y=expression(population~mean~set-point~viral~load~(log[10]))) +
 	theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
-		axis.title.x = element_text(margin = margin(10,0,0,0))) +
+		axis.title.x = element_text(margin = margin(10,0,0,0)),
+		legend.position = "none") +
 	facet_wrap(~model, nrow = 2) +
 	zero_margin
 	
@@ -148,9 +149,10 @@ gg_betatraj <- ggplot(ss2,
                      aes(tvec,mean,ymin=lwr,ymax=upr))+
 	geom_line(aes(colour=model,linetype=model),lwd=1)+
 	geom_ribbon(aes(fill = model), alpha=0.3)+
-	labs(x="time (years)",y=expression(mean~transmission~rate~during~asymptomatic~stage)) +
+	labs(x="time (years)",y=expression(mean~transmission~rate~during~asymptomatic~stage~(year^-1))) +
 	theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
-		axis.title.x = element_text(margin = margin(10,0,0,0))) +
+		axis.title.x = element_text(margin = margin(10,0,0,0)),
+		legend.position = "none") +
 	facet_wrap(~model, nrow = 2) +
 	zero_margin
 	
@@ -177,9 +179,10 @@ gg_durtraj <- ggplot(ss3,
                      aes(tvec,mean,ymin=lwr,ymax=upr))+
 	geom_line(aes(colour=model,linetype=model),lwd=1)+
 	geom_ribbon(aes(fill = model), alpha=0.3)+
-	labs(x="time (years)",y=expression(mean~duration~of~asymptomatic~stage)) +
+	labs(x="time (years)",y=expression(mean~duration~of~asymptomatic~stage~(years))) +
 	theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
-		axis.title.x = element_text(margin = margin(10,0,0,0))) +
+		axis.title.x = element_text(margin = margin(10,0,0,0)),
+		legend.position = "none") +
 	facet_wrap(~model, nrow = 2) +
 	zero_margin
 	
@@ -206,6 +209,7 @@ mLw$variable <- fixfac2(mLw$variable)
 
 gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 	geom_violinh(width=1)+
+	theme(legend.position = "none") +
 	facet_wrap(~variable,scale="free_x")+
 	guides(fill=guide_legend(reverse=TRUE))+
 	labs(y="")+
@@ -247,6 +251,7 @@ mLw.epi$variable <- factor(mLw.epi$variable, levels = c("eq_t", "peak_t", "eq_du
 
 gg_univ.epi <- ggplot(mLw.epi,aes(value,model,fill=model))+
 	geom_violinh(width=1)+
+	theme(legend.position = "none") +
 	facet_wrap(~variable,scale="free_x")+
 	guides(fill=guide_legend(reverse=TRUE))+
 	labs(y="")+
@@ -258,7 +263,7 @@ print(gg_univ.epi)
 
 ```
 
-```{r sumtab,as.is=TRUE}
+```{r sumtab,as.is=TRUE,eval=FALSE}
 rq <- function(x,q,digits=3) {
     round(quantile(x,q),digits)
 }
@@ -271,7 +276,8 @@ mLtab <- mL.epi %>% group_by(model,variable) %>%
     arrange(variable,model)
 kable(mLtab)
 ```
-```{r sumvals,echo=FALSE}
+
+```{r sumvals,echo=FALSE,eval=FALSE}
 ff <- function(model,variable,r=3) {
     mm <- mLtab[mLtab$model==model & mLtab$variable==variable,3:5]
     round(unlist(mm),r)
@@ -284,6 +290,7 @@ maxt_pfepc <- ff("pairform+epc","peak_t",2)
 maxt_implicit  <- ff("implicit","peak_t",2)
 save(list=ls(pattern="^(maxt|mindur)"),file="../ms/maxminstats.RData")
 ```
+
 ```{r fig4_func, echo = FALSE}
 trim_gg <- function(gg,hack_spaces=TRUE) {
     n <- gg$nrow

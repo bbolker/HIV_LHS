@@ -37,6 +37,10 @@ output: html_document
 
 
 
+
+
+
+
 ### Figure 4
 
 ![plot of chunk fig4](figure/fig4-1.png)
