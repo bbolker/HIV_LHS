@@ -1,0 +1,9 @@
+- make sure DP is first; change affiliation
+- cover letter
+- other examples? (recent lit search)
+- figures vs. poster:
+    - remove legends in figs 2,3 
+	- units in y-axis figs 2.1,2.2 (/year)
+    - figure 2: y-axis "mean set-point viral load (log[10])"
+- virulence -> exploitation?
+- add figures (2.1, 2.2, 3.1) to supplementary material; mention in main text
