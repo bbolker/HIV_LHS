@@ -1,0 +1,37 @@
+% This is where the material for the default letterhead is defined.
+% Overridden by user with \leftaddress and \rightaddress.  These
+% defaults are for STATISTICS of course.
+%
+\long\def\leftaddress#1{\def\fromleftaddress{#1}}
+\def\fromleftaddress{\bf Dr. Benjamin Bolker\\ Professor\\
+  Departments of Mathematics \& Statistics and Biology}
+\long\def\rightaddress#1{\def\fromrightaddress{#1}}
+%\def\fromrightaddress{103 Griffin-Floyd Hall\\ P. O. Box 118545\\
+%  Gainesville, FL 32611-8545\\
+%   Phone: (352) 392-1941 Ext.\ 236\\ FAX: (352) 392-5175\\
+%   E-mail: \small\tt presnell@stat.ufl.edu}
+\def\fromrightaddress{1280 King Street West\\
+  Hamilton, ON L8S 4K1 Canada\\
+   \emph{phone} (905) 525-9140 x23320 \\ \emph{fax} (905) 522-0935\\
+%   E-mail: \small\tt presnell@stat.ufl.edu}
+   \emph{e-mail} \tt bolker@mcmaster.ca }
+%   \emph{web}  \small\tt http://www.zoo.ufl.edu/bolker }
+
+% A personal preference:
+\renewcommand{\enclname}{Enclosures}
+
+% Input the main driver file.
+%
+\input{macltr.tex}
+% Try changing the space left for the signature.
+%\long\def\closing#1{\par\nobreak\vspace{\parskip}%
+%  \stopbreaks%
+%  \noindent%
+%  \hspace*{\longindentation}%
+%  \parbox{\indentedwidth}{\raggedright%
+%       \ignorespaces #1\\[4\medskipamount]%% changed 20 Jan 88
+%       \ifx\@empty\fromsig%
+%           \fromname%
+%       \else \fromsig \fi\strut}%
+%   \par}
+\endinput
