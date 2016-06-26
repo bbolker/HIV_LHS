@@ -358,7 +358,8 @@ The mutational process in our model is directly taken from Shirreff \etal. Over 
 \end{equation}
 We have experimented with varying degrees of discretization in the strain distribution (i.e., values of $n$); in our model runs comparing results with Shirreff \etal\ \cite{shirreff_transmission_2011} (\figurename~\ref{fig:panel3}) we use $n=51$ (i.e. a bin width of 0.1 \Lspvl\ for $\alpha$), but we find only small differences when reducing $n$ to 21 (bin width = 0.25 \Lspvl), which we use for all other simulations.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig1.pdf}
 \caption{{\bf Baseline dynamics.}
 Time series of mean population virulence (\Lspvl). (a) Shirreff model, effects of varying $r$. (b) Effects of varying initial infectious density $I(0)$. (c) Effects of varying initial mean virulence $\alpha(0)$.}
 \label{fig:panel3}
@@ -431,7 +432,7 @@ $n$ & Number of strains & 21 (51*) & Assumption\\
 \label{table:parmsTable}
 \end{table}
 
-The one completely new parameter in our model, the ratio of uncoupled to within-couple transmission $c_u/c_w$, is needed to more flexibly contrast uncoupled and extra-couple transmission dynamics within multi-strain models (Appendix); we need to pick a reasonable range for it. Champredon \etal\ \cite{champredon_hiv_2013} assume that the effective within-couple contact rate and effective uncoupled contact rate have the same range of 0.05 - 0.25.  Given Champredon \etal's parameter range, the possible maximum and minimum values of $c_u/c_w$ are 5 and 1/5. Therefore, we use 1/5-5 as the range for the parameter $c_u/c_w$. Although this adds more uncertainty to the parameter $c_u$ --- Champredon \etal's range implies a 5-fold difference whereas ours gives a 25-fold difference --- we consider the wider range appropriate, as little is not much known about the uncoupled transmission rate.
+The one completely new parameter in our model, the ratio of uncoupled to within-couple transmission $c_u/c_w$, is needed to more flexibly contrast uncoupled and extra-couple transmission dynamics within multi-strain models (Appendix S1); we need to pick a reasonable range for it. Champredon \etal\ \cite{champredon_hiv_2013} assume that the effective within-couple contact rate and effective uncoupled contact rate have the same range of 0.05 - 0.25.  Given Champredon \etal's parameter range, the possible maximum and minimum values of $c_u/c_w$ are 5 and 1/5. Therefore, we use 1/5-5 as the range for the parameter $c_u/c_w$. Although this adds more uncertainty to the parameter $c_u$ --- Champredon \etal's range implies a 5-fold difference whereas ours gives a 25-fold difference --- we consider the wider range appropriate, as little is not much known about the uncoupled transmission rate.
 
 
 \subsection*{Simulation runs}
@@ -498,7 +499,8 @@ Changing the initial infectious density ($I(0)$), while it produces the expected
 
 Across the entire range of parameters covered by the LHS analysis, all of the classes of models we considered produce qualitatively similar virulence trajectories (\figurename~\ref{fig:virtraj}). Although the speed of virulence evolution varies, leading to wide variation in the peak virulence (means ranging from approximately 3.75 to 4.5 \Lspvl), virulence peaks in all models between 200 and 300 years.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig2.pdf}
 \caption{{\bf Envelopes of virulence trajectories under all models.}
 All models were run until $t=4000~\textrm{years}$; truncated series are shown here.}
 \label{fig:virtraj}
@@ -523,13 +525,15 @@ occasionally have parameter sets that select for such low virulence across
 the board that they never exceed their initial virulence, leading to a tail
 of peak times near zero.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig3.pdf}
 \caption{{\bf Univariate distributions of summary statistics.}
 The distribution of equilibrium virulence for the random mixing model is very narrow, and has been replaced by a point in order to preserve the vertical axis scaling.}
 \label{fig:unidist}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig4.pdf}
 \caption{{\bf Pairs plot: bivariate relationships among summary statistics for each model structure.}
 Dashed line in equilibrium vs. peak virulence plot shows 1:1 line.}
 \label{fig:pairplot}
@@ -569,7 +573,8 @@ on the epidemiological scales
 of progression time and transmission probability,
 for all summary measures and all models).
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig5.pdf}
 \caption{{\bf Sensitivity plot.}
 For each parameter in the Latin hypercube sample and each summary statistic, shows the distribution (points) and trend (smooth line) of the summary statistic as a function of the \emph{unscaled} parameter value, i.e. prior to adjusting the parameters to achieve the standard initial epidemic growth rate.}
 \label{fig:plot_sens}
@@ -722,12 +727,15 @@ this work was funded by an NSERC Discovery Grant.
 \section*{Supporting Information}
 
 % Include only the SI item label in the paragraph heading. Use the \nameref{label} command to cite SI items in the text.
-\paragraph*{Appendix S1}
+\paragraph*{Appendix S1: model details}
 \label{S1_Appendix}
-{\bf Model details.} Since we use multi-strain models, in which the distribution of \Lspvl\ has been discretized into a vector, we use a matrix notation to describe our models. The five states described in the Methods section are replaced with the following notations: $S$, $I_i$, $SS$, $SI_i$, $II_{ij}$, where the subscripts denote the strain that an individual is infected with. For example, $I_i$ is number of infected individuals with \Lspvl\ of $\alpha_i$, and $II_{ij}$ is the number of concordant, HIV-positive couples in which the two partners have \Lspvl\ of $\alpha_i$ and $\alpha_j$ (independent of order; $II_{ij}$ is synonymous with $II_{ji}$). 
+
+Since we use multi-strain models in which the distribution of \Lspvl\ has been discretized into a vector, we use a matrix notation to describe our models. The five states described in the \emph{Methods} section are replaced with the following notations: $S$, $I_i$, $SS$, $SI_i$, $II_{ij}$, where the subscripts denote the strain with which an individual is infected. For example, $I_i$ is number of infected individuals with \Lspvl\ of $\alpha_i$, and $II_{ij}$ is the number of concordant, HIV-positive couples in which the two partners have \Lspvl\ of $\alpha_i$ and $\alpha_j$ (independent of order; $II_{ij}$ is synonymous with $II_{ji}$). 
 Below, we use the Kronecker delta (i.e. $\delta_{ij}=1$ if $i=j$ and 1 otherwise) in a slightly non-standard fashion as an exponent, e.g. $2^{\delta_{ij}}$, to set a value to 2 when $i=j$ and 1 otherwise.
 
-\subsection*{Models 1 and 2: partnership dynamics}
+\subsection*{Models 1 (``pairform+epc'') and 2 (``pairform'')}
+
+\subsubsection*{Partnership dynamics}
 
 Single individuals acquire partners at per-person rate $\rho$. Partnership formation rate for $S$, $I_i$ are $- \rho S$ and $-\rho I_i$, respectively. We follow Champredon \etal's results and assume that single individuals are distributed into coupled states with pair-formation (PF) rates as follows:
 
@@ -760,7 +768,7 @@ II_{ij}' &= \khalf \cdot \frac{\rho I_i \cdot I_j}{S + \sum_k I_k} - c II_{ij}
 \end{aligned}
 \end{equation}
 
-\subsection*{Models 1 and 2: infection}
+\subsubsection*{Pair-formation models: infection dynamics}
 
 Within-couple transmission (WT) occurs in both models. An infected partner in $SI$ partnership transmits virus to a susceptible partner, and partnership state becomes $II$: $\WT(SI_i) = - \beta_i SI_i$. Since we assume that mutation occurs, $II_{ij}$, where $i \neq j$, can be formed from both $SI_i$ and $SI_j$ partnership: $\WT(II_{ij}) = M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j$. On the other hand, $II_{ii}$ can only be formed from an $SI_i$ partnership: $\WT(II_{ii}) = M_{ii} \beta_i SI_i$. Using the Kronecker delta notation, we obtain the following set of equations that describes within-couple transmission dynamics:
 
@@ -801,7 +809,7 @@ II_{ij}' =& \khalf \cdot (M_{ij} \beta_i SI_i + M_{ji}, \beta_j SI_j) + \khalf \
 \end{aligned}
 \end{equation}
 
-\subsection*{Model 1 and 2 - Disease induced mortality}
+\subsubsection*{Pair formation models: Disease induced mortality}
 
 The disease induced mortality (DM) rate, $\lambda$, is given by taking the reciprocal of the total duration of the infection: $\lambda_i = 1/(D_A + D_P(\alpha_i) + D_D)$. Since we assume an SIS formulation, where infected individuals that die from infection are immediately replaced by an individual in the single susceptible compartment, we obtain the following equation for single infected individuals:
 
@@ -847,7 +855,8 @@ II_{ij}' =& \khalf \cdot \frac{\rho I_i \cdot I_j}{(S + \sum_k I_k)} - c II_{ij}
 \end{aligned}
 \end{equation}
 
-\subsection*{Models 3 and 4: Partnership dynamics}
+\subsection*{Models 3 (``instswitch'') and 4 (``instswitch'')}
+\subsubsection*{Partnership dynamics}
 
 Since model 3 and 4 assume instantaneous partnership formation, there are only three states: $SS$, $SI_i$, and $II_{ij}$. Partnership dissolution rates are equal to those of model 1 and 2: $\DS(SS) = -cSS$, $\DS(SI_i) = - cSI_i$, and $\DS(II_{ij}) = - II_{ij}$. Once individuals leave a partnership, they enter temporary compartments and are distributed into a partnership as follows:
 
@@ -861,16 +870,16 @@ II_{ij}' &= - c II_{ij} +\khalf \frac{Y_i Y_j}{X + \sum_k Y_k}.
 \end{aligned}
 \end{equation}
 
-\subsection*{Model 3 and 4 - Infection}
+\subsubsection*{Instantaneous-switching models: Infection dynamics}
 
-Model 3 and 4 share the within-couple transmission term with model 1 and 2. Since there is no single state, only extra couple transmission exists:
+Model 3 and 4 share the within-couple transmission term with model 1 and 2. Since there is no single (uncoupled) state, only extra-couple transmission exists:
 
 \begin{equation}
 P_i = \frac{r_e (SI_i + \sum_k (II_{ik} + \delta_{ik} II_{ik}))}{r_e(2 SS + \sum_k 2 SI_k + \sum_l \sum_k (2^\delta_{kl} II_{lk}) )}.
 \end{equation}
 Movement from $SS$ state to $SI$ state and $SI$ to $SS$ is modeled through the same equation that is used in model 1 and 2.
 
-\subsection*{Model 3 and 4 - Disease induced mortality}
+\subsubsection*{Instantaneous-switching models: Disease induced mortality}
 
 Disease induced mortality is modeled similar to model 1 and 2. However, as single state does not exist in model 3 and 4, individuals that has left their partnerships due to death of their partners enter temporary compartments and form partners instantly:
 
@@ -898,7 +907,7 @@ II_{ij}& - c II_{ij} +\khalf \frac{Y_i Y_j}{X + \sum_k Y_k} + \khalf \cdot (M_{i
 \end{aligned}
 \end{equation}
 
-\subsection*{Model 5}
+\subsection*{Implicit model}
 
 Following \cite{shirreff_transmission_2011}, Model 5 is an implicit instantaneous partnership formation model that uses an adjusted transmission rate, $\beta'$, that is derived from \cite{hollingsworth_hiv1_2008}'s approximate basic reproduction number:
 
@@ -914,7 +923,7 @@ I_i & = \sum_k M_{ki} \beta'_k S I_k - \lambda_i I_i.
 \end{aligned}
 \end{equation}
 
-\subsection*{Model 6}
+\subsection*{Random-mixing model}
 
 Model 6 is a random mixing model. It is modeled in a same way as model 5 without the adjusted transmission rate:
 
@@ -924,7 +933,6 @@ S' & = \sum_k \lambda_k I_k - \sum_k \beta_k S I_k,\\
 I_i & = \sum_k M_{ki} \beta_k S I_k - \lambda_i I_i.
 \end{aligned}
 \end{equation}
-
 
 \subsection*{Initial distribution of infected individuals}
 
@@ -958,8 +966,44 @@ I_i(0) &=  \epsilon D_i.
 \end{equation}
 Model 6 has the same distribution of initial infected individuals as model 5.
 
-\paragraph*{Appendix S2}
+\paragraph*{Appendix S2: dynamics of transmission and virulence}
+
 \label{S2_Appendix}
+
+This section presents
+
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig_S2_1.pdf}
+\caption{{\bf Envelopes of transmission trajectories under all models.}
+This figure matches \figurename~\ref{fig:virtraj}, but displays the
+envelope of population-mean transmission probabilities rather than \Lspvl\ over time
+for each model.
+}
+\label{fig:transtraj}
+\end{figure}
+
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig_S2_2.pdf}
+\caption{{\bf Envelopes of progression trajectories under all models.}
+This figure matches \figurename~\ref{fig:virtraj}, but displays the
+envelope of population-mean expected time of progression to AIDS (i.e., length of
+intermediate HIV phase) rather than \Lspvl\ over time
+for each model.
+}
+\label{fig:durtraj}
+\end{figure}
+
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig_S2_3.pdf}
+\caption{{\bf Univariate distributions of transmission probabilities and progression.}
+This figure matches \figurename~\ref{fig:unidist}, but displays the
+univariate distributions for the transmission probability and 
+progression time at the virulence
+peak and at the epidemiological equilibrium,
+rather than the distributions of \Lspvl.
+}
+\label{fig:tranprogsum}
+\end{figure}
 
 \nolinenumbers
 
