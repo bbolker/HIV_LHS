@@ -146,7 +146,6 @@ gfun <- function(parameters, experimental=FALSE) {
   if (experimental) return(gX) else return(g)
 }
 
-gfunX <- 
 #serial
 gfun2 <- function(parameters) {
   pp <- expand(parameters)

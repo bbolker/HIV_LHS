@@ -17,7 +17,10 @@ HIVpars.skeleton <- list(
   Vm = 0.12,                            ##Mutational standard deviation of log10SPVL (Shirreff)
   inisd = 0.2,                          ##Standard deviation of the initial SPVL distribution
   Ini_I = 1e-4,                         ##Initial number of infected individuals
-  ini_V = 3.5                           ##Initial mean SPVL
+  ini_V = 3.5,                          ##Initial mean SPVL
+  n.risk = 3,                           ##number of risk groups
+  r.risk = c(0.9,1,1.1),                ##risk group mixing ratio
+  p.risk = c(0.3, 0.4, 0.3)             ##risk group proportion
 )
 
 
