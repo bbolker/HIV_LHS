@@ -19,6 +19,10 @@ vignettes/*.pdf
 *.out
 *.soc
 *-tikzDictionary
+*.nav
+*.nsm
+*.toc
+*.bak
 
 *~
 cache

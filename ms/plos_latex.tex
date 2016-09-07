@@ -1,3 +1,4 @@
+% ## http://journals.plos.org/ploscompbiol/s/submit-now
 % Template for PLoS
 % Version 3.2 March 2016
 %
@@ -172,16 +173,14 @@
 % Insert author names, affiliations and corresponding author email (do not include titles, positions, or degrees).
 \\
 Sang Woo Park\textsuperscript{1}
-Benjamin M. Bolker\textsuperscript{2,3,4,*}
+Benjamin M. Bolker\textsuperscript{1,2,3,*}
 \\
 \bigskip
-\textbf{1} Program in Health Sciences, McMaster University, Hamilton, Ontario, Canada
+\textbf{1} Department of Mathematics \& Statistics,  McMaster University, Hamilton, Ontario, Canada
 \\
-\textbf{2} Department of Mathematics \& Statistics,  McMaster University, Hamilton, Ontario, Canada
+\textbf{2} Department of Biology,  McMaster University, Hamilton, Ontario, Canada
 \\
-\textbf{3} Department of Biology,  McMaster University, Hamilton, Ontario, Canada
-\\
-\textbf{4} Institute for Infectious Disease Research,  McMaster University, Hamilton, Ontario, Canada
+\textbf{3} Institute for Infectious Disease Research,  McMaster University, Hamilton, Ontario, Canada
 \\
 \bigskip
 
@@ -332,7 +331,7 @@ Shirreff \etal's multi-strain evolutionary model \cite{shirreff_transmission_201
 
 \subsection*{Infection dynamics}
 
-Like Shirreff \etal\ \cite{shirreff_transmission_2011}, we focus on the evolution of mean $\log_{10}$ set-point viral load, SPVL (which we denote as $\alpha$), rather than th rate of progression to AIDS itself
+Like Shirreff \etal\ \cite{shirreff_transmission_2011}, we focus on the evolution of mean $\log_{10}$ set-point viral load, SPVL (which we denote as $\alpha$), rather than the rate of progression to AIDS itself
 (we refer to SPVL as ``virulence'' hereafter).
 In contrast to Shirreff \etal, we use a single-stage disease model instead of accounting explicitly for progression through the three main stages of HIV infection (primary, asymptomatic, and disease), and we use a simple exponentially distributed infectious period instead of a more realistic Weibull-distributed infectious period. We account for varying transmission rates and durations of each disease stage by summing the durations of three stages (again based on Shirreff \etal's model) and taking the duration-weighted average of transmission rates of three stages. Thus the within-couple transmission rate, $\beta$, for our models is given by:
 \begin{equation}
@@ -358,9 +357,10 @@ The mutational process in our model is directly taken from Shirreff \etal. Over 
 \begin{equation}
 \alpha_i =  (\tsub{\alpha}{max} - \tsub{\alpha}{min})\frac{(i-1)}{n-1} + \tsub{\alpha}{min} \qquad i = 1,2,3, \dots n.
 \end{equation}
-We have experimented with varying degrees of discretization in the strain distribution (i.e., values of $n$); in our model runs comparing results with Shirreff \etal\ \cite{shirreff_transmission_2011} (Fig.~\ref{fig:panel3}) we use $n=51$ (i.e. a bin width of 0.1 \Lspvl\ for $\alpha$), but we find only small differences when reducing $n$ to 21 (bin width = 0.25 \Lspvl), which we use for all other simulations.
+We have experimented with varying degrees of discretization in the strain distribution (i.e., values of $n$); in our model runs comparing results with Shirreff \etal\ \cite{shirreff_transmission_2011} (\figurename~\ref{fig:panel3}) we use $n=51$ (i.e. a bin width of 0.1 \Lspvl\ for $\alpha$), but we find only small differences when reducing $n$ to 21 (bin width = 0.25 \Lspvl), which we use for all other simulations.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig1.pdf}
 \caption{{\bf Baseline dynamics.}
 Time series of mean population virulence (\Lspvl). (a) Shirreff model, effects of varying $r$. (b) Effects of varying initial infectious density $I(0)$. (c) Effects of varying initial mean virulence $\alpha(0)$.}
 \label{fig:panel3}
@@ -404,7 +404,7 @@ Table~\ref{table:parmsTable} gives the ranges of the model parameters used for L
 %Tables need to be placed after the first paragraph in which they are cited.
 
 \begin{table}[h!]
-\caption{Parameter ranges/values.  Note that $c$ and $\rho$ values are doubled from Champredon \etal\  because we keep track of individuals, while they keep track of couples. Starred (*) parameters (used in Figure~\ref{fig:panel3}), and Descriptions of Hill function coefficients, are taken from \cite{shirreff_transmission_2011}.}
+\caption{Parameter ranges/values.  Note that $c$ and $\rho$ values are doubled from Champredon \etal\  because we keep track of individuals, while they keep track of couples. Starred (*) parameters (used in \figurename~\ref{fig:panel3}), and Descriptions of Hill function coefficients, are taken from \cite{shirreff_transmission_2011}.}
 \centering
 \begin{tabular}{c p{2in} c l}
 \hline 
@@ -433,7 +433,7 @@ $n$ & Number of strains & 21 (51*) & Assumption\\
 \label{table:parmsTable}
 \end{table}
 
-The one completely new parameter in our model, the ratio of uncoupled to within-couple transmission $c_u/c_w$, is needed to more flexibly contrast uncoupled and extra-couple transmission dynamics within multi-strain models (Appendix); we need to pick a reasonable range for it. Champredon \etal\ \cite{champredon_hiv_2013} assume that the effective within-couple contact rate and effective uncoupled contact rate have the same range of 0.05 - 0.25.  Given Champredon \etal's parameter range, the possible maximum and minimum values of $c_u/c_w$ are 5 and 1/5. Therefore, we use 1/5-5 as the range for the parameter $c_u/c_w$. Although this adds more uncertainty to the parameter $c_u$ --- Champredon \etal's range implies a 5-fold difference whereas ours gives a 25-fold difference --- we consider the wider range appropriate, as little is not much known about the uncoupled transmission rate.
+The one completely new parameter in our model, the ratio of uncoupled to within-couple transmission $c_u/c_w$, is needed to more flexibly contrast uncoupled and extra-couple transmission dynamics within multi-strain models (Appendix S1); we need to pick a reasonable range for it. Champredon \etal\ \cite{champredon_hiv_2013} assume that the effective within-couple contact rate and effective uncoupled contact rate have the same range of 0.05 - 0.25.  Given Champredon \etal's parameter range, the possible maximum and minimum values of $c_u/c_w$ are 5 and 1/5. Therefore, we use 1/5-5 as the range for the parameter $c_u/c_w$. Although this adds more uncertainty to the parameter $c_u$ --- Champredon \etal's range implies a 5-fold difference whereas ours gives a 25-fold difference --- we consider the wider range appropriate, as little is not much known about the uncoupled transmission rate.
 
 
 \subsection*{Simulation runs}
@@ -493,14 +493,15 @@ We focus on these statistics for the following two reasons. First of all, knowin
 % Results and Discussion can be combined.
 \section*{Results}
 
-Our simplifications of Shirreff \etal's model \cite{shirreff_transmission_2011} reproduce its qualitative behaviour --- in particular, its predictions of virulence dynamics --- reasonably well. As $r$ decreases from 0.084 to 0.42 (the latter value matching the initial rate of increase in prevalence in Shirreff \etal's full model) the initial trajectory of increasing virulence brackets the rate from the original model (Fig.~\ref{fig:panel3}a). However, our model produces lower peak virulence ($\approx 4.3$ vs. $\approx 4.6$ \Lspvl) 
+Our simplifications of Shirreff \etal's model \cite{shirreff_transmission_2011} reproduce its qualitative behaviour --- in particular, its predictions of virulence dynamics --- reasonably well. As $r$ decreases from 0.084 to 0.42 (the latter value matching the initial rate of increase in prevalence in Shirreff \etal's full model) the initial trajectory of increasing virulence brackets the rate from the original model (\figurename~\ref{fig:panel3}a). However, our model produces lower peak virulence ($\approx 4.3$ vs. $\approx 4.6$ \Lspvl) 
 and equilibrium virulence ($\approx 4.25$ vs. $\approx 4.5$ \Lspvl) than Shirreff's, even for matching initial incidence trajectories (i.e., $r=0.042~\textrm{year}^{-1}$).
 
-Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory, making the virulence peaks slightly later and larger as $I(0)$ decreases. Decreasing $I(0)$ allows a longer epidemic phase before the transition to endemic dynamics (Fig.~\ref{fig:panel3}b). Decreasing the initial virulence similarly but more strongly leads to progressively later, larger peaks in virulence (Fig.~\ref{fig:panel3}c).
+Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory, making the virulence peaks slightly later and larger as $I(0)$ decreases. Decreasing $I(0)$ allows a longer epidemic phase before the transition to endemic dynamics (\figurename~\ref{fig:panel3}b). Decreasing the initial virulence similarly but more strongly leads to progressively later, larger peaks in virulence (\figurename~\ref{fig:panel3}c).
 
-Across the entire range of parameters covered by the LHS analysis, all of the classes of models we considered produce qualitatively similar virulence trajectories (Fig.~\ref{fig:virtraj}). Although the speed of virulence evolution varies, leading to wide variation in the peak virulence (means ranging from approximately 3.75 to 4.5 \Lspvl), virulence peaks in all models between 200 and 300 years.
+Across the entire range of parameters covered by the LHS analysis, all of the classes of models we considered produce qualitatively similar virulence trajectories (\figurename~\ref{fig:virtraj}). Although the speed of virulence evolution varies, leading to wide variation in the peak virulence (means ranging from approximately 3.75 to 4.5 \Lspvl), virulence peaks in all models between 200 and 300 years.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig2.pdf}
 \caption{{\bf Envelopes of virulence trajectories under all models.}
 All models were run until $t=4000~\textrm{years}$; truncated series are shown here.}
 \label{fig:virtraj}
@@ -516,7 +517,7 @@ sets for these models lead to low equilibrium virulence ($\approx 2.5 \log_{10}$
 these same sets lead to correspondingly low
 peak virulence ($< 3.5 \log_{10}$ SPVL) and early peak times (before 200 years), 
 but high relative peaks ($>1.3$)
-(Fig.~\ref{fig:pairplot}, leftmost column) because the equilibrium virulence is low.
+(\figurename~\ref{fig:pairplot}, leftmost column) because the equilibrium virulence is low.
 At the opposite extreme, parameter sets that produce high equilibrium virulence 
 also produce late peaks ($> 200 \text{ years}$), 
 high peak virulence, and low relative peaks ($\approx 1.05$).
@@ -525,21 +526,23 @@ occasionally have parameter sets that select for such low virulence across
 the board that they never exceed their initial virulence, leading to a tail
 of peak times near zero.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig3.pdf}
 \caption{{\bf Univariate distributions of summary statistics.}
 The distribution of equilibrium virulence for the random mixing model is very narrow, and has been replaced by a point in order to preserve the vertical axis scaling.}
 \label{fig:unidist}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig4.pdf}
 \caption{{\bf Pairs plot: bivariate relationships among summary statistics for each model structure.}
 Dashed line in equilibrium vs. peak virulence plot shows 1:1 line.}
 \label{fig:pairplot}
 \end{figure}
 
 The most striking aspect of the univariate comparisons in
-Fig.~\ref{fig:unidist}, (and the bivariate comparisons in
-Fig.~\ref{fig:pairplot}) is the similarity between the results of the
+\figurename~\ref{fig:unidist}, (and the bivariate comparisons in
+\figurename~\ref{fig:pairplot}) is the similarity between the results of the
 least (random mixing) and the most complex (pair formation with
 extra-pair contact) models. The random-mixing model has lower
 variability, because it is unaffected by uncertainty in pair formation
@@ -547,7 +550,7 @@ and extra-pair contact parameters, but otherwise the virulence
 dynamics of these two extreme models are remarkably similar.
 This phenomenon is driven by the strong effects of extra-pair contact in the
 model with explicit pair formation and extra-pair contact 
-(``pairform+epc'' in Figures~\ref{fig:virtraj}-\ref{fig:plot_sens}). When individuals spend time uncoupled between
+(``pairform+epc'' in \figurename{}s~\ref{fig:virtraj}-\ref{fig:plot_sens}). When individuals spend time uncoupled between
 partnerships, and when these single individuals can transmit disease
 to coupled individuals, the resulting unstructured mixing overwhelms
 the effect of structured mixing within couples, leading to mixing
@@ -558,7 +561,7 @@ parameters, i.e. using the Hill functions to translate \Lspvl\ to
 within-couple transmission probabilities and average time of progression
 to AIDS, shows that these differences are practically as well as 
 scientifically important. The random-mixing and pairform+epc models
-predict minimimum times to progression (at the virulence peak) of
+predict minimum times to progression (at the virulence peak) of
 5.7 (95\% CI 6.1-6.3) and 6.0 (5.0-7.7) years respectively, while
 the implicit model gives progression times about twice as long:
 12.5 (9.5-15.6) years. The corresponding differences in 
@@ -566,15 +569,19 @@ within-couple transmission
 probability are even more extreme, about a fourfold difference:
 0.249 (0.24-0.26) and 0.252 (0.19-0.28) per year for the 
 random and pairform+epc models vs. 0.059 (0.02-0.13) per year
-for the implicit model.
+for the implicit model (Figs~???? show univariate distributions
+on the epidemiological scales
+of progression time and transmission probability,
+for all summary measures and all models).
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig5.pdf}
 \caption{{\bf Sensitivity plot.}
 For each parameter in the Latin hypercube sample and each summary statistic, shows the distribution (points) and trend (smooth line) of the summary statistic as a function of the \emph{unscaled} parameter value, i.e. prior to adjusting the parameters to achieve the standard initial epidemic growth rate.}
 \label{fig:plot_sens}
 \end{figure}
 
-Plotting the bivariate result distributions (Fig.~\ref{fig:pairplot})
+Plotting the bivariate result distributions (\figurename~\ref{fig:pairplot})
 shows that most of the summary statistics
 are monotonically related, except those involving the relative peak virulence
 (bottom row). Changes in parameters that increase the equilibrium
@@ -601,7 +608,7 @@ and as such would be expected to match the equilibrium behaviour
 but not necessarily the epidemic-phase behaviour of a model
 with explicit partnership dynamics.
 
-Finally, the sensitivity plots (Fig.~\ref{fig:plot_sens}) show the effects 
+Finally, the sensitivity plots (\figurename~\ref{fig:plot_sens}) show the effects 
 of each parameter on the summary statistics. In almost every case the
 effects of the parameters are monotonic; note that
 the plot shows the effects of the \emph{unscaled} parameters, i.e.
@@ -704,25 +711,34 @@ the range of a parameter.
 
 Researchers have documented that HIV virulence and set-point viral
 load are changing, on time scales comparable to those portrayed here
-(e.g., compare Fig.~\ref{fig:virtraj} to Herbeck \etal's
+(e.g., compare \figurename~\ref{fig:virtraj} to Herbeck \etal's
 estimated rate of change of 1.3 \Lspvl\ per century [95\% CI -0.1 to
   3] \cite{herbeck_is_2012}), and have begun to build relatively realistic models that
 attempt to describe how interventions such as mass antiretroviral
 therapy (ART) can be expected to change the trajectory of virulence
-evolution \cite{payne_impact_2014,herbeck2016evolution}.  While these
+evolution \cite{payne_impact_2014,roberts2015impact,herbeck2016evolution}.  While these
 efforts are well-intentioned, we caution that epidemiological and
 other structural details that are currently omitted from these models
 could significantly change their conclusions.
 
+\section*{Acknowledgements}
+We would like to thank Christophe Fraser and
+David Champredon for access to simulation code;
+this work was funded by NSERC Discovery Grant 386590-2010.
+
+
 \section*{Supporting Information}
 
 % Include only the SI item label in the paragraph heading. Use the \nameref{label} command to cite SI items in the text.
-\paragraph*{S1 Appendix.}
+\paragraph*{Appendix S1: model details}
 \label{S1_Appendix}
-{\bf Model details.} Since we use multi-strain models, in which the distribution of \Lspvl\ has been discretized into a vector, we use a matrix notation to describe our models. The five states described in the Methods section are replaced with the following notations: $S$, $I_i$, $SS$, $SI_i$, $II_{ij}$, where the subscripts denote the strain that an individual is infected with. For example, $I_i$ is number of infected individuals with \Lspvl\ of $\alpha_i$, and $II_{ij}$ is the number of concordant, HIV-positive couples in which the two partners have \Lspvl\ of $\alpha_i$ and $\alpha_j$ (independent of order; $II_{ij}$ is synonymous with $II_{ji}$). 
+
+Since we use multi-strain models in which the distribution of \Lspvl\ has been discretized into a vector, we use a matrix notation to describe our models. The five states described in the \emph{Methods} section are replaced with the following notations: $S$, $I_i$, $SS$, $SI_i$, $II_{ij}$, where the subscripts denote the strain with which an individual is infected. For example, $I_i$ is number of infected individuals with \Lspvl\ of $\alpha_i$, and $II_{ij}$ is the number of concordant, HIV-positive couples in which the two partners have \Lspvl\ of $\alpha_i$ and $\alpha_j$ (independent of order; $II_{ij}$ is synonymous with $II_{ji}$). 
 Below, we use the Kronecker delta (i.e. $\delta_{ij}=1$ if $i=j$ and 1 otherwise) in a slightly non-standard fashion as an exponent, e.g. $2^{\delta_{ij}}$, to set a value to 2 when $i=j$ and 1 otherwise.
 
-\subsection*{Models 1 and 2: partnership dynamics}
+\subsection*{Models 1 (``pairform+epc'') and 2 (``pairform'')}
+
+\subsubsection*{Partnership dynamics}
 
 Single individuals acquire partners at per-person rate $\rho$. Partnership formation rate for $S$, $I_i$ are $- \rho S$ and $-\rho I_i$, respectively. We follow Champredon \etal's results and assume that single individuals are distributed into coupled states with pair-formation (PF) rates as follows:
 
@@ -755,7 +771,7 @@ II_{ij}' &= \khalf \cdot \frac{\rho I_i \cdot I_j}{S + \sum_k I_k} - c II_{ij}
 \end{aligned}
 \end{equation}
 
-\subsection*{Models 1 and 2: infection}
+\subsubsection*{Pair-formation models: infection dynamics}
 
 Within-couple transmission (WT) occurs in both models. An infected partner in $SI$ partnership transmits virus to a susceptible partner, and partnership state becomes $II$: $\WT(SI_i) = - \beta_i SI_i$. Since we assume that mutation occurs, $II_{ij}$, where $i \neq j$, can be formed from both $SI_i$ and $SI_j$ partnership: $\WT(II_{ij}) = M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j$. On the other hand, $II_{ii}$ can only be formed from an $SI_i$ partnership: $\WT(II_{ii}) = M_{ii} \beta_i SI_i$. Using the Kronecker delta notation, we obtain the following set of equations that describes within-couple transmission dynamics:
 
@@ -796,7 +812,7 @@ II_{ij}' =& \khalf \cdot (M_{ij} \beta_i SI_i + M_{ji}, \beta_j SI_j) + \khalf \
 \end{aligned}
 \end{equation}
 
-\subsection*{Model 1 and 2 - Disease induced mortality}
+\subsubsection*{Pair formation models: Disease induced mortality}
 
 The disease induced mortality (DM) rate, $\lambda$, is given by taking the reciprocal of the total duration of the infection: $\lambda_i = 1/(D_A + D_P(\alpha_i) + D_D)$. Since we assume an SIS formulation, where infected individuals that die from infection are immediately replaced by an individual in the single susceptible compartment, we obtain the following equation for single infected individuals:
 
@@ -842,7 +858,8 @@ II_{ij}' =& \khalf \cdot \frac{\rho I_i \cdot I_j}{(S + \sum_k I_k)} - c II_{ij}
 \end{aligned}
 \end{equation}
 
-\subsection*{Models 3 and 4: Partnership dynamics}
+\subsection*{Models 3 (``instswitch'') and 4 (``instswitch'')}
+\subsubsection*{Partnership dynamics}
 
 Since model 3 and 4 assume instantaneous partnership formation, there are only three states: $SS$, $SI_i$, and $II_{ij}$. Partnership dissolution rates are equal to those of model 1 and 2: $\DS(SS) = -cSS$, $\DS(SI_i) = - cSI_i$, and $\DS(II_{ij}) = - II_{ij}$. Once individuals leave a partnership, they enter temporary compartments and are distributed into a partnership as follows:
 
@@ -856,16 +873,16 @@ II_{ij}' &= - c II_{ij} +\khalf \frac{Y_i Y_j}{X + \sum_k Y_k}.
 \end{aligned}
 \end{equation}
 
-\subsection*{Model 3 and 4 - Infection}
+\subsubsection*{Instantaneous-switching models: Infection dynamics}
 
-Model 3 and 4 share the within-couple transmission term with model 1 and 2. Since there is no single state, only extra couple transmission exists:
+Model 3 and 4 share the within-couple transmission term with model 1 and 2. Since there is no single (uncoupled) state, only extra-couple transmission exists:
 
 \begin{equation}
 P_i = \frac{r_e (SI_i + \sum_k (II_{ik} + \delta_{ik} II_{ik}))}{r_e(2 SS + \sum_k 2 SI_k + \sum_l \sum_k (2^\delta_{kl} II_{lk}) )}.
 \end{equation}
 Movement from $SS$ state to $SI$ state and $SI$ to $SS$ is modeled through the same equation that is used in model 1 and 2.
 
-\subsection*{Model 3 and 4 - Disease induced mortality}
+\subsubsection*{Instantaneous-switching models: Disease induced mortality}
 
 Disease induced mortality is modeled similar to model 1 and 2. However, as single state does not exist in model 3 and 4, individuals that has left their partnerships due to death of their partners enter temporary compartments and form partners instantly:
 
@@ -893,7 +910,7 @@ II_{ij}& - c II_{ij} +\khalf \frac{Y_i Y_j}{X + \sum_k Y_k} + \khalf \cdot (M_{i
 \end{aligned}
 \end{equation}
 
-\subsection*{Model 5}
+\subsection*{Implicit model}
 
 Following \cite{shirreff_transmission_2011}, Model 5 is an implicit instantaneous partnership formation model that uses an adjusted transmission rate, $\beta'$, that is derived from \cite{hollingsworth_hiv1_2008}'s approximate basic reproduction number:
 
@@ -909,7 +926,7 @@ I_i & = \sum_k M_{ki} \beta'_k S I_k - \lambda_i I_i.
 \end{aligned}
 \end{equation}
 
-\subsection*{Model 6}
+\subsection*{Random-mixing model}
 
 Model 6 is a random mixing model. It is modeled in a same way as model 5 without the adjusted transmission rate:
 
@@ -919,7 +936,6 @@ S' & = \sum_k \lambda_k I_k - \sum_k \beta_k S I_k,\\
 I_i & = \sum_k M_{ki} \beta_k S I_k - \lambda_i I_i.
 \end{aligned}
 \end{equation}
-
 
 \subsection*{Initial distribution of infected individuals}
 
@@ -943,7 +959,7 @@ SI_i(0) &= 2 \epsilon (1-\epsilon) SS^* D_i,\\
 II_{ij}(0) &=  \khalf 2\epsilon^2 SS^* D_i D_j.
 \end{aligned}
 \end{equation}
-Lastly, as model 5 is an implicit model, which does not consider different stages of partnership, we have the following initial distribution.
+Lastly, as model 5 is an implicit model, which does not consider different stages of partnership, we have the following initial distribution:
 
 \begin{equation}
 \begin{aligned}
@@ -951,11 +967,46 @@ S(0) &= 1 - \epsilon,\\
 I_i(0) &=  \epsilon D_i.
 \end{aligned}
 \end{equation}
-Model 6 also shares the same distribution of initial infected individuals as model 5.
+Model 6 has the same distribution of initial infected individuals as model 5.
 
-\section*{Acknowledgments}
-We would like to thank Christophe Fraser for access to simulation code;
-this work was funded by an NSERC Discovery Grant.
+\paragraph*{Appendix S2: dynamics of transmission and virulence}
+
+\label{S2_Appendix}
+
+This section presents
+
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig_S2_1.pdf}
+\caption{{\bf Envelopes of transmission trajectories under all models.}
+This figure matches \figurename~\ref{fig:virtraj}, but displays the
+envelope of population-mean transmission probabilities rather than \Lspvl\ over time
+for each model.
+}
+\label{fig:transtraj}
+\end{figure}
+
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig_S2_2.pdf}
+\caption{{\bf Envelopes of progression trajectories under all models.}
+This figure matches \figurename~\ref{fig:virtraj}, but displays the
+envelope of population-mean expected time of progression to AIDS (i.e., length of
+intermediate HIV phase) rather than \Lspvl\ over time
+for each model.
+}
+\label{fig:durtraj}
+\end{figure}
+
+\begin{figure}[!ht]
+  \includegraphics[width=\textwidth]{../figures/fig_S2_3.pdf}
+\caption{{\bf Univariate distributions of transmission probabilities and progression.}
+This figure matches \figurename~\ref{fig:unidist}, but displays the
+univariate distributions for the transmission probability and 
+progression time at the virulence
+peak and at the epidemiological equilibrium,
+rather than the distributions of \Lspvl.
+}
+\label{fig:tranprogsum}
+\end{figure}
 
 \nolinenumbers
 
@@ -972,7 +1023,182 @@ this work was funded by an NSERC Discovery Grant.
 % here.
 % 
 
-\bibliography{virulence}
+% \bibliography{virulence}
+\begin{thebibliography}{10}
+
+\bibitem{Ebert1999}
+Ebert D.
+\newblock The evolution and expression of parasite virulence.
+\newblock In: Stearns SC, editor. Evolution in Health \& Disease. New York:
+  Oxford University Press, Oxford, UK; 1999. p. 161--172.
+
+\bibitem{EbertBull2003}
+Ebert D, Bull JJ.
+\newblock Challenging the trade-off model for the evolution of virulence: is
+  virulence management feasible?
+\newblock Trends Microbiol. 2003;11(1):15--20.
+
+\bibitem{alizon_adaptive_2015}
+Alizon S, Michalakis Y.
+\newblock Adaptive virulence evolution: the good old fitness-based approach.
+\newblock Trends in Ecology \& Evolution. 2015;30(5):248--254.
+\newblock doi:{10.1016/j.tree.2015.02.009}.
+
+\bibitem{Dwyer+1990}
+Dwyer G, Levin SA, Buttel L.
+\newblock A simulation model of the population dynamics and evolution of
+  myxomatosis.
+\newblock Ecol Monog. 1990;60:423--447.
+
+\bibitem{mackinnon1999genetic}
+Mackinnon MJ, Read AF.
+\newblock Genetic relationships between parasite virulence and transmission in
+  the rodent malaria {{\em Plasmodium chabaudi}}.
+\newblock Evolution. 1999; p. 689--703.
+
+\bibitem{jensen2006empirical}
+Jensen KH, Little T, Skorping A, Ebert D.
+\newblock Empirical support for optimal virulence in a castrating parasite.
+\newblock PLoS Biol. 2006;4(7):e197.
+
+\bibitem{deroode2008virulence}
+De~Roode JC, Yates AJ, Altizer S.
+\newblock Virulence-transmission trade-offs and population divergence in
+  virulence in a naturally occurring butterfly parasite.
+\newblock Proceedings of the National Academy of Sciences.
+  2008;105(21):7489--7494.
+
+\bibitem{Fraser+2007}
+Fraser C, Hollingsworth TD, Chapman R, de~Wolf F, Hanage WP.
+\newblock Variation in {HIV}-1 set-point viral load: Epidemiological analysis
+  and an evolutionary hypothesis.
+\newblock PNAS. 2007;104:17441--17446.
+
+\bibitem{fraser_virulence_2014}
+Fraser C, Lythgoe K, Leventhal GE, Shirreff G, Hollingsworth TD, Alizon S,
+  et~al.
+\newblock Virulence and Pathogenesis of {HIV}-1 Infection: An Evolutionary
+  Perspective.
+\newblock Science. 2014;343(6177):1243727.
+\newblock doi:{10.1126/science.1243727}.
+
+\bibitem{shirreff_transmission_2011}
+Shirreff G, Pellis L, Laeyendecker O, Fraser C.
+\newblock Transmission Selects for {HIV-1} Strains of Intermediate Virulence: A
+  Modelling Approach.
+\newblock PLoS Computational Biology. 2011;7(10):e1002185.
+\newblock doi:{10.1371/journal.pcbi.1002185}.
+
+\bibitem{herbeck_hiv_2014}
+Herbeck JT, Mittler JE, Gottlieb GS, Mullins JI.
+\newblock An {HIV} Epidemic Model Based on Viral Load Dynamics: Value in
+  Assessing Empirical Trends in {HIV} Virulence and Community Viral Load.
+\newblock {PLoS} Comput Biol. 2014;10(6):e1003673.
+
+\bibitem{day_virulence_2004}
+Day T, Proulx SR.
+\newblock A General Theory for the Evolutionary Dynamics of Virulence.
+\newblock The American Naturalist. 2004;163(4):E40--E63.
+\newblock doi:{10.1086/382548}.
+
+\bibitem{alizon_price_2009}
+Alizon S.
+\newblock The {Price} equation framework to study disease within-host
+  evolution.
+\newblock Journal of Evolutionary Biology. 2009;22(5):1123--1132.
+\newblock doi:{10.1111/j.1420-9101.2009.01726.x}.
+
+\bibitem{champredon_hiv_2013}
+Champredon D, Bellan S, Dushoff J.
+\newblock {HIV} Sexual Transmission Is Predominantly Driven by Single
+  Individuals Rather than Discordant Couples: A Model-Based Approach.
+\newblock PLoS ONE. 2013;8(12):e82906.
+\newblock doi:{10.1371/journal.pone.0082906}.
+
+\bibitem{hollingsworth_hiv1_2008}
+Hollingsworth TD, Anderson RM, Fraser C.
+\newblock {HIV}-1 Transmission, by Stage of Infection.
+\newblock Journal of Infectious Diseases. 2008;198(5):687--693.
+\newblock doi:{10.1086/590501}.
+
+\bibitem{blower_drugs_1991}
+Blower SM, Hartel D, Dowlatabadi H, Anderson RM, May RM.
+\newblock Drugs, Sex and {HIV}: A Mathematical Model for {New York City}.
+\newblock Philosophical Transactions of the Royal Society of London B:
+  Biological Sciences. 1991;331(1260):171--187.
+\newblock doi:{10.1098/rstb.1991.0006}.
+
+\bibitem{ma_estimating_2014}
+Ma J, Dushoff J, Bolker BM, Earn DJD.
+\newblock Estimating Initial Epidemic Growth Rates.
+\newblock Bulletin of Mathematical Biology. 2014;76(1):245--260.
+\newblock doi:{10.1007/s11538-013-9918-2}.
+
+\bibitem{wallinga_how_2007}
+Wallinga J, Lipsitch M.
+\newblock How generation intervals shape the relationship between growth rates
+  and reproductive numbers.
+\newblock Proceedings of the Royal Society of London B: Biological Sciences.
+  2007;274(1609):599--604.
+\newblock doi:{10.1098/rspb.2006.3754}.
+
+\bibitem{soetaert_solving_2010}
+Soetaert K, Petzoldt T, Setzer RW.
+\newblock Solving Differential Equations in {R}: Package {deSolve}.
+\newblock Journal of Statistical Software. 2010;33(9):1--25.
+\newblock doi:{10.18637/jss.v033.i09}.
+
+\bibitem{herbeck2016evolution}
+Herbeck J, Mittler J, Gottlieb G, Goodreau S, Murphy J, Cori A, et~al.
+\newblock Evolution of {HIV} virulence in response to widespread scale up of
+  antiretroviral therapy: a modeling study.
+\newblock bioRxiv. 2016; p. 039560.
+
+\bibitem{wawer2005rates}
+Wawer MJ, Gray RH, Sewankambo NK, Serwadda D, Li X, Laeyendecker O, et~al.
+\newblock Rates of {HIV}-1 transmission per coital act, by stage of {HIV}-1
+  infection, in {Rakai}, {Uganda}.
+\newblock Journal of Infectious Diseases. 2005;191(9):1403--1409.
+
+\bibitem{faria_early_2014}
+Faria NR, Rambaut A, Suchard MA, Baele G, Bedford T, Ward MJ, et~al.
+\newblock The early spread and epidemic ignition of {HIV}-1 in human
+  populations.
+\newblock Science (New York, NY). 2014;346(6205):56--61.
+\newblock doi:{10.1126/science.1256739}.
+
+\bibitem{elderd_uncertainty_2006}
+Elderd BD, Dukic VM, Dwyer G.
+\newblock Uncertainty in predictions of disease spread and public health
+  responses to bioterrorism and emerging diseases.
+\newblock Proceedings of the National Academy of Sciences. 2006;103(42):15693
+  --15697.
+\newblock doi:{10.1073/pnas.0600816103}.
+
+\bibitem{herbeck_is_2012}
+Herbeck JT, Müller V, Maust BS, Ledergerber B, Torti C, Di~Giambenedetto S,
+  et~al.
+\newblock Is the virulence of {HIV} changing? {A} meta-analysis of trends in
+  prognostic markers of {HIV} disease progression and transmission.
+\newblock AIDS (London, England). 2012;26(2):193--205.
+\newblock doi:{10.1097/QAD.0b013e32834db418}.
+
+\bibitem{payne_impact_2014}
+Payne R, Muenchhoff M, Mann J, Roberts HE, Matthews P, Adland E, et~al.
+\newblock Impact of {HLA}-driven {HIV} adaptation on virulence in populations
+  of high {HIV} seroprevalence.
+\newblock Proceedings of the National Academy of Sciences.
+  2014;111(50):E5393--E5400.
+\newblock doi:{10.1073/pnas.1413339111}.
+
+\bibitem{roberts2015impact}
+Roberts HE, Goulder PJ, McLean AR.
+\newblock The impact of antiretroviral therapy on population-level virulence
+  evolution of {HIV}-1.
+\newblock Journal of The Royal Society Interface. 2015;12(113):20150888.
+
+\end{thebibliography}
+
 
 \end{document}
 
