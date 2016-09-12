@@ -395,4 +395,24 @@ matplot(cbind(r_full[,488], r_test[,1899]), type = "l")
 matplot(cbind(r_full[,487], r_test[,1898]), type = "l")
 ```
 
-Seems like this model works?
+Seems like this model works? Now, let's test rcpp function...
+
+
+```{r rcpp}
+library(Rcpp)
+sourceCpp("fullModel.cpp")
+
+pp <- expand(HIVpars.mean)
+
+attach(pp)
+  
+cc_mat <- outer(r.risk * c_mean, r.risk * c_mean, "+")/2
+  
+detach(pp)
+
+tvec <- seq(1,100, 0.1)
+yini1 <- calc_yini_partner(HIVpars.mean)
+r1 <- lsoda(unlist(yini1), func = g, parms = HIVpars.mean, times = tvec)
+
+
+```
