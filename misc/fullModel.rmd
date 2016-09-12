@@ -1,0 +1,398 @@
+---
+title: "Attempting to write a full model"
+output: html_document
+---
+
+I want to write a full model. Let's start by considering partnership dynamics:
+
+$$
+\begin{aligned}
+N_i &= - \rho_i N_i + \sum_k 2^{\delta_{ik}} NN_{ik} \frac{c_i + c_k}{2}\\
+NN_{ij} &= \frac{1}{2^{\delta_{ij}}} \frac{\rho_i N_i \rho_j N_j}{\sum_k \rho_k N_k} - \frac{c_i + c_j}{2} NN_{ij}
+\end{aligned}
+$$
+
+Let's put that into a code:
+```{r load, echo = FALSE, message=FALSE}
+library("deSolve")
+library("reshape2")
+library("ggplot2"); theme_set(theme_bw())
+source("../simFuns.R")  ## for transform.list
+source("../hivFuns.R")
+source("../Param.R")
+source("../hivModels.R")
+```
+```{r}
+calc_yini_partner <- function(parameters){
+  with(c(expand(parameters)),{
+    yini <- list(
+      N  = p.risk,
+      NN = matrix(0, n.risk, n.risk))
+    return(yini)
+  })
+}
+
+model1 <- function(parameters) {
+  pp <- expand(parameters)
+  attach(pp)
+  
+  cc_mat <- outer(r.risk * c_mean, r.risk * c_mean, "+")/2
+  
+  detach(pp)
+  
+  g <- function(t,yini,parameters) {
+      with(as.list(c(yini,pp)), 
+      {
+          N <- yini[1:n.risk]
+          NN <- matrix(yini[-(1:n.risk)], n.risk, n.risk)
+          NN_adj <- NN
+          diag(NN_adj) <- 2 * diag(NN_adj)
+              
+          frate <- r.risk * rho * N
+          f.sum <- sum(frate)
+                
+          dN <- - frate + colSums(cc_mat * NN_adj)
+            
+          f.NN <- outer(frate, frate, "*")/f.sum 
+          diag(f.NN) <- diag(f.NN)/2
+            
+          dNN <- f.NN - cc_mat * NN
+                
+          list(c(dN, dNN))
+      })
+  }
+}
+```
+
+This model seems to be running fine. Now, I would like to calculate the single/couple ratios at equilibrium.... It seems too complicated especially with infected individuals... I can probably get away with it by deriving it numerically:
+
+```{r}
+
+calc_yini_full <- function(parameters){
+    with(c(expand(parameters)),{
+        c = Ini_I
+        I_vec = c * I_initialize(parameters)
+        yini <- list(
+            S  = (1 - c) * p.risk,
+            I = c(outer(I_vec, p.risk)),
+            SS = matrix(0, n.risk, n.risk),
+            SI = matrix(0, n.risk, n.risk * n.alpha),
+            II = matrix(0, n.risk * n.alpha, n.risk *  n.alpha))
+        return(yini)
+    })
+}
+
+colSums2 <- function(data, by){
+    if(is.vector(data)){
+        data <- matrix(data, nrow = 1)
+    }
+    length <- ncol(data)
+    n <- length/by
+    z <- colSums(data)
+    z.mat <- matrix(z, ncol = n)
+    return(colSums(z.mat))
+}
+
+makeMutMat <- function(xpars) {
+    p <- with(xpars, {
+        p <- matrix(NA, n.alpha, n.alpha)
+        for(i in 1:n.alpha){
+            x <- min.alpha + (i-1)*d.alpha
+            denom <- 
+                diff(pnorm(c(min.alpha-d.alpha/2,max.alpha+d.alpha/2),
+                    mean=x, sd=Vm))
+            for (j in 1:n.alpha){
+                k <- min.alpha + (j-1)*d.alpha
+                p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
+            }
+        }
+    p
+    })
+    return(p)
+}
+
+model2 <- function(parameters,
+                   infection = FALSE,
+                   mortality = FALSE) {
+    pp <- expand(parameters)
+    attach(pp)
+  
+    S.ind <- 1:n.risk
+    I.ind <- (n.risk+1):(n.risk+n.risk*n.alpha)
+    SS.ind <- (n.risk+n.risk*n.alpha+1):(n.risk+n.risk*n.alpha+n.risk*n.risk)
+    SI.ind <- (n.risk+n.risk*n.alpha+n.risk*n.risk+1):(n.risk+n.risk*n.alpha+n.risk*n.risk+n.alpha*n.risk*n.risk)
+    II.ind <- (n.risk+n.risk*n.alpha+n.risk*n.risk+n.alpha*n.risk*n.risk+1):(n.risk+n.risk*n.alpha+n.risk*n.risk+n.alpha*n.risk*n.risk+n.alpha*n.alpha*n.risk*n.risk)
+  
+    rho2 <- r.risk * rho
+    c2 <- r.risk * c_mean
+    
+    rho2.I <- rep(rho2, each = n.alpha)
+    
+    cc_mat <- outer(c2, c2, "+")/2
+  
+    c2.I <- rep(c2, each = n.alpha)
+    cc_mat.I <- outer(c2, c2.I, "+")/2
+    
+    cc_mat.II <- outer(c2.I, c2.I, "+")/2
+    
+    alpha2 <- rep(alpha, n.risk)
+    
+    #infection
+    if(infection){
+        p <- makeMutMat(parameters)
+        
+        beta.SI <- matrix(rep(Beta, n.risk*n.risk), nrow = n.risk, byrow = TRUE)
+        
+        distribute.SIinf <- function(SIinf){
+            attach(pp)
+            dist.SI <- matrix(0, n.risk * n.alpha, n.risk * n.alpha)
+            for(i in 1:n.risk){
+                vec.i <- c(1:n.alpha) + n.alpha * (i-1)
+                for(j in 1:n.risk){
+                    vec.j <- c(1:n.alpha) + n.alpha * (j-1)
+                    dist.SI[vec.i,vec.j] <- SIinf[i,vec.j] * p
+                }
+            }
+            detach(pp)
+            return(dist.SI)
+        }
+        
+        c_u_ratio2 <- r.risk * c_u_ratio
+        c_e_ratio2 <- r.risk * c_e_ratio
+        
+        c_u_ratio2.I <- rep(c_u_ratio2, each = n.alpha)
+        c_e_ratio2.I <- rep(c_e_ratio2, each = n.alpha)
+        
+        c_u2 <- outer(r.risk, c_u)
+        
+        r.risk.couple <- outer(r.risk, r.risk, "+")
+        
+    }
+    
+    if(mortality){
+        lam2 <- rep(lam, n.risk)
+        lammat_dis2 <- matrix(rep(lam2, n.alpha*n.risk), n.alpha * n.risk, n.alpha * n.risk)
+        diag(lammat_dis2) <- 2 * diag(lammat_dis2)
+        lammat_adj2 <- outer(lam2, lam2, "+")
+        
+    }
+    
+    inf.SI.from <- matrix(0, n.risk, n.risk * n.alpha)
+    inf.SI.to <- matrix(0, n.risk * n.alpha, n.risk *  n.alpha)
+    inf.S.from <- rep(0, n.risk)
+    inf.S.to <- rep(0, n.risk * n.alpha)
+    inf.SS.from <- matrix(0, n.risk, n.risk)
+    inf.SS.to <- matrix(0, n.risk, n.risk * n.alpha)
+    inf.SI.from2 <- matrix(0, n.risk, n.risk * n.alpha)
+    inf.SI.to2 <- matrix(0, n.risk * n.alpha, n.risk *  n.alpha)
+    
+    mort.I.out <- rep(0, n.risk * n.alpha)
+    mort.I.sus <- rep(0, n.risk)
+    mort.SI.out <- matrix(0, n.risk, n.risk * n.alpha)
+    mort.SI.sus <- rep(0, n.risk)
+    mort.II.out <- matrix(0, n.risk * n.alpha, n.risk *  n.alpha)
+    mort.II.I <- rep(0, n.risk * n.alpha)
+    mort.II.sus <- rep(0, n.risk)
+    
+    detach(pp)
+  
+    g <- function(t,yini,parameters) {
+        with(as.list(c(yini,pp)), 
+        {
+            
+            S <- yini[S.ind]
+            I <- yini[I.ind]
+            SS <- matrix(yini[SS.ind], n.risk, n.risk)
+            SI <- matrix(yini[SI.ind], n.risk, n.risk * n.alpha)
+            II <- matrix(yini[II.ind], n.risk * n.alpha, n.risk * n.alpha)
+            
+            ##Partnership formation rate
+            N <- S + colSums2(I, n.alpha)
+            
+            frate <- rho2 * N
+            f.sum <- sum(frate)
+          
+            SS_adj <- SS
+            diag(SS_adj) <- 2 * diag(SS_adj)
+          
+            f.SS <- outer(rho2 * S, rho2 * S)/f.sum
+            diag(f.SS) <- diag(f.SS)/2
+          
+            f.SI <- outer(rho2 * S, rho2.I * I)/f.sum
+            
+            II_adj <- II
+            diag(II_adj) <- 2 * diag(II_adj)
+                
+            f.II <- outer(rho2.I * I, rho2.I * I)/f.sum
+            diag(f.II) <- diag(f.II)/2
+          
+            NN <- colSums(SS_adj) + rowSums(SI) + colSums2(SI, n.alpha) + colSums2(II_adj, n.alpha)
+            
+            ##Partnership dissolution rate
+            d.SS <- cc_mat * SS
+            
+            d.SI <- cc_mat.I * SI
+            
+            ##trying to model disease dynamics
+            
+            if(infection){
+                ##within couple infection
+                inf.SI.from <- beta.SI * SI
+                inf.SI.tmp <- distribute.SIinf(inf.SI.from)
+                inf.SI.to <- inf.SI.tmp + t(inf.SI.tmp)
+                diag(inf.SI.to) <- diag(inf.SI.to)/2
+                
+                ##extra couple infection
+                #prop <- (c_u_ratio * I + c_e_ratio * (SI + colSums(II_adj)))/
+                #(c_u_ratio * (S + sum(I)) +
+                #c_e_ratio * (2 * SS + 2 * sum(SI) + sum(II_adj)))
+                
+                prop.mat <- matrix(c(c_u_ratio2.I * I + c_e_ratio2.I * (colSums(SI) + colSums(II_adj))), ncol = n.risk)
+                prop.num <- rowSums(prop.mat)
+                prop.denom <- sum(c_u_ratio2 * N + c_e_ratio2 * NN)
+                prop <- prop.num/prop.denom
+                
+                inf.S.rate <- S * sweep(c_u2, 2, prop, "*")
+                inf.S.from <- rowSums(inf.S.rate)
+                inf.S.to <- c(apply(inf.S.rate, 1, function(x) x %*% p))
+                
+                inf.ce.tmp <- c_e * prop
+                risk.SS <- r.risk.couple * SS
+                inf.SS.from <- risk.SS * sum(inf.ce.tmp)
+                
+                ce.mut <- inf.ce.tmp %*% p
+                inf.SS.tmp2 <- outer(c(t(r.risk * SS_adj)), c(ce.mut))
+                inf.SS.to <- matrix(c(t(inf.SS.tmp2)), nrow = n.risk, byrow = TRUE)
+                
+                SI2 <- r.risk * SI
+                inf.SI.from2 <- sum(inf.ce.tmp) * SI2
+                
+                inf.SI.to2 <- matrix(0, n.risk * n.alpha, n.risk * n.alpha)
+                
+                for(i in 1:n.risk){
+                    tmp.vec <- c(1:n.alpha) + (i-1) * n.alpha
+                    inf.SI.to2[,tmp.vec] <- outer(SI2[i,], ce.mut)
+                }
+                
+                inf.SI.to2 <- inf.SI.to2 + t(inf.SI.to2)
+                diag(inf.SI.to2) <- diag(inf.SI.to2)/2
+            }
+            
+            if(mortality){
+                mort.I.out <- lam2 * I
+                mort.I.sus <- colSums2(mort.I.out, n.alpha)
+                
+                mort.SI.out <- sweep(SI, 2, lam2, "*")
+                mort.SI.sus <- rowSums(mort.SI.out) + colSums2(mort.SI.out, n.alpha)
+                
+                mort.II.out <- lammat_adj2 * II
+                mort.II.I <- colSums(lammat_dis2 * II)
+                mort.II.sus <- colSums2(t(lammat_dis2 * II), n.alpha)
+            }
+            
+            dS <- - rho2 * S + colSums(cc_mat * SS_adj) + rowSums(d.SI) - inf.S.from + mort.I.sus +
+                mort.SI.sus + mort.II.sus
+            dI <- - rho2.I * I + colSums(d.SI) + colSums(cc_mat.II * II_adj) + inf.S.to - mort.I.out + mort.II.I
+            dSS <- f.SS - d.SS - inf.SS.from
+            dSI <- f.SI - d.SI - inf.SI.from + inf.SS.to - inf.SI.from2 - mort.SI.out
+            dII <- f.II - cc_mat.II * II + inf.SI.to + inf.SI.to2 - mort.II.out
+            
+            ##total ratio of people in the risk group
+            #tot <- N + NN
+            
+            ##total number of couples
+            #coup <- sum(SS[lower.tri(SS, diag = TRUE)]) + sum(SI) + sum(II[lower.tri(II, diag = TRUE)])
+            
+            ##total susceptible
+            #sus <- S + colSums(SS_adj) + rowSums(SI)
+            inf <- I + colSums(SI) + colSums(II_adj)
+            
+            tot_I <- sum(inf)
+            tot_V <- sum(alpha *  inf)
+            
+            test <- inf.S.to
+            
+            list(c(dS, dI, dSS, dSI, dII), tot_I = tot_I, mean_V = tot_V/tot_I)
+        })
+    }
+}
+
+```
+
+OK I think I have the full model... Now I need to test this somehow...
+
+```{r comparison}
+tvec <- seq(1,100, 0.1)
+yini1 <- calc_yini_partner(HIVpars.mean)
+yini2 <- calc_yini_full(HIVpars.mean)
+r1 <- lsoda(unlist(yini1), func = model1(HIVpars.mean), parms = HIVpars.mean, times = tvec)
+r2 <- lsoda(unlist(yini2), func = model2(HIVpars.mean), parms = HIVpars.mean, times = tvec)
+
+N.risk1 <- with(HIVpars.mean, return(r1[,2:(1+n.risk)]))
+N.risk2 <- with(expand(HIVpars.mean),{
+        S <- r2[,2:(1+n.risk)]
+        I <- apply(r2[,(2+n.risk):(1+n.risk+n.risk*n.alpha)], 1, function(x) colSums2(x, n.alpha))
+        return(S + t(I))
+})
+
+all.equal(unname(N.risk1), unname(N.risk2))
+
+matplot(N.risk1, type = "l")
+matplot(N.risk2, type = "l")
+```
+
+It seems like partnership dynamics work fine. Can we check disease dynamics?
+
+```{r disease}
+pars <- transform(HIVpars.mean, n.risk = 1, r.risk = 1, p.risk = 1, scale_all = 5)
+
+calc_yini_tmp <- function(parameters){
+  with(c(expand(parameters)),{
+    c = Ini_I
+    I_vec = c * I_initialize(parameters)
+    yini <- list(
+      S  = (1 - c),
+      SS = 0,
+      SI = rep(0, n.alpha),
+      I = I_vec,
+      II = matrix(0, n.alpha, n.alpha))
+    return(yini)
+  })
+}
+
+yini_norisk <- calc_yini_tmp(pars)
+yini_full <- calc_yini_full(pars)
+
+tvec <- seq(1, 30, 0.1)
+r_norisk <- lsoda(unlist(yini_norisk), func = gfun(pars), parms = pars, times = tvec)
+r_full <- lsoda(unlist(yini_full), func = model2(pars, infection = TRUE, mortality = TRUE), parms = pars, times = tvec)
+
+all.equal(r_norisk[,488],r_full[,488])
+
+matplot(cbind(r_norisk[,488], r_full[,488]), type = "l")
+matplot(cbind(r_norisk[,487], r_full[,487]), type = "l")
+```
+
+Introducing heterogeneity:
+
+```{r}
+pars2 <- transform(HIVpars.mean, n.risk = 2, r.risk = c(0.8,4.8), p.risk = c(0.95, 0.05), scale_all = 5)
+yini_het <- calc_yini_full(pars2)
+r_het <- lsoda(unlist(yini_het), func = model2(pars2, infection = TRUE, mortality = TRUE), parms = pars2, times = tvec)
+
+matplot(cbind(r_full[,488], r_het[,1899]), type = "l")
+matplot(cbind(r_full[,487], r_het[,1898]), type = "l")
+```
+
+One more test. This should be identical to homogeneous model
+
+```{r}
+pars3 <- transform(HIVpars.mean, n.risk = 2, r.risk = c(1,1), p.risk = c(0.5, 0.5), scale_all = 5)
+yini_test <- calc_yini_full(pars3)
+r_test <- lsoda(unlist(yini_test), func = model2(pars3, infection = TRUE, mortality = TRUE), parms = pars3, times = tvec)
+
+matplot(cbind(r_full[,488], r_test[,1899]), type = "l")
+matplot(cbind(r_full[,487], r_test[,1898]), type = "l")
+```
+
+Seems like this model works?
