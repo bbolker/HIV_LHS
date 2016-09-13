@@ -405,7 +405,8 @@ r1 <- lsoda(unlist(yini1), func = model1(HIVpars.mean), parms = HIVpars.mean, ti
 r1rcpp <- lsoda(unlist(yini1), func = g, parms = expand(HIVpars.mean), times = tvec)
 yini2 <- list(N = c(0.1, 0.2, 0.3), NN = matrix(c(0.1, 0.1, 0, 0,0,0,0,0,0), 3, 3))
 yini3 <- calc_yini_full(HIVpars.mean)
-g2(0, unlist(yini3), expand(HIVpars.mean))
-model1(expand(HIVpars.mean))(0, unlist(yini2), expand(HIVpars.mean))
+tmpa <- unname(g2(0, unlist(yini3), expand(HIVpars.mean))$dSS)
+tmpb <- unname(model2(expand(HIVpars.mean))(0, unlist(yini3), expand(HIVpars.mean))[[1]][67:75])
+all.equal(tmpa, tmpb)
 ```
 

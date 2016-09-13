@@ -31,7 +31,11 @@ expand.HIVvirparlist <- function(x,...) {
           ##Heterogeneity
           cc_mat <- outer(r.risk * c_mean, r.risk * c_mean, "+")/2
           rho2 <- r.risk * rho
+          c2 <- r.risk * c_mean
           rho2.I <- rep(rho2, each = n.alpha)
+          c2.I <- rep(c2, each = n.alpha)
+          cc_mat.I <- outer(c2, c2.I, "+")/2
+          cc_mat.II <- outer(c2.I, c2.I, "+")/2
        })
     return(x)
 }
