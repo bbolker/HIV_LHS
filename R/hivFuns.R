@@ -27,6 +27,11 @@ expand.HIVvirparlist <- function(x,...) {
           Beta = scale_all * scale* (Beta1 * Duration1 + Beta2 * Duration2 + Beta3 * Duration3) * lam
           c_e = Beta * c_e_ratio
           c_u = Beta * c_u_ratio
+          
+          ##Heterogeneity
+          cc_mat <- outer(r.risk * c_mean, r.risk * c_mean, "+")/2
+          rho2 <- r.risk * rho
+          rho2.I <- rep(rho2, each = n.alpha)
        })
     return(x)
 }
