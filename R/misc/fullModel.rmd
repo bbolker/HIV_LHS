@@ -387,6 +387,42 @@ Seems like this model works? Now, let's test rcpp function...
 library(Rcpp)
 sourceCpp("fullModel.cpp")
 
+full_model_rcpp <- function(t, yini, parameters){
+	return(list(unlist(g2(t, yini, parameters))))
+}
+
+pp <- expand(HIVpars.mean)
+
+tvec <- seq(1, 30, 0.5)
+
+r_rcpp <- lsoda(unlist(yini2), func = full_model_rcpp, parms = pp, times = tvec)
+N_rcpp <- with(expand(HIVpars.mean),{
+        S <- r_rcpp[,2:(1+n.risk)]
+        I <- apply(r_rcpp[,(2+n.risk):(1+n.risk+n.risk*n.alpha)], 1, function(x) colSums2(x, n.alpha))
+        return(S + t(I))
+})
+
+r_full <- lsoda(unlist(yini2), func = model2(HIVpars.mean, infection = TRUE, mortality = TRUE), parms = HIVpars.mean, times = tvec)
+N_R <- with(expand(HIVpars.mean),{
+        S <- r_full[,2:(1+n.risk)]
+        I <- apply(r_full[,(2+n.risk):(1+n.risk+n.risk*n.alpha)], 1, function(x) colSums2(x, n.alpha))
+        return(S + t(I))
+})
+
+all.equal(N_rcpp, N_R)
+
+library(microbenchmark)
+microbenchmark(
+	rcpp = lsoda(unlist(yini2), func = full_model_rcpp, parms = pp, times = tvec),
+	R= lsoda(unlist(yini2), func = model2(HIVpars.mean, infection = TRUE, mortality = TRUE), parms = HIVpars.mean, times = tvec)
+)
+	
+```
+
+Junk:
+
+```{r junk, eval = FALSE}
+	
 r1 <- lsoda(unlist(yini1), func = model1(HIVpars.mean), parms = HIVpars.mean, times = tvec)
 r1rcpp <- lsoda(unlist(yini1), func = g, parms = expand(HIVpars.mean), times = tvec)
 yini2 <- list(N = c(0.1, 0.2, 0.3), NN = matrix(c(0.1, 0.1, 0, 0,0,0,0,0,0), 3, 3))

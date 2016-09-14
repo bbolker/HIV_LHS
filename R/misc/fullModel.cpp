@@ -533,8 +533,7 @@ List g2(double t, NumericVector yini, List parameters) {
                            Rcpp::Named("dI") = dI,
                            Rcpp::Named("dSS") = dSS,
                            Rcpp::Named("dSI") = dSI,
-                           Rcpp::Named("dII") = dII,
-                           Rcpp::Named("test") = mortSIout);
+                           Rcpp::Named("dII") = dII);
 	
 }
 
