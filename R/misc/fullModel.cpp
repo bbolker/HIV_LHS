@@ -403,12 +403,22 @@ List g2(double t, NumericVector yini, List parameters) {
 		cemut[i] = sum(infcetmp * p(_,i));
 	}
 	//FIXME:
+	
+	NumericMatrix infSStmp2(nrisk * nrisk, nalpha);
+	for(i = 0; i < nrisk; i ++){
+		k = nrisk * i;
+		for(j = 0; j < nrisk; j ++){
+			infSStmp2(k,_) = rrisk[j] * SS_adj(j,i) * cemut;
+			k++;
+		}
+	}
+	
 	NumericMatrix infSSto(nrisk, nrisk * nalpha);
 	for(i= 0; i < nrisk; i ++){
 		for(j = 0; j < nrisk * nalpha; j ++){
-			k = floor(j/nalpha);
-			l = j%nalpha;
-			infSSto(i,j) =  rrisk[k] * cemut[l] * SS_adj(i,k);
+			k = j % nalpha;
+			l = i * nrisk + floor(j/nalpha);
+			infSSto(i,j) =  infSStmp2(l,k);
 		}
 	}
 	
@@ -446,52 +456,52 @@ List g2(double t, NumericVector yini, List parameters) {
 	mortIout = lam2 * I;
 	NumericVector mortIsus(nrisk);
 	for(i = 0; i < nrisk * nalpha; i ++){
-		j = i % nalpha;
+		j = floor(i/nalpha);
 		mortIsus[j] += mortIout[i];
 	}
 	
 	//mort.SI.out <- sweep(SI, 2, lam2, "*")
 	//mort.SI.sus <- rowSums(mort.SI.out) + colSums2(mort.SI.out, n.alpha)
-	//NumericMatrix mortSIout(nrisk, nrisk * nalpha);
-	//NumericVector mortSIsus(nrisk);
-	//for(i = 0; i < nrisk; i ++){
-  //	mortSIout(i,_) = SI(i,_) * lam2;
-	//	mortSIsus[i] = sum(mortSIout(i,_));
-	//}
+	NumericMatrix mortSIout(nrisk, nrisk * nalpha);
+	NumericVector mortSIsus(nrisk);
+	for(i = 0; i < nrisk; i ++){
+  	mortSIout(i,_) = SI(i,_) * lam2;
+		mortSIsus[i] = sum(mortSIout(i,_));
+	}
 	
-	//for(i = 0; i < nrisk * nalpha; i ++){
-  //	j = i % nalpha;
-	//	mortSIsus[j] += sum(mortSIout(_,i));
-	//}
+	for(i = 0; i < nrisk * nalpha; i ++){
+		j = floor(i/nalpha);
+		mortSIsus[j] += sum(mortSIout(_,i));
+	}
 	
 	//mort.II.out <- lammat_adj2 * II
 	//mort.II.I <- colSums(lammat_dis2 * II)
 	//mort.II.sus <- colSums2(t(lammat_dis2 * II), n.alpha)
-	// NumericMatrix mortIIout(nrisk * nalpha, nrisk * nalpha);
-	// NumericVector mortIII(nrisk * nalpha);
-	// NumericVector mortIIsus(nrisk);
-	// for(i = 0; i < nrisk * nalpha; i ++){
-	// 	mortIIout(i,_) = lammat_adj2(i,_) * II(i,_);
-	// }
-	// for(i = 0; i < nrisk * nalpha; i ++){
-	// 	j = i % nalpha;
-	// 	mortIII[i] = sum(lammat_dis2(_,i) * II(_,i));
-	// 	mortIIsus[j] += sum(lammat_dis2(i,_) * II(i,_));
-	// }
-	// 
+	NumericMatrix mortIIout(nrisk * nalpha, nrisk * nalpha);
+	NumericVector mortIII(nrisk * nalpha);
+	NumericVector mortIIsus(nrisk);
+	for(i = 0; i < nrisk * nalpha; i ++){
+		mortIIout(i,_) = lammat_adj2(i,_) * II(i,_);
+	}
+	for(i = 0; i < nrisk * nalpha; i ++){
+		j = floor(i/nalpha);
+	 	mortIII[i] = sum(lammat_dis2(_,i) * II(_,i));
+	 	mortIIsus[j] += sum(lammat_dis2(i,_) * II(i,_));
+	}
+	 
 	//dS <- - rho2 * S + colSums(cc_mat * SS_adj) + rowSums(d.SI) - inf.S.from + mort.I.sus +
 	//	mort.SI.sus + mort.II.sus
 	NumericVector dS(nrisk);
 	dS = - rho2 * S;
 	for(i = 0; i < nrisk; i ++){
-		dS[i] += sum(cc_mat(_,i) * SS_adj(_,i)) + sum(d_SI(i,_)) - infSfrom[i];
+		dS[i] += sum(cc_mat(_,i) * SS_adj(_,i)) + sum(d_SI(i,_)) - infSfrom[i] + mortIsus[i] + mortSIsus[i] + mortIIsus[i];
 	}
 	
 	//dI <- - rho2.I * I + colSums(d.SI) + colSums(cc_mat.II * II_adj) + inf.S.to - mort.I.out + mort.II.I
 	NumericVector dI(nrisk * nalpha);
 	dI = - rho2I * I;
 	for(i = 0; i < nrisk * nalpha; i ++){
-		dI[i] += sum(d_SI(_,i)) + sum(cc_matII(_,i) * II_adj(_,i)) + infSto[i];
+		dI[i] += sum(d_SI(_,i)) + sum(cc_matII(_,i) * II_adj(_,i)) + infSto[i] - mortIout[i] + mortIII[i];
 	}
 	
 	//dSS <- f.SS - d.SS - inf.SS.from
@@ -507,7 +517,7 @@ List g2(double t, NumericVector yini, List parameters) {
 	NumericMatrix dSI(nrisk, nrisk * nalpha);
 	for(i = 0; i < nrisk; i ++){
 		for(j = 0; j < nrisk * nalpha; j ++){
-			dSI(i, j) = fSI(i, j) + d_SI(i,j) - infSIfrom(i,j) + infSSto(i,j) - infSIfrom2(i,j);
+			dSI(i, j) = fSI(i, j) - d_SI(i,j) - infSIfrom(i,j) + infSSto(i,j) - infSIfrom2(i,j) - mortSIout(i,j);
 		}
 	}
 	
@@ -515,7 +525,7 @@ List g2(double t, NumericVector yini, List parameters) {
 	NumericMatrix dII(nrisk * nalpha, nrisk * nalpha);
 	for(i = 0; i < nrisk * nalpha; i ++){
 		for(j = 0; j < nrisk * nalpha; j ++){
-			dII(i,j) = fII(i,j) - cc_matII(i,j) * II(i,j) + infSIto(i,j) + infSIto2(i,j);
+			dII(i,j) = fII(i,j) - cc_matII(i,j) * II(i,j) + infSIto(i,j) + infSIto2(i,j) - mortIIout(i,j);
 		}
 	}
 	
@@ -524,7 +534,7 @@ List g2(double t, NumericVector yini, List parameters) {
                            Rcpp::Named("dSS") = dSS,
                            Rcpp::Named("dSI") = dSI,
                            Rcpp::Named("dII") = dII,
-                           Rcpp::Named("test") = infSIto2);
+                           Rcpp::Named("test") = mortSIout);
 	
 }
 
