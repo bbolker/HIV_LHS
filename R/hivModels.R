@@ -1,29 +1,5 @@
-makeMutMat <- function(xpars) {
-  p <- with(xpars, {
-    p <- matrix(NA, n.alpha, n.alpha)
-    for(i in 1:n.alpha){
-      x <- min.alpha + (i-1)*d.alpha
-      denom <- 
-        diff(pnorm(c(min.alpha-d.alpha/2,max.alpha+d.alpha/2),
-                   mean=x, sd=Vm))
-      for (j in 1:n.alpha){
-        k <- min.alpha + (j-1)*d.alpha
-        p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
-      }
-    }
-    p
-  })
-  return(p)
-}
-
 #extra couple
 gfun <- function(parameters, experimental=FALSE) {
-  pp <- expand(parameters)
-  attach(pp)
-  
-  p <- makeMutMat(pp)
-  
-  detach(pp)
   
   g <- function(t,yini,parameters) {
       with(as.list(c(yini,expand(parameters))), 
@@ -148,12 +124,6 @@ gfun <- function(parameters, experimental=FALSE) {
 
 #serial
 gfun2 <- function(parameters) {
-  pp <- expand(parameters)
-  attach(pp)
-  
-  p <- makeMutMat(pp)
-  
-  detach(pp)
   
   g <- function(t,yini,parameters) {
     with(as.list(c(yini,expand(parameters))), 
@@ -194,11 +164,6 @@ return(g)
 
 #serial + inst
 gfun3 <- function(parameters) {
-  pp <- expand(parameters)
-  attach(pp)
-  
-  p <- makeMutMat(pp)
-  detach(pp)
   
   g <- function(t,yini,parameters) {
     with(as.list(c(yini,expand(parameters))), 
@@ -247,12 +212,6 @@ return(g)
 
 #serial + inst + extra
 gfun4 <- function(parameters) {
-  pp <- expand(parameters)
-  attach(pp)
-  
-  p <- makeMutMat(pp)
-  
-  detach(pp)
   
   g <- function(t,yini,parameters) {
     with(as.list(c(yini,expand(parameters))), 
@@ -305,12 +264,6 @@ return(g)
 
 #shirreff
 gfun5 <- function(parameters) {
-  pp <- expand(parameters)
-  attach(pp)
-  
-  p <- makeMutMat(pp)
-  
-  detach(pp)
   
   g <- function(t,yini,parameters) {
     with(as.list(c(yini,expand(parameters))), 
@@ -337,12 +290,6 @@ return(g)
 
 #random mixing
 gfun_random <- function(parameters) {
-  pp <- expand(parameters)
-  attach(pp)
-  
-  p <- makeMutMat(pp)
-  
-  detach(pp)
   
   g <- function(t,yini,parameters) {
     with(as.list(c(yini,expand(parameters))), 

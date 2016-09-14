@@ -36,6 +36,35 @@ expand.HIVvirparlist <- function(x,...) {
           c2.I <- rep(c2, each = n.alpha)
           cc_mat.I <- outer(c2, c2.I, "+")/2
           cc_mat.II <- outer(c2.I, c2.I, "+")/2
+          
+          #Infection
+          p <- matrix(NA, n.alpha, n.alpha)
+          for(i in 1:n.alpha){
+          	x <- min.alpha + (i-1)*d.alpha
+          	denom <- 
+          		diff(pnorm(c(min.alpha-d.alpha/2,max.alpha+d.alpha/2),
+          							 mean=x, sd=Vm))
+          	for (j in 1:n.alpha){
+          		k <- min.alpha + (j-1)*d.alpha
+          		p[i,j] = diff(pnorm(k + c(-1,1)*d.alpha/2, mean = x, sd = Vm))/denom
+          	}
+          }
+          
+          beta.SI <- matrix(rep(Beta, n.risk*n.risk), nrow = n.risk, byrow = TRUE)
+          
+          #extracouple
+          c_u_ratio2 <- r.risk * c_u_ratio
+          c_e_ratio2 <- r.risk * c_e_ratio
+          c_u_ratio2.I <- rep(c_u_ratio2, each = n.alpha)
+          c_e_ratio2.I <- rep(c_e_ratio2, each = n.alpha)
+          c_u2 <- outer(r.risk, c_u)
+          r.risk.couple <- outer(r.risk, r.risk, "+")
+          
+          lam2 <- rep(lam, n.risk)
+          lammat_dis2 <- matrix(rep(lam2, n.alpha*n.risk), n.alpha * n.risk, n.alpha * n.risk)
+          diag(lammat_dis2) <- 2 * diag(lammat_dis2)
+          lammat_adj2 <- outer(lam2, lam2, "+")
+          
        })
     return(x)
 }
@@ -43,7 +72,6 @@ expand.HIVvirparlist <- function(x,...) {
 hill <- function(x,a,b,p) {
     a*b^p/(b^p+x^p)
 }
-
 
 ##' get r value within specified bounds
 ##'
