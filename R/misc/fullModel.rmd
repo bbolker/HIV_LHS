@@ -296,9 +296,7 @@ model2 <- function(parameters,
             
             test <- inf.S.to
             
-            list(c(dS, dI, dSS, dSI, dII), 
-            		 ##tot_I = tot_I, mean_V = tot_V/tot_I
-            		 mort.SI.out)
+            list(c(dS, dI, dSS, dSI, dII), tot_I = tot_I, mean_V = tot_V/tot_I)
         })
     }
 }
@@ -388,14 +386,18 @@ library(Rcpp)
 sourceCpp("fullModel.cpp")
 
 full_model_rcpp <- function(t, yini, parameters){
-	return(list(unlist(g2(t, yini, parameters))))
+	return(list(unlist(rcppFull(t, yini, parameters))))
 }
 
-pp <- expand(HIVpars.mean)
+parstmp <- transform(HIVpars.mean, n.risk = 6, r.risk = c(0.8, 0.9, 1, 1, 1.1, 1.2), p.risk = c(0.15, 0.15, 0.2 , 0.2, 0.15, 0.15))
 
-tvec <- seq(1, 30, 0.5)
+yini2 <- calc_yini_full(parstmp)
 
-r_rcpp <- lsoda(unlist(yini2), func = full_model_rcpp, parms = pp, times = tvec)
+pp <- expand(parstmp)
+
+tvec <- seq(1, 4000, 1)
+
+system.time(r_rcpp <- rk(unlist(yini2), func = full_model_rcpp, parms = pp, times = tvec))
 N_rcpp <- with(expand(HIVpars.mean),{
         S <- r_rcpp[,2:(1+n.risk)]
         I <- apply(r_rcpp[,(2+n.risk):(1+n.risk+n.risk*n.alpha)], 1, function(x) colSums2(x, n.alpha))
@@ -431,10 +433,11 @@ library(microbenchmark)
 ##length(unlist(yini3)) = 4233
 yini4 <- rnorm(4233)
 
-microbenchmark(
-tmpa = c(unname(g2(0, unlist(yini4), expand(HIVpars.mean))$dSI)),
-tmpb = c(unname(model2(expand(HIVpars.mean), infection = TRUE, mortality = TRUE)(0, unlist(yini4), expand(HIVpars.mean))[[1]][76:264]))
-)
+
+tmpa = c(unname(rcppPartner(0, unlist(yini4), expand(HIVpars.mean))$dII))
+
+tmpb = c(unname(model2(expand(HIVpars.mean))(0, unlist(yini4), expand(HIVpars.mean))[[1]][-c(1:264)]))
+
 ##1:3, 4:66. 67:75, 76:264
 ##-c(1:264)
 all.equal(tmpa, tmpb)

@@ -17,18 +17,24 @@ expand.HIVvirparlist <- function(x,...) {
           v <- 10^alpha
           ## duration <- (Dmax * D50^h)/(D50^h + v^h)
           Duration2 <- hill(v,Dmax,D50,h)
-          lam = 1/(Duration1 + Duration2 + Duration3)
-          lammat = matrix(rep(lam,n.alpha), n.alpha, n.alpha)
-          lammat_dis = lammat
-          diag(lammat_dis) = 2 * diag(lammat_dis)
-          lammat_adj = lammat + t(lammat)
+          lam <- 1/(Duration1 + Duration2 + Duration3)
+          lammat <- matrix(rep(lam,n.alpha), n.alpha, n.alpha)
+          lammat_dis <- lammat
+          diag(lammat_dis) <- 2 * diag(lammat_dis)
+          lammat_adj <- lammat + t(lammat)
           ## Beta2 <- Bmax * v^a / (v^a + K^a)
           Beta2 <- hill(K,Bmax,v,a)
-          Beta = scale_all * scale* (Beta1 * Duration1 + Beta2 * Duration2 + Beta3 * Duration3) * lam
-          c_e = Beta * c_e_ratio
-          c_u = Beta * c_u_ratio
+          Beta <- scale_all * scale* (Beta1 * Duration1 + Beta2 * Duration2 + Beta3 * Duration3) * lam
+          c_e <- Beta * c_e_ratio
+          c_u <- Beta * c_u_ratio
+          
+          ##Risk distribution
+          p.risk_base <- dnbinom(x = r.risk, size = size, mu = mu)
+          p.risk <- p.risk_base/sum(p.risk_base)
           
           ##Heterogeneity
+          alpha2 <- rep(alpha, n.risk)
+          
           cc_mat <- outer(r.risk * c_mean, r.risk * c_mean, "+")/2
           rho2 <- r.risk * rho
           c2 <- r.risk * c_mean
@@ -116,10 +122,16 @@ get_rval <- function(g, yini, pp, plot.it=FALSE,
 
 get_rval2 <- function(val, g, yini, basepar,
                       adjpar="scale",
-                      verbose=FALSE,...) {
+                      verbose=FALSE,
+											full = FALSE, ...) {
     pp <- basepar
     pp[[adjpar]] <- val
-    r <- get_rval(g(pp), yini, pp,...)
+    if(full){
+    	pp2 <- expand(pp)
+    	r <- get_rval(g, yini, pp2,...)
+    }else{
+    	r <- get_rval(g(pp), yini, pp,...)
+    }
     if (verbose) cat(adjpar,r,"\n")
     return(r)
 }
@@ -134,11 +146,12 @@ find_scale <- function(target,
                        g, yini, parameters,
                        adjpar = "scale",
                        interval=c(0.9,1.3),
-                       verbose=FALSE) {
+                       verbose=FALSE,
+											 ...) {
     if (verbose) cat("target:",target,"\n")
     uu <- uniroot(function(x)
         get_rval2(x,g, yini, parameters, adjpar = adjpar,
-                  verbose=verbose)-target,
+                  verbose=verbose,...)-target,
             interval)
     return(uu$root)
 }
