@@ -9,11 +9,9 @@ source("../hivFuns.R")
 source("../Param.R")
 source("../hivModels.R")
 
-ltab.full <- cbind(ltab, ltab.het)
-
 HIVpars.skeleton <- transform(HIVpars.skeleton, ini_V = 3)
 
-tvec <- c(1:1000)
+tvec <- c(1:2000)
 
 I_matFull <- matrix(NA, nrow = length(tvec), ncol = n.trial)
 vir_matFull <- matrix(NA, nrow = length(tvec), ncol = n.trial)
@@ -26,7 +24,7 @@ if (file.exists("ev_LHS_resFull.rda")) {
 } else {
 	for (i in 1:100) {
 		cat(i)
-		HIVpars <- as.HIVvirparlist(ltab.full[i,])
+		HIVpars <- as.HIVvirparlist(ltab[i,])
 		pp <- expand(HIVpars)
 		yini <- calc_yini_full(pp)
 		little_r <- get_rval(full_model_rcpp, yini, pp, tvec = c(1:30))

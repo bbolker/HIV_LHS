@@ -31,7 +31,7 @@ if (file.exists("ev_LHS_res19.rda")) {
     }
     val_vec19[i] = find_scale(0.04, gfun5, yini, HIVpars, interval=interval, adjpar = "scale_all")
     HIVpars_adj <- transform(HIVpars, scale_all = val_vec19[i])
-    r <- lsoda(unlist(yini), func = gfun5(HIVpars_adj), parms = HIVpars_adj, times = tvec)
+    r <- rk(unlist(yini), func = gfun5(HIVpars_adj), parms = HIVpars_adj, times = tvec)
     
     I_mat19[,i] = r[,(ncol(r) - 1)]
     vir_mat19[,i] = r[,ncol(r)]

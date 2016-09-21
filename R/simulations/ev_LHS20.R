@@ -31,7 +31,7 @@ if (file.exists("ev_LHS_res20.rda")) {
     }
     val_vec20[i] = find_scale(0.04, gfun_random, yini, HIVpars, interval=interval, adjpar = "scale_all")
     HIVpars_adj <- transform(HIVpars, scale_all = val_vec20[i])
-    r <- lsoda(unlist(yini), func = gfun_random(HIVpars_adj), parms = HIVpars_adj, times = tvec)
+    r <- rk(unlist(yini), func = gfun_random(HIVpars_adj), parms = HIVpars_adj, times = tvec)
     
     I_mat20[,i] = r[,(ncol(r) - 1)]
     vir_mat20[,i] = r[,ncol(r)]

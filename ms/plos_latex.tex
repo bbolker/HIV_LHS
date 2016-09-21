@@ -404,25 +404,25 @@ Table~\ref{table:parmsTable} gives the ranges of the model parameters used for L
 %Tables need to be placed after the first paragraph in which they are cited.
 
 \begin{table}[h!]
-\caption{Parameter ranges/values.  Note that $c$ and $\rho$ values are doubled from Champredon \etal\  because we keep track of individuals, while they keep track of couples. Starred (*) parameters (used in \figurename~\ref{fig:panel3}), and Descriptions of Hill function coefficients, are taken from \cite{shirreff_transmission_2011}.}
+\caption{Parameter ranges/values.  Note that $c$ and $\rho$ values are doubled from Champredon \etal\  because we keep track of individuals, while they keep track of couples. Starred (*) parameters (used in \figurename~\ref{fig:panel3}), and descriptions of Hill function coefficients, are taken from \cite{shirreff_transmission_2011}.}
 \centering
 \begin{tabular}{c p{2in} c l}
 \hline 
 Notation & Description & Range/Value & Source\\
 \hline % inserts single horizontal line
-$\rho$ & Partnership formation rate & 1/10-2/5 & \cite{champredon_hiv_2013} \\
-$c$ & Partnership dissolution rate & 1/15-1/5 (1.25*) & \cite{champredon_hiv_2013} \\
+$\rho$ & Partnership formation rate & 1/10-2/5 per year & \cite{champredon_hiv_2013} \\
+$c$ & Partnership dissolution rate & 1/15-1/5 (1.25*) per year & \cite{champredon_hiv_2013} \\
 $c_u/c_w$ & Relative contact rate for uncoupled transmission & 1/5-5 & Assumption \\
 $c_e/c_w$ & Relative contact rate extra-couple & 0.01-1 & \cite{champredon_hiv_2013} \\
-$\beta_P$ & Rate of transmission during primary infection & 1.31-5.09 (2.76*) & \cite{hollingsworth_hiv1_2008} \\
-$\beta_D$ & Rate of transmission during high transmission disease stage & 0.413-1.28 (0.76*) & \cite{hollingsworth_hiv1_2008} \\
-$D_P$ & Duration of primary infection & 1.23/12-6/12 (0.25*) & \cite{hollingsworth_hiv1_2008,shirreff_transmission_2011} \\
-$D_D$ & Duration of high transmission disease stage & 4.81/12-14/12 (0.75*) & \cite{hollingsworth_hiv1_2008} \\
-$\tsub{\beta}{max}$ & Maximum rate of transmission during asymptomatic stage & 0.317 & \cite{shirreff_transmission_2011} \\
-$\beta_{50}$ & SPVL at which infectiousness is half maximum & 13938 & \cite{shirreff_transmission_2011} \\
+$\beta_P$ & Rate of transmission during primary infection & 1.31-5.09 (2.76*) per year & \cite{hollingsworth_hiv1_2008} \\
+$\beta_D$ & Rate of transmission during high transmission disease stage & 0.413-1.28 (0.76*) per year & \cite{hollingsworth_hiv1_2008} \\
+$D_P$ & Duration of primary infection & 1.23/12-6/12 (0.25*) years & \cite{hollingsworth_hiv1_2008} \\
+$D_D$ & Duration of high transmission disease stage & 4.81/12-14/12 (0.75*) years & \cite{hollingsworth_hiv1_2008} \\
+$\tsub{\beta}{max}$ & Maximum rate of transmission during asymptomatic stage & 0.317 per year & \cite{shirreff_transmission_2011} \\
+$\beta_{50}$ & SPVL at which infectiousness is half maximum & 13938 copies per ml & \cite{shirreff_transmission_2011} \\
 $\beta_k$ & Hill coefficient: steepness of increase in infectiousness as a function of SPVL & 1.02 & \cite{shirreff_transmission_2011} \\
-$\tsub{D}{max}$ & Duration of primary infection & 25.4 & \cite{shirreff_transmission_2011} \\
-$D_{50}$ & SPVL at which duration of asymptomatic infection is half maximum & 3058 & \cite{shirreff_transmission_2011} \\
+$\tsub{D}{max}$ & Duration of primary infection & 25.4 years & \cite{shirreff_transmission_2011} \\
+$D_{50}$ & SPVL at which duration of asymptomatic infection is half maximum & 3058 copies per ml & \cite{shirreff_transmission_2011} \\
 $D_{k}$ & Hill coefficient: steepness of decrease in duration as a function of SPVL & 0.41 & \cite{shirreff_transmission_2011} \\
 $\sigma_M$ & Mutation standard deviation of $\log_{10}$ SPVL & 0.12 & \cite{shirreff_transmission_2011} \\
 $\tsub{\alpha}{min}$ & Minimum $\log_{10}$ SPVL & 2 & \cite{shirreff_transmission_2011}\\
@@ -740,7 +740,7 @@ Below, we use the Kronecker delta (i.e. $\delta_{ij}=1$ if $i=j$ and 1 otherwise
 
 \subsubsection*{Partnership dynamics}
 
-Single individuals acquire partners at per-person rate $\rho$. Partnership formation rate for $S$, $I_i$ are $- \rho S$ and $-\rho I_i$, respectively. We follow Champredon \etal's results and assume that single individuals are distributed into coupled states with pair-formation (PF) rates as follows:
+Single individuals acquire partners at per-person rate $\rho$. Partnership formation rate for $S$, $I_i$ are $- \rho S$ and $-\rho I_i$, respectively. We follow Champredon \etal's results \cite{champredon_hiv_2013} and assume that single individuals are distributed into coupled states with pair-formation (PF) rates as follows:
 
 \begin{equation}
 \begin{aligned}
@@ -861,7 +861,7 @@ II_{ij}' =& \khalf \cdot \frac{\rho I_i \cdot I_j}{(S + \sum_k I_k)} - c II_{ij}
 \subsection*{Models 3 (``instswitch'') and 4 (``instswitch'')}
 \subsubsection*{Partnership dynamics}
 
-Since model 3 and 4 assume instantaneous partnership formation, there are only three states: $SS$, $SI_i$, and $II_{ij}$. Partnership dissolution rates are equal to those of model 1 and 2: $\DS(SS) = -cSS$, $\DS(SI_i) = - cSI_i$, and $\DS(II_{ij}) = - II_{ij}$. Once individuals leave a partnership, they enter temporary compartments and are distributed into a partnership as follows:
+Since model 3 and 4 assume instantaneous partnership formation, there are only three states: $SS$, $SI_i$, and $II_{ij}$. Partnership dissolution rates are equal to those of model 1 and 2: $\DS(SS) = -cSS$, $\DS(SI_i) = - cSI_i$, and $\DS(II_{ij}) = - II_{ij}$. Once individuals leave a partnership, they are instantaneously distributed into coupled states. In order to make the equations simpler, we introduce the following two terms: $X$ and $Y_i$, where $X$ denotes the number of susceptible individuals that leave the partnership at a given time, and $Y_i$ the number of infected individuals with \Lspvl\ of $\alpha_i$ who leave partnership at a given time. These temporarily single individuals then form couples through the same partnership formation rule described in the previous section:
 
 \begin{equation}
 \begin{aligned}
@@ -902,27 +902,27 @@ Combining all these dynamics, we have equation 3. If we remove extra-couple tran
 \begin{aligned}
 X =& 2 c SS + \sum_k c SI_k + \sum_k 2 \lambda_k SI_k + \sum_l \sum_k 2^{\delta_{lk}}  \lambda_k II_{lk},\\
 Y_i =& c SI_i + \sum_k 2^{\delta_{ik}}  c II_{ik} + \sum_k  2^{\delta_{ik}}  \lambda_k II_{ik}, \\
-SS  =& - c SS + \frac{X^2}{2 (X + \sum_k Y_k)}  - \sum_i 2 P_i E_i SS,\\
-SI_i =& - c SI_i + \frac{X Y_i}{X + \sum_k Y_k} - \beta_i SI_i + \sum_k 2 M_{ki} P_k E_k SS\\
+SS'  =& - c SS + \frac{X^2}{2 (X + \sum_k Y_k)}  - \sum_i 2 P_i E_i SS,\\
+SI_i' =& - c SI_i + \frac{X Y_i}{X + \sum_k Y_k} - \beta_i SI_i + \sum_k 2 M_{ki} P_k E_k SS\\
 &- \sum_k P_k E_k SI_i - \lambda_i SI_i,\\
-II_{ij}& - c II_{ij} +\khalf \frac{Y_i Y_j}{X + \sum_k Y_k} + \khalf \cdot (M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j)\\
+II_{ij}'& - c II_{ij} +\khalf \frac{Y_i Y_j}{X + \sum_k Y_k} + \khalf \cdot (M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j)\\
 &+ \khalf \cdot (\sum_k (M_{kj} P_k E_k SI_i + M_{ki} P_k E_k SI_j)) -(\lambda_i + \lambda_j) II_{ij}.
 \end{aligned}
 \end{equation}
 
 \subsection*{Implicit model}
 
-Following \cite{shirreff_transmission_2011}, Model 5 is an implicit instantaneous partnership formation model that uses an adjusted transmission rate, $\beta'$, that is derived from \cite{hollingsworth_hiv1_2008}'s approximate basic reproduction number:
+Following \cite{shirreff_transmission_2011}, Model 5 is an implicit instantaneous partnership formation model that uses an adjusted transmission rate, $\beta^\ast$, that is derived from \cite{hollingsworth_hiv1_2008}'s approximate basic reproduction number:
 
 \begin{equation}
-\beta'_i = \frac{c \beta_i}{c + \beta_i + \lambda_i}.
+\beta^\ast_i = \frac{c \beta_i}{c + \beta_i + \lambda_i}.
 \end{equation}
 Thus, we get the following model:
 
 \begin{equation}
 \begin{aligned}
-S' & = \sum_k \lambda_k I_k - \sum_k \beta'_k S I_k.\\
-I_i & = \sum_k M_{ki} \beta'_k S I_k - \lambda_i I_i.
+S' & = \sum_k \lambda_k I_k - \sum_k \beta^\ast_k S I_k.\\
+I_i' & = \sum_k M_{ki} \beta^\ast_k S I_k - \lambda_i I_i.
 \end{aligned}
 \end{equation}
 
@@ -933,7 +933,7 @@ Model 6 is a random mixing model. It is modeled in a same way as model 5 without
 \begin{equation}
 \begin{aligned}
 S' & = \sum_k \lambda_k I_k - \sum_k \beta_k S I_k,\\
-I_i & = \sum_k M_{ki} \beta_k S I_k - \lambda_i I_i.
+I_i' & = \sum_k M_{ki} \beta_k S I_k - \lambda_i I_i.
 \end{aligned}
 \end{equation}
 

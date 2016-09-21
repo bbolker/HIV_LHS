@@ -1,8 +1,8 @@
 #extra couple
 gfun <- function(parameters, experimental=FALSE) {
-  
+	px <- expand(parameters)
   g <- function(t,yini,parameters) {
-      with(as.list(c(yini,expand(parameters))), 
+      with(as.list(c(yini,px)), 
       { 
           SI <- yini[3:(2+n.alpha)]
           I <- yini[(3+n.alpha):(2+2*n.alpha)]
@@ -56,9 +56,7 @@ gfun <- function(parameters, experimental=FALSE) {
   }
 
   ## tweak for performance
-
-  px <- expand(parameters)
-  gX <- function(t,yini,parameters) {
+	gX <- function(t,yini,parameters) {
       with(as.list(c(yini,px)),
       { 
           SI <- yini[3:(2+n.alpha)]
@@ -124,9 +122,9 @@ gfun <- function(parameters, experimental=FALSE) {
 
 #serial
 gfun2 <- function(parameters) {
-  
+	px <- expand(parameters)
   g <- function(t,yini,parameters) {
-    with(as.list(c(yini,expand(parameters))), 
+    with(as.list(c(yini,px)), 
 {      
   
   SI = yini[3:(2+n.alpha)]
@@ -164,9 +162,9 @@ return(g)
 
 #serial + inst
 gfun3 <- function(parameters) {
-  
+	px <- expand(parameters)
   g <- function(t,yini,parameters) {
-    with(as.list(c(yini,expand(parameters))), 
+    with(as.list(c(yini,px)), 
 {      
   
   SI = yini[2:(1+n.alpha)]
@@ -212,9 +210,9 @@ return(g)
 
 #serial + inst + extra
 gfun4 <- function(parameters) {
-  
+	px <- expand(parameters)
   g <- function(t,yini,parameters) {
-    with(as.list(c(yini,expand(parameters))), 
+    with(as.list(c(yini,px)), 
 {      
   
   SI = yini[2:(1+n.alpha)]
@@ -264,9 +262,9 @@ return(g)
 
 #shirreff
 gfun5 <- function(parameters) {
-  
+	px <- expand(parameters)
   g <- function(t,yini,parameters) {
-    with(as.list(c(yini,expand(parameters))), 
+    with(as.list(c(yini,px)), 
 {      
   
   I = yini[-1]
@@ -290,9 +288,9 @@ return(g)
 
 #random mixing
 gfun_random <- function(parameters) {
-  
+	px <- expand(parameters)
   g <- function(t,yini,parameters) {
-    with(as.list(c(yini,expand(parameters))), 
+    with(as.list(c(yini,px)), 
 {      
   
   I = yini[-1]

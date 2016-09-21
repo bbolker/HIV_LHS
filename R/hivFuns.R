@@ -98,10 +98,9 @@ get_rval <- function(g, yini, pp, plot.it=FALSE,
     r <- rk(y=start,
                  times=tvec,
                  func=g,
-                 parms=pp, method = "ode45")
+                 parms=pp)
         
     Itot <- r[,(ncol(r)-1)]
-    
     if(max(Itot) < 5e-2){
       return(0)
     }else{

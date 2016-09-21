@@ -41,6 +41,8 @@ set.seed(101)
 ltab[] <- lapply(ltab,sample)
 ltab.het[] <- lapply(ltab.het,sample)
 
+ltab <- cbind(ltab, ltab.het)
+
 as.HIVvirparlist <- function(x) {
   res <- append(x,HIVpars.skeleton)
   class(res) <- c("list","parlist","HIVvirparlist")
