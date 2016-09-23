@@ -29,8 +29,12 @@ expand.HIVvirparlist <- function(x,...) {
           c_u <- Beta * c_u_ratio
           
           ##Risk distribution
-          p.risk_base <- dnbinom(x = r.risk, size = size, mu = mu)
-          p.risk <- p.risk_base/sum(p.risk_base)
+          gamma.shape <- 1/kappa
+          gamma.scale <- mu/gamma.shape
+          bin.risk <-  qgamma(seq(0, 0.99, length.out = n.risk+1), shape = gamma.shape, scale = gamma.scale)
+          
+          p.risk <- rep(1/n.risk, n.risk)
+          r.risk <- (bin.risk[-1] + bin.risk[-(n.risk+1)])/2
           
           ##Heterogeneity
           alpha2 <- rep(alpha, n.risk)
@@ -101,6 +105,7 @@ get_rval <- function(g, yini, pp, plot.it=FALSE,
                  parms=pp)
         
     Itot <- r[,(ncol(r)-1)]
+    
     if(max(Itot) < 5e-2){
       return(0)
     }else{

@@ -18,8 +18,7 @@ HIVpars.skeleton <- list(
   inisd = 0.2,                          ##Standard deviation of the initial SPVL distribution
   Ini_I = 1e-4,                         ##Initial number of infected individuals
   ini_V = 3.5,                          ##Initial mean SPVL
-  n.risk = 10,                          ##number of risk groups
-  r.risk = c(1:10)                      ##risk group mixing ratio
+  n.risk = 10                           ##number of risk groups
 )
 
 
@@ -30,9 +29,9 @@ ltab <- as.data.frame(apply(HIVpars_range,1,
                             function(x) exp(seq(log(x[1]),log(x[2]),
                                                 length=n.trial))))
 
-Het_range <- data.frame(min=c(1, 1),
-												max=c(100, 5),
-												row.names=c("size", "mu"))
+Het_range <- data.frame(min=c(0.1, 0.103),
+												max=c(20.324, 1.206),
+												row.names=c("kappa", "mu"))
 ltab.het <- as.data.frame(apply(Het_range,1,
 																function(x) exp(seq(log(x[1]),log(x[2]),
 																										length=n.trial))))
