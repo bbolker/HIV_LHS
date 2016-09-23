@@ -31,7 +31,7 @@ expand.HIVvirparlist <- function(x,...) {
           ##Risk distribution
           gamma.shape <- 1/kappa
           gamma.scale <- mu/gamma.shape
-          bin.risk <-  qgamma(seq(0, 0.99, length.out = n.risk+1), shape = gamma.shape, scale = gamma.scale)
+          bin.risk <-  qgamma(seq(0.01, 0.99, length.out = n.risk+1), shape = gamma.shape, scale = gamma.scale)
           
           p.risk <- rep(1/n.risk, n.risk)
           r.risk <- (bin.risk[-1] + bin.risk[-(n.risk+1)])/2
