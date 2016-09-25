@@ -131,7 +131,7 @@ gfun2 <- function(parameters) {
   I = yini[(3+n.alpha):(2+2*n.alpha)]
   II = matrix(yini[(3+2*n.alpha):(2+(2+n.alpha)*n.alpha)], n.alpha, n.alpha)
   
-  dS = - rho * S * S/(S+sum(I)) + 2 * c_mean * SS - rho * S *sum( I)/(S+sum(I)) + c_mean * sum(SI) + 2 * sum(lam * SI) + sum(lam * I) + sum(lammat_dis * II)
+  dS = - rho * S + 2 * c_mean * SS + c_mean * sum(SI) + 2 * sum(lam * SI) + sum(lam * I) + sum(lammat_dis * II)
   dSS = 0.5 * rho * S * S/(S+sum(I)) - c_mean * SS
   dSI = rho * S * I/(S+sum(I)) - c_mean * SI - lam * SI - Beta * SI
   
@@ -145,7 +145,7 @@ gfun2 <- function(parameters) {
   II_adj = II
   diag(II_adj) = 2 * diag(II_adj) 
   
-  dI = - rho * S * I/(S+sum(I)) + c_mean * SI - rho * I * (sum(I))/(S+sum(I))  + colSums(c_mean * II_adj) - lam * I + colSums(lammat_dis * II)
+  dI = - rho * I + c_mean * SI + colSums(c_mean * II_adj) - lam * I + colSums(lammat_dis * II)
   dII = frate.I - c_mean * II - lammat_adj * II + infrate_adj
   
   tot = S + 2* sum(SI) + 2*SS + sum(I) + sum(II_adj)
