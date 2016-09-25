@@ -31,7 +31,7 @@ library("ggstance")
 ```
 
 ```{r load, echo = FALSE}
-load("../simdata/combine_ev_LHS4.rda")
+load("../simdata/combineResults.rda")
 ```
 
 ```{r setup2,echo=FALSE}
@@ -368,6 +368,7 @@ print(ggp2,spacingProportion=0)
 ### Figure 5
 
 ```{r fig5, echo = FALSE, fig.width = 10, cache = TRUE,dpi = 600}
+mL2 <- subset(mL2, !(LHSvar %in% c("kappa", "mu")))
 mL3 <- subset(mL2,
        !((model=="implicit" &
           LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
@@ -379,6 +380,7 @@ mL3 <- subset(mL2,
           LHSvar %in% c("rho_base","c_u_ratio")) |
          (model=="pairform" &
           LHSvar %in% c("c_u_ratio","c_e_ratio"))))
+
 ## reorder factors
 mL3$LHSvar <- factor(mL3$LHSvar,
                      levels=c("Beta1","Beta3",
