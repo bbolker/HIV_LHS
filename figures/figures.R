@@ -29,7 +29,7 @@ load("../simdata/combine_ev_LHS4.rda")
 
 ## setup2
 orig_sum_labs <- c("peak_time","peak_vir","eq_vir","rel_peak")
-new_sum_labs <- c("peak time","peak virulence","equilibrium virulence","relative peak")
+new_sum_labs <- c("peak time","peak SPVL","equilibrium SPVL","relative peak")
 fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
     if (atop) new_sum_labs <-
                   gsub("(.*) (.*)","atop(\\1,\\2)",new_sum_labs)
@@ -99,6 +99,7 @@ png(file="fig1.png",height=3.5*600,width=10*600)
 print(grid.arrange(g1.y, g2.y, g3.y, nrow=1))
 dev.off()
 
+fig_objects <- c("g1.y","g2.y","g3.y")
 
 ### Figure 2
 
@@ -122,6 +123,8 @@ gg_virtraj <- ggplot(ss,
 ## scale_x_continuous(limits=c(0,2500))
 ggsave(gg_virtraj,file="fig2.pdf",width=6,height=4)
 ggsave(gg_virtraj,file="fig2.png",width=6,height=4,dpi=400)
+
+fig_objects <- c(fig_objects,"gg_virtraj")
 
 ### Figure 2.1 - Transmission rate
 
@@ -209,7 +212,7 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 	facet_wrap(~variable,scale="free_x")+
 	guides(fill=guide_legend(reverse=TRUE))+
 	labs(y="")+
-	geom_point(data=data.frame(model="random",variable="equilibrium virulence",
+	geom_point(data=data.frame(model="random",variable="equilibrium SPVL",
                                value=rval),pch=22,size=3,show.legend=FALSE) +
 	zero_x_margin
 
@@ -218,6 +221,7 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 ggsave(gg_univ,file="fig3.pdf",width=8,height=4.8)
 ggsave(gg_univ,file="fig3.png",width=8,height=4.8,dpi=600)
 
+fig_objects <- c(fig_objects,"gg_univ")
 
 ### Figure 3.1
 
@@ -260,6 +264,8 @@ gg_univ.epi <- ggplot(mLw.epi,aes(value,model,fill=model))+
 
 ggsave(gg_univ.epi,file="fig_S2_3.pdf",width=8,height=4.8)
 ggsave(gg_univ.epi,file="fig_S2_3.png",width=8,height=4.8,dpi=600)
+
+fig_objects <- c(fig_objects,"gg_univ.epi")
 
 ## ```{r sumtab,as.is=TRUE,eval=FALSE}
 if (FALSE) {
@@ -371,6 +377,8 @@ png(file="fig4.png",width=7*600,height=7*600)
 print(ggp2,spacingProportion=0)
 dev.off()
 
+fig_objects <- c(fig_objects,"ggp2")
+
 ### Figure 5
 
 mL3 <- subset(mL2,
@@ -446,3 +454,8 @@ ggsens <- ggplot(mL3,aes(LHSval,sumval,colour=model))+
 
 ggsave(ggsens, file="fig5.pdf",width=10,height=5)
 ggsave(ggsens, file="fig5.png",width=10,height=5,dpi=600)
+
+fig_objects <- c(fig_objects,"ggsens")
+
+
+save(list=c("fig_objects",fig_objects),file="HIVLHS_figures.RData")
