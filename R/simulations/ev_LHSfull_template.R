@@ -34,7 +34,7 @@ for (i in start_sim:end_sim) {
     HIVpars <- as.HIVvirparlist(ltab[i,])
     pp <- expand(HIVpars)
     yini <- calc_yini_full(pp)
-    little_r <- get_rval(full_model_rcpp, yini, pp, tvec = c(1:30))
+    little_r <- get_rval(full_model_rcpp, yini, pp)
     
     if(little_r < 0.04){
         interval = c(1,10)
@@ -42,7 +42,7 @@ for (i in start_sim:end_sim) {
         interval = c(0.01,1)
     }
     val_vecFull[i] = find_scale(0.04, full_model_rcpp, yini, HIVpars, interval=interval,
-                                adjpar = "scale_all", full = TRUE, tvec = c(1:300))
+                                adjpar = "scale_all", full = TRUE)
     HIVpars_adj <- transform(HIVpars, scale_all = val_vecFull[i])
     pp_adj <- expand(HIVpars_adj)
     r <- rk(unlist(yini), func = full_model_rcpp, parms = pp_adj, times = tvec)
