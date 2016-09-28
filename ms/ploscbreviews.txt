@@ -176,7 +176,7 @@ between the acute (primary) and chronic (asymptomatic) stage of
 infections, which might influence HIV virulence evolution more than
 differences in the sexual partnership dynamics. Hence, I am not
 convinced that the authors use a “more realistic” model than the one by
-Shireff et al.
+vShireff et al.
 
 Structure:
 - The references to the equations are not always correct.
