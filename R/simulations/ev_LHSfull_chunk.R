@@ -48,7 +48,7 @@ for (i in start_sim:end_sim) {
             }
             val_vecFull[i] = find_scale(0.04, full_model_rcpp, yini,
                                         HIVpars, interval=interval,
-                                        adjpar = "scale_all", full = TRUE)
+                                        adjpar = "scale_all", full = TRUE, hmax = 0.5)
             HIVpars_adj <- transform(HIVpars, scale_all = val_vecFull[i])
             pp_adj <- expand(HIVpars_adj)
             rk(unlist(yini), func = full_model_rcpp, parms = pp_adj,
