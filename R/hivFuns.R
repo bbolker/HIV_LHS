@@ -119,6 +119,10 @@ get_rval <- function(g, yini, pp, plot.it=FALSE,
         abline(mm,col=2)
       }
       cc <- coef(mm)[2]
+      if(is.na(cc){
+      	return(3)
+      })
+      
       return(cc)
     }
 }
