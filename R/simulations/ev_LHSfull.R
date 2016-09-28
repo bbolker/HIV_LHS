@@ -38,7 +38,7 @@ if (file.exists("ev_LHS_resFull.rda")) {
 															adjpar = "scale_all", full = TRUE)
 		HIVpars_adj <- transform(HIVpars, scale_all = val_vecFull[i])
 		pp_adj <- expand(HIVpars_adj)
-		r <- rk(unlist(yini), func = full_model_rcpp, parms = pp_adj, times = tvec)
+		r <- rk(unlist(yini), func = full_model_rcpp, parms = pp_adj, times = tvec, hmax = 0.5)
 		
 		I_matFull[,i] = r[,(ncol(r) - 1)]
 		vir_matFull[,i] = r[,ncol(r)]

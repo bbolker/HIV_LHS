@@ -102,7 +102,7 @@ get_rval <- function(g, yini, pp, plot.it=FALSE,
     r <- rk(y=start,
                  times=tvec,
                  func=g,
-                 parms=pp)
+                 parms=pp, hmax = 0.5)
         
     Itot <- r[,(ncol(r)-1)]
     
@@ -135,6 +135,7 @@ get_rval2 <- function(val, g, yini, basepar,
 											full = FALSE, ...) {
     pp <- basepar
     pp[[adjpar]] <- val
+    
     if(full){
     	pp2 <- expand(pp)
     	r <- get_rval(g, yini, pp2,...)
