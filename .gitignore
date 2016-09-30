@@ -28,3 +28,7 @@ vignettes/*.pdf
 cache
 figure
 .Rproj.user
+
+*.Rout
+*.krasched.*
+R/simulations/*.rda
