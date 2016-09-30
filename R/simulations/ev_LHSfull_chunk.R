@@ -48,12 +48,11 @@ for (i in start_sim:end_sim) {
             }
             val_vecFull[mrow] = find_scale(0.04, full_model_rcpp, yini,
                                         HIVpars, interval=interval,
-                                        adjpar = "scale_all", full = TRUE,
-                                        hmax = 0.5)
+                                        adjpar = "scale_all", full = TRUE)
             HIVpars_adj <- transform(HIVpars, scale_all = val_vecFull[mrow])
             pp_adj <- expand(HIVpars_adj)
             rk(unlist(yini), func = full_model_rcpp, parms = pp_adj,
-               times = tvec)
+               times = tvec, hmax = 0.5)
             })
     if (!inherits(r,"try-error")) {
         I_matFull[,mrow] = r[,(ncol(r) - 1)]
