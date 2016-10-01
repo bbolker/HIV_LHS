@@ -60,7 +60,11 @@ if (FALSE) {
     pcol <- adjustcolor("black",alpha=0.1)
     matplot(all_comb$I_matFull,type="l",lty=1,col=pcol)
     matplot(all_comb$vir_matFull,type="l",lty=1,col=pcol,
-            ylim=c(0,7))
+            ylim=c(2.5,7))
+    sum(apply(all_comb$vir_matFull,
+          2,function(x)
+        !all(is.na(x)) & min(x)>2.5  & max(x)<7))
+    ## 785 (out of 792)
     plot(density(all_comb$eq_vecFull))
     plot(density(na.omit(all_comb$peak_matFull[,1])))
     plot(density(na.omit(all_comb$peak_matFull[,2])))
