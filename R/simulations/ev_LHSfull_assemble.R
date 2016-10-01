@@ -59,7 +59,8 @@ if (FALSE) {
     ## quick look at results ...
     pcol <- adjustcolor("black",alpha=0.1)
     matplot(all_comb$I_matFull,type="l",lty=1,col=pcol)
-    matplot(all_comb$vir_matFull,type="l",lty=1,col=pcol)
+    matplot(all_comb$vir_matFull,type="l",lty=1,col=pcol,
+            ylim=c(0,7))
     plot(density(all_comb$eq_vecFull))
     plot(density(na.omit(all_comb$peak_matFull[,1])))
     plot(density(na.omit(all_comb$peak_matFull[,2])))
