@@ -69,4 +69,18 @@ if (FALSE) {
     plot(density(na.omit(all_comb$peak_matFull[,1])))
     plot(density(na.omit(all_comb$peak_matFull[,2])))
     plot(density(all_comb$val_vecFull))
+    
+    ##little_r
+    
+    min(all_comb$I_matFull[2000,], na.rm = TRUE)
+    
+    little_r <- unlist(apply(all_comb$I_matFull, 2, function(x){
+    	df <- data.frame(t = 1:2000, I = x)
+    	l <- try(lm(log(I)~t, data = df, subset = I > 1e-3 & I < 3e-2))
+    	ifelse(!inherits(l,"try-error"), coef(l)[[2]], NA) 
+    }))
+    plot(density(little_r, na.rm = TRUE))
+    matplot(all_comb$I_matFull[,which(little_r < 0.05)], type = "l", lty = 1, col = pcol, log = "y")
+    length(which(little_r < 0.05))
+    length(which(little_r > 0.05))
 }
