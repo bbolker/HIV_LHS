@@ -53,7 +53,7 @@ for (i in start_sim:end_sim) {
             HIVpars_adj <- transform(HIVpars, scale_all = val_vecFull[mrow])
             pp_adj <- expand(HIVpars_adj)
             rk(unlist(yini), func = full_model_rcpp, parms = pp_adj,
-               times = tvec, hmax = 0.5)
+               times = tvec, hmax = 0.3)
             })
     if (!inherits(r,"try-error")) {
         I_matFull[,mrow] = r[,(ncol(r) - 1)]

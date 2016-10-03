@@ -94,7 +94,7 @@ hill <- function(x,a,b,p) {
 ##' @param verbose verbose (debugging) output?
 get_rval <- function(g, yini, pp, plot.it=FALSE,
                      tvec = c(1:500),
-                     lims=c(1e-3,5e-2),
+                     lims=c(1e-3,1e-2),
                      verbose=FALSE) {
   
     start <- unlist(yini)
@@ -102,11 +102,11 @@ get_rval <- function(g, yini, pp, plot.it=FALSE,
     r <- rk(y=start,
                  times=tvec,
                  func=g,
-                 parms=pp, hmax = 0.5)
+                 parms=pp, hmax = 0.3)
         
     Itot <- r[,(ncol(r)-1)]
     
-    if(max(Itot) < 5e-2){
+    if(max(Itot) < 1e-2){
       return(0)
     }else{
       

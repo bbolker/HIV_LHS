@@ -29,8 +29,8 @@ ltab <- as.data.frame(apply(HIVpars_range,1,
                             function(x) exp(seq(log(x[1]),log(x[2]),
                                                 length=n.trial))))
 
-Het_range <- data.frame(min=c(0.1, 0.103),
-												max=c(20.324, 1.206),
+Het_range <- data.frame(min=c(0.01, 0.103),
+												max=c(100, 1.206),
 												row.names=c("kappa", "mu"))
 ltab.het <- as.data.frame(apply(Het_range,1,
 																function(x) exp(seq(log(x[1]),log(x[2]),
