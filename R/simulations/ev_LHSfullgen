@@ -5,5 +5,5 @@ BATCHSIZE=20
 for BATCHNUM in {0..49}; do
      echo $BATCHNUM
      fn=ev_LHSfull_batch${BATCHNUM}
-     sqsub -q serial -o $fn.%J.out --mpp 8G -r 64h R CMD BATCH --vanilla "--args $BATCHNUM $BATCHSIZE" ev_LHSfull_chunk.R $fn.Rout
+     sqsub -q serial -o $fn.%J.out --mpp 8G -r 96h R CMD BATCH --vanilla "--args $BATCHNUM $BATCHSIZE" ev_LHSfull_chunk.R $fn.Rout
 done

@@ -9,6 +9,8 @@ source("../hivFuns.R")
 source("../Param.R")
 source("../hivModels.R")
 
+BATCHTAG <- "_v3"
+
 t0 <- proc.time()
 argvals <- commandArgs(trailingOnly=TRUE) ## chunk number: full run is (20)x50
 ## indexed from 0
@@ -18,7 +20,7 @@ cat(batch_num,batch_size,"\n")
 
 start_sim <- batch_num*batch_size+1  
 end_sim <- (batch_num+1)*batch_size
-fn <- paste0("ev_LHSfull_",batch_num,"_v2.rda")
+fn <- paste0("ev_LHSfull_",batch_num,BATCHTAG,".rda")
 cat(start_sim,end_sim,fn,"\n")
 
 n.trial <- end_sim-start_sim+1 ## overwrite source()d value
