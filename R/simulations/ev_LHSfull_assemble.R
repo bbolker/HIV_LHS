@@ -58,9 +58,15 @@ if (FALSE) {
     load(paste0("ev_LHSfull_comb",tag,".rda"))
     ## quick look at results ...
     pcol <- adjustcolor("black",alpha=0.1)
-    matplot(all_comb$I_matFull,type="l",lty=1,col=pcol)
+    matplot(all_comb$I_matFull,type="l",lty=1,col=pcol, log = "y")
+    
+    ## make sure initial growth rate is consistent even when equilibrium prevalence is close to subset limits
+    ## matplot(all_comb$I_matFull[,all_comb$I_matFull[2000,] < 2e-2], type = "l", lty = 1, col = pcol, log = "y")
+    ## These seem OK although they seem a bit off. Should we get rid of them? or keep them? Re-adjust little r just for these?
+    
     matplot(all_comb$vir_matFull,type="l",lty=1,col=pcol,
             ylim=c(2.5,7))
+    
     sum(apply(all_comb$vir_matFull,
           2,function(x)
         !all(is.na(x)) & min(x)>2.5  & max(x)<7))
