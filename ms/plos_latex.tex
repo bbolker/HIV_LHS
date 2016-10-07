@@ -236,13 +236,24 @@ The evolutionary dynamics of parasite virulence over the
   dissolution and allowing for individuals to transmit disease outside
   of partnerships. We assess summary statistics such as the peak value
   of virulence (SPVL) and the time at which the peak occurs across all
-  models and across a Latin hypercube sample that captures a realistic
-  range of partnership dynamic parameters for sub-Saharan Africa. In
+  models for a range of 
+  partnership dynamic parameters 
+  applicable to the HIV epidemic in sub-Saharan Africa. In
   order to account for the different interpretations of parameters
   across model structures, we scale all parameter sets to constrain
   the simulated epidemic growth rate to be identical, matching a
-  realistic baseline value. For this
-  particular model setting, the simplest random-mixing structure is
+  realistic baseline value. 
+  Although SPVL trajectories are broadly similar
+  across model structures --- an initial increase in SPVL, 
+  followed by a peak and a decline to an equilibrium SPVL slightly
+  lower than a peak --- the timing and height of the peak vary
+  considerably.
+  Models of intermediate
+  complexity predicted much lower peak virulence (15 years to
+  progress to AIDS) compared to both more realistic models
+  and simple random-mixing models with no partnership structure
+  at all (both approx. 7.25 years to progress to AIDS).
+  In this range of models, the simplest random-mixing structure is
   actually the best approximation to the most realistic model; this
   surprising outcome occurs because the dominance of extra-pair
   contact in the realistic model tends to mask the effects of
@@ -283,10 +294,23 @@ pathogens should proceed with caution.
 
 The evolution of pathogen virulence is a fundamental process in
 evolutionary biology, of both theoretical and (potentially) practical
-importance. The trade-off theory \cite{Ebert1999} --- which
-postulates that parasite virulence can be explained as the long-term
-evolutionary outcome of a saturating relationship between parasite
-clearance rate and transmission rate --- has been criticized
+importance. In general, evolutionary suggests that
+disease strains that can reproduce more, where reproduction
+means the amount of \emph{between-host} transmission, or
+the number of new hosts infected, will increase in prevalence.
+Pathogens can increase their between-host 
+fitness, or net reproduction rate, either
+by increasing their birth rate, the rate at which they
+infect new hosts, or by decreasing their death rate, the rate
+at which hosts recover or die from disease.
+The trade-off theory \cite{Ebert1999} --- postulates that
+the birth and death rate are both linked to the rate at which
+the pathogen reproduces the host, and that the pathogen
+evolution will thus strike a balance between the
+pathogen's rate of transmission
+to new hosts and its rate of killing its host (or of provoking
+the host's immune system to eliminate it).
+The tradeoff theory has been criticized
 \cite{EbertBull2003,alizon_adaptive_2015}, but has also been
 successfully applied in a variety of host-pathogen systems \cite{Dwyer+1990,mackinnon1999genetic,jensen2006empirical,deroode2008virulence}. One
 particularly interesting application of these ideas is the work by
@@ -447,18 +471,18 @@ One of the most difficult parts of model comparison is finding
 parameter sets that are commensurate with many different model
 structures. For the most part, our models are too complex to easily
 derive analytical correspondences among them. Given a numerical
-criterion, such as $r$ (initial exponential growth rate) or ${\cal
-  R}_0$ (intrinsic reproductive number), we can adjust one or more
+criterion, such as $r$ (initial exponential growth rate) or $\rzero$ 
+(intrinsic reproductive number), we can adjust one or more
 parameters by brute force to ensure that all of the models match
-according to that criterion. While ${\cal R}_0$ is often considered
+according to that criterion. While $\rzero$ is often considered
 the most fundamental property of an epidemic, and might thus seem to
 be a natural matching criterion, here we focus on matching the initial
 growth rate $r$ for several reasons. First, our primary interest is in
 the transient evolutionary dynamics of virulence, which are more
-strongly affected by $r$ than ${\cal R}_0$. Second, $r$ is 
+strongly affected by $r$ than $\rzero$. Second, $r$ is 
 more directly observable in real epidemics; $r$ can be estimated by
 fitting an exponential curve to the initial incidence or
-prevalence curves \cite{ma_estimating_2014}, while ${\cal R}_0$
+prevalence curves \cite{ma_estimating_2014}, while $\rzero$
 typically requires either (1) knowledge of \emph{all} epidemic
 parameters or (2) calculations based on
 $r$ and knowledge of the serial interval or generation interval of the
@@ -607,7 +631,7 @@ would have expected the implicit model to be most similar to the
 the instantaneous-switching model without extra-pair contact,
 which most closely matches its derivation. However, we note
 that the implicit model derivation is based on defining
-the force of infection to match a scaled version of ${\cal R}_0$,
+the force of infection to match a scaled version of $\rzero$,
 and as such would be expected to match the equilibrium behaviour
 but not necessarily the epidemic-phase behaviour of a model
 with explicit partnership dynamics.
