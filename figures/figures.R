@@ -26,6 +26,7 @@ library("ggstance")
 
 ## load data
 load("../simdata/combine_ev_LHS4.rda")
+load("../simdata/combineResults.rda")
 
 ## setup2
 orig_sum_labs <- c("peak_time","peak_vir","eq_vir","rel_peak")
@@ -105,19 +106,24 @@ fig_objects <- c("g1.y","g2.y","g3.y")
 
 ss <- subset(sum_list[["vir_mat"]],tvec<750)
 
-ss$model <- factor(ss$model, c("random","pairform+epc", "pairform","instswitch+epc","instswitch","implicit"))
+ss$model <- factor(ss$model, c("random","pairform+epc", "pairform","instswitch+epc","instswitch","implicit","heterogeneous"))
 
 gg_virtraj <- ggplot(ss,
                      aes(tvec,mean,ymin=lwr,ymax=upr))+
 	geom_line(aes(colour=model,linetype=model),lwd=1)+
 	geom_ribbon(aes(fill = model), alpha=0.3)+
-	labs(x="time (years)",y=expression(population~mean~set-point~viral~load~(log[10]))) +
+	labs(x="time (years)",
+             y=expression(population~mean~set-point~viral~load~(log[10]))) +
 	theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
 		axis.title.x = element_text(margin = margin(10,0,0,0)),
 		legend.position = "none") +
 	facet_wrap(~model, nrow = 2) +
 	zero_margin
 
+## experiment: collapse pairs, + direct labeling???
+
+library(directlabels)
+direct.label(gg_virtraj+expand_limits(x=1000),method="top.bumpup")
 ## r fig2, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400}
 
 ## scale_x_continuous(limits=c(0,2500))
