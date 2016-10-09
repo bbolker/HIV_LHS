@@ -4,7 +4,6 @@ library("ggplot2"); theme_set(theme_bw(base_size = 12,
                                        base_family = "Times"))
 library("dplyr")
 library("tidyr")
-opts_chunk$set(echo=FALSE,error=FALSE)
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
 } 
@@ -23,13 +22,16 @@ library("GGally") ## need BMB version
 ## devtools::install_github("bbolker/GGally")
 ## devtools::install_github("lionel-/ggstance")
 library("ggstance")
+source("../R/hivFuns.R")
+source("../R/Param.R")
 
 ## load data
-load("../simdata/combine_ev_LHS4.rda")
+load("../simdata/combineResults.rda")
 
 ## setup2
-orig_sum_labs <- c("peak_time","peak_vir","eq_vir","rel_peak")
-new_sum_labs <- c("peak time","peak SPVL","equilibrium SPVL","relative peak")
+orig_sum_labs <- c("peak_time","peak_dur","eq_dur","rel_dur")
+new_sum_labs <- c("time at which progression time is minimal (years)","minimum mean progression time (years)",
+									"equilibrium mean progression time (years)","relative ratio: minimum/equilibrium progression time")
 fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
     if (atop) new_sum_labs <-
                   gsub("(.*) (.*)","atop(\\1,\\2)",new_sum_labs)
@@ -128,9 +130,6 @@ fig_objects <- c(fig_objects,"gg_virtraj")
 
 ### Figure 2.1 - Transmission rate
 
-source("../R/hivFuns.R")
-source("../R/Param.R")
-
 returnBeta <- function(lSpvl, parameters){
 	with(as.list(c(parameters)),{
 		v = 10^lSpvl
@@ -195,13 +194,31 @@ ggsave(gg_durtraj,file="fig_S2_2.png",width=6,height=4,dpi=400)
 
 ### Figure 3
 
-sL <- transform(sum_list[["sum_mat"]],rel_peak=peak_vir/eq_vir)
-sL$model <- factor(sL$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
-mL <- melt(sL,id.vars=c("model","run"))
+load("../simdata/ev_LHSfull_comb_v3.rda")
+full.n <- which(!is.na(all_comb[["peak_matFull"]])[,2])
+full_sum_mat <- with(all_comb,{
+	data.frame(
+		model = "hetero",
+		run = full.n,
+		eq_vir = eq_vecFull[full.n],
+		peak_time = peak_matFull[full.n,1],
+		peak_vir = peak_matFull[full.n,2]
+	)
+})
+
+sL <- transform(rbind(sum_list[["sum_mat"]], full_sum_mat),rel_peak=peak_vir/eq_vir)
+
+sL$model <- factor(sL$model, c("random", "hetero","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
+
+sL.mod <- transform(sL, peak_dur = returnDur(peak_vir,HIVpars.skeleton),
+										eq_dur = returnDur(eq_vir,HIVpars.skeleton))
+sL.mod <- transform(sL.mod, rel_dur = peak_dur/eq_dur)
+sL.mod <- sL.mod[,-c(3, 5, 6)]
+mL <- melt(sL.mod,id.vars=c("model","run"))
 ## horrible hack (but doesn't help); subsample
 ## w <- which(mL$model=="random")
 ## mLw <- mL[-sample(w,size=length(w)*9/10,replace=FALSE),]
-w <- with(mL,which(model=="random" & variable=="eq_vir"))
+w <- with(mL,which(model=="random" & variable=="eq_dur"))
 rval <- mean(mL$value[w])
 mLw <- droplevels(mL[-w,])
 mLw$variable <- fixfac2(mLw$variable)
@@ -212,7 +229,7 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 	facet_wrap(~variable,scale="free_x")+
 	guides(fill=guide_legend(reverse=TRUE))+
 	labs(y="")+
-	geom_point(data=data.frame(model="random",variable="equilibrium SPVL",
+	geom_point(data=data.frame(model="random",variable="equilibrium mean progression time (years)",
                                value=rval),pch=22,size=3,show.legend=FALSE) +
 	zero_x_margin
 
@@ -225,8 +242,6 @@ fig_objects <- c(fig_objects,"gg_univ")
 
 ### Figure 3.1
 
-sL$model <- factor(sL$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
-
 sL.epi <- transform(sL, eq_t = returnBeta(eq_vir,HIVpars.skeleton),
 										peak_t = returnBeta(peak_vir,HIVpars.skeleton),
 										eq_dur = returnDur(eq_vir,HIVpars.skeleton),
@@ -235,37 +250,6 @@ sL.epi <- transform(sL, eq_t = returnBeta(eq_vir,HIVpars.skeleton),
 sL.epi <- sL.epi[,-c(3:6)]
 
 mL.epi <- melt(sL.epi,id.vars=c("model","run"))
-## horrible hack (but doesn't help); subsample
-## w <- which(mL$model=="random")
-## mLw <- mL[-sample(w,size=length(w)*9/10,replace=FALSE),]
-w.epi.t <- with(mL.epi,which(model=="random" & variable=="eq_t"))
-w.epi.d <- with(mL.epi,which(model=="random" & variable=="eq_dur"))
-rval.epi.t <- mean(mL.epi$value[w.epi.t])
-rval.epi.d <- mean(mL.epi$value[w.epi.d])
-mLw.epi <- droplevels(mL.epi[-c(w.epi.t,w.epi.d),])
-mLw.epi$variable <- factor(mLw.epi$variable, levels = c("eq_t", "peak_t", "eq_dur", "peak_dur"),
-													 labels = c("Equilbrium asymptomatic transmission rate",
-													 					 "Maximum transmission rate",
-													 					 "Equilibrium duration of asymptomatic stage",
-													 					 "Minimum duration of asymptomatic stage"))
-
-gg_univ.epi <- ggplot(mLw.epi,aes(value,model,fill=model))+
-	geom_violinh(width=1)+
-	theme(legend.position = "none") +
-	facet_wrap(~variable,scale="free_x")+
-	guides(fill=guide_legend(reverse=TRUE))+
-	labs(y="")+
-	geom_point(data=data.frame(model="random",variable=c("Equilbrium asymptomatic transmission rate",
-																											 "Equilibrium duration of asymptomatic stage"),
-                               value=c(rval.epi.t, rval.epi.d)),pch=22,size=3,show.legend=FALSE) +
-	zero_x_margin
-
-## r fig3.1, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
-
-ggsave(gg_univ.epi,file="fig_S2_3.pdf",width=8,height=4.8)
-ggsave(gg_univ.epi,file="fig_S2_3.png",width=8,height=4.8,dpi=600)
-
-fig_objects <- c(fig_objects,"gg_univ.epi")
 
 ## ```{r sumtab,as.is=TRUE,eval=FALSE}
 if (FALSE) {
@@ -345,12 +329,15 @@ tweak_colours_gg <- function(gg) {
 
 ### Figure 4
 
-sL2 <- sL
-names(sL2)[na.omit(match(orig_sum_labs,names(sL)))] <- gsub(" ","_",new_sum_labs)
+sL2 <- sL.mod[,c("model", "run", "eq_dur", "peak_time", "peak_dur")]
+
+new_sum_labs2 <- gsub("\\s\\(years\\)?", "" ,new_sum_labs[1:3])
+
+names(sL2)[na.omit(match(orig_sum_labs,names(sL2)))] <- gsub(" ","_",new_sum_labs2)
     ## paste0("`",new_sum_labs,"`")
 ggp1 <- ggpairs(sL2,
         mapping = ggplot2::aes(color = model),
-        columns=3:6,
+        columns=3:5,
         legends=TRUE,
         lower = list(continuous = wrap("points",size=0.1)), ## alpha = 0.3,size=0.5)),
         diag = list(continuous = "blankDiag"),
@@ -381,30 +368,44 @@ fig_objects <- c(fig_objects,"ggp2")
 
 ### Figure 5
 
-mL3 <- subset(mL2,
+combined_sum_mat <- transform(rbind(full_sum_mat, sum_list[["sum_mat"]]),
+	peak_dur = returnDur(peak_vir,HIVpars.skeleton),
+	eq_dur = returnDur(eq_vir,HIVpars.skeleton))
+combined_sum_mat <- combined_sum_mat[,-c(3,5)]
+ltab <- cbind(run = 1:1000, ltab)
+comb.m1 <- setNames(melt(combined_sum_mat, id.vars = c("model","run")), c("model", "run", "sumvar", "sumval"))
+comb.m2 <- setNames(melt(ltab, id.vars = "run"), c("run", "LHSvar", "LHSval"))
+comb.mL <- full_join(comb.m1, comb.m2)
+
+comb.mL <- subset(comb.mL,
+									!(LHSvar %in% c("Beta1", "Beta3", "Duration3")))
+
+mL3 <- subset(comb.mL,
        !((model=="implicit" &
-          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
+          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio", "kappa", "mu")) |
          (model=="random" &
-          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
+          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio", "kappa", "mu")) |
          (model=="instswitch" &
-          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
+          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio", "kappa", "mu")) |
          (model=="instswitch+epc" &
-          LHSvar %in% c("rho_base","c_u_ratio")) |
+          LHSvar %in% c("rho_base","c_u_ratio", "kappa", "mu")) |
          (model=="pairform" &
-          LHSvar %in% c("c_u_ratio","c_e_ratio"))))
+          LHSvar %in% c("c_u_ratio","c_e_ratio", "kappa", "mu")) |
+       		(model == "pairform+epc" &
+       		 	LHSvar %in% c("kappa", "mu"))))
 ## reorder factors
 mL3$LHSvar <- factor(mL3$LHSvar,
-                     levels=c("Beta1","Beta3",
-                              "Duration1","Duration3",
+                     levels=c("Duration1",
                               "c_mean_base","c_e_ratio","rho_base",
-                              "c_u_ratio"),
-                     labels = c("beta[P]", "beta[D]", "D[P]", "D[D]",
-                                "c", "c[e]/c[w]", "rho", "c[u]/c[w]"))
+                              "c_u_ratio",
+                     				 "kappa", "mu"),
+                     labels = c("D[P]",
+                                "c", "c[e]/c[w]", "rho", "c[u]/c[w]", "kappa", "mu"))
 
 ## FIXME: could also use labels argument to rename levels, labeller=label_parsed
 ## in facet_grid to get pretty math
 
-mL3$model <- factor(mL3$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
+mL3$model <- factor(mL3$model, c("random", "hetero", "pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
 
 mL3$sumvar <- fixfac2(mL3$sumvar)
 
@@ -456,6 +457,5 @@ ggsave(ggsens, file="fig5.pdf",width=10,height=5)
 ggsave(ggsens, file="fig5.png",width=10,height=5,dpi=600)
 
 fig_objects <- c(fig_objects,"ggsens")
-
 
 save(list=c("fig_objects",fig_objects),file="HIVLHS_figures.RData")
