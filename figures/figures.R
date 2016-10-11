@@ -31,6 +31,13 @@ load("../simdata/combineResults.rda")
 source("../R/hivFuns.R")
 source("../R/Param.R")
 
+returnDur <- function(lSpvl, parameters){
+	with(as.list(c(parameters)),{
+		v = 10^lSpvl
+		return(hill(v,Dmax,D50,h))
+	})
+}
+
 returnBeta <- function(lSpvl, parameters){
 	with(as.list(c(parameters)),{
 		v = 10^lSpvl
@@ -123,9 +130,9 @@ ss <- transform(ss,
                 cmodel=droplevels(factor(gsub("+epc","",model,fixed=TRUE),
                                          levels=levels(model))))
 
-ss2 <- transform(ss, mean = returnBeta(mean,HIVpars.skeleton),
-                 lwr = returnBeta(lwr,HIVpars.skeleton),
-                 upr = returnBeta(upr,HIVpars.skeleton))
+ss2 <- transform(ss, mean = returnDur(mean,HIVpars.skeleton),
+                 lwr = returnDur(lwr,HIVpars.skeleton),
+                 upr = returnDur(upr,HIVpars.skeleton))
                                  
 gg_virtraj <- ggplot(ss,
                      aes(tvec,mean,ymin=lwr,ymax=upr))+
@@ -146,7 +153,11 @@ top.points2 <- gapply.fun(transform(d[which.max(d$y), ],
                                ## *smaller* numbers move labels right/up
                                     hjust = 0.1, vjust = -1))
 
-direct.label(gg_virtraj %+% ss2,
+nostrips <- theme(strip.background = element_blank(),
+                  strip.text.x = element_blank())
+## http://stackoverflow.com/questions/10547487/r-removing-facet-wrap-labels-completely-in-ggplot2
+direct.label(gg_virtraj %+% ss2 +
+             labs(y="progression to AIDS (years)")+nostrips,
              method=list("top.points2","bumpup"))
 ## r fig2, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400}
 
@@ -180,12 +191,6 @@ ggsave(gg_betatraj,file="fig_S2_1.png",width=6,height=4,dpi=400)
 
 ### Figure 2.2 - Duration
 
-returnDur <- function(lSpvl, parameters){
-	with(as.list(c(parameters)),{
-		v = 10^lSpvl
-		return(hill(v,Dmax,D50,h))
-	})
-}
 
 ss3 <- transform(ss, mean = returnDur(mean,HIVpars.skeleton),
 								 lwr = returnDur(lwr,HIVpars.skeleton),
