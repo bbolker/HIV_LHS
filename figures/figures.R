@@ -28,6 +28,16 @@ library("ggstance")
 load("../simdata/combine_ev_LHS4.rda")
 load("../simdata/combineResults.rda")
 
+source("../R/hivFuns.R")
+source("../R/Param.R")
+
+returnBeta <- function(lSpvl, parameters){
+	with(as.list(c(parameters)),{
+		v = 10^lSpvl
+		return(hill(K,Bmax,v,a))
+	})
+}
+
 ## setup2
 orig_sum_labs <- c("peak_time","peak_vir","eq_vir","rel_peak")
 new_sum_labs <- c("peak time","peak SPVL","equilibrium SPVL","relative peak")
@@ -108,6 +118,15 @@ ss <- subset(sum_list[["vir_mat"]],tvec<750)
 
 ss$model <- factor(ss$model, c("random","pairform+epc", "pairform","instswitch+epc","instswitch","implicit","heterogeneous"))
 
+
+ss <- transform(ss,
+                cmodel=droplevels(factor(gsub("+epc","",model,fixed=TRUE),
+                                         levels=levels(model))))
+
+ss2 <- transform(ss, mean = returnBeta(mean,HIVpars.skeleton),
+                 lwr = returnBeta(lwr,HIVpars.skeleton),
+                 upr = returnBeta(upr,HIVpars.skeleton))
+                                 
 gg_virtraj <- ggplot(ss,
                      aes(tvec,mean,ymin=lwr,ymax=upr))+
 	geom_line(aes(colour=model,linetype=model),lwd=1)+
@@ -117,13 +136,18 @@ gg_virtraj <- ggplot(ss,
 	theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
 		axis.title.x = element_text(margin = margin(10,0,0,0)),
 		legend.position = "none") +
-	facet_wrap(~model, nrow = 2) +
+	facet_wrap(~cmodel, nrow = 2) +
 	zero_margin
 
-## experiment: collapse pairs, + direct labeling???
 
 library(directlabels)
-direct.label(gg_virtraj+expand_limits(x=1000),method="top.bumpup")
+## like top.points, but with vjust=0.5
+top.points2 <- gapply.fun(transform(d[which.max(d$y), ],
+                               ## *smaller* numbers move labels right/up
+                                    hjust = 0.1, vjust = -1))
+
+direct.label(gg_virtraj %+% ss2,
+             method=list("top.points2","bumpup"))
 ## r fig2, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400}
 
 ## scale_x_continuous(limits=c(0,2500))
@@ -133,20 +157,6 @@ ggsave(gg_virtraj,file="fig2.png",width=6,height=4,dpi=400)
 fig_objects <- c(fig_objects,"gg_virtraj")
 
 ### Figure 2.1 - Transmission rate
-
-source("../R/hivFuns.R")
-source("../R/Param.R")
-
-returnBeta <- function(lSpvl, parameters){
-	with(as.list(c(parameters)),{
-		v = 10^lSpvl
-		return(hill(K,Bmax,v,a))
-	})
-}
-
-ss2 <- transform(ss, mean = returnBeta(mean,HIVpars.skeleton),
-								 lwr = returnBeta(lwr,HIVpars.skeleton),
-								 upr = returnBeta(upr,HIVpars.skeleton))
 
 
 gg_betatraj <- ggplot(ss2,
