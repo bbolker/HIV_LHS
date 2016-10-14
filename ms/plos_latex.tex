@@ -221,8 +221,8 @@ The evolutionary dynamics of parasite virulence over the
   Changes in the fitness landscape
   will generally select for higher virulence during the early
   phase of an epidemic, but quantitative outcomes
-  can depend sensitively on biological details and the structure of
-  mathematical models used to capture them.  Fraser, Shirreff, and
+  may depend sensitively on biological details and the structure of
+  mathematical models used to capture them.  Fraser and
   co-workers have proposed a series of models for eco-evolutionary
   dynamics of HIV that are relatively detailed in their portrayal of
   the tradeoffs between transmission and virulence (mediated by
@@ -234,8 +234,9 @@ The evolutionary dynamics of parasite virulence over the
   explore models that combine HIV virulence tradeoffs with a range of
   epidemiological structures, modeling partnership formation and
   dissolution and allowing for individuals to transmit disease outside
-  of partnerships. We assess summary statistics such as the peak value
-  of virulence (SPVL) and the time at which the peak occurs across all
+  of partnerships. We assess summary statistics such as the minimum
+  time of progression to AIDS and the time at which this 
+  extreme value (peak virulence) occurs across all
   models for a range of 
   partnership dynamic parameters 
   applicable to the HIV epidemic in sub-Saharan Africa. In
@@ -243,10 +244,10 @@ The evolutionary dynamics of parasite virulence over the
   across model structures, we scale all parameter sets to constrain
   the simulated epidemic growth rate to be identical, matching a
   realistic baseline value. 
-  Although SPVL trajectories are broadly similar
-  across model structures --- an initial increase in SPVL, 
-  followed by a peak and a decline to an equilibrium SPVL slightly
-  lower than a peak --- the timing and height of the peak vary
+  Although virulence trajectories are broadly similar
+  across model structures --- an initial increase in virulence, 
+  followed by a peak and a decline to an equilibrium virulence slightly
+  lower than a peak --- the timing and magnitude of the peak vary
   considerably.
   Models of intermediate
   complexity predicted much lower peak virulence (15 years to
@@ -292,29 +293,29 @@ pathogens should proceed with caution.
 % Use "Eq" instead of "Equation" for equation citations.
 \section*{Introduction}
 
-The evolution of pathogen virulence is a fundamental process in
-evolutionary biology, of both theoretical and (potentially) practical
-importance. In general, evolutionary suggests that
-disease strains that can reproduce more, where reproduction
-means the amount of \emph{between-host} transmission, or
-the number of new hosts infected, will increase in prevalence.
-Pathogens can increase their between-host 
-fitness, or net reproduction rate, either
-by increasing their birth rate, the rate at which they
+The evolution of pathogen virulence has both 
+theoretical and, potentially, practical
+importance. In general, evolutionary theory suggests that
+disease strains that can reproduce more --- where reproduction
+is defined the amount of \emph{between-host} transmission, or
+the number of new hosts infected --- will increase in prevalence.
+Pathogens can increase their net reproduction rate either
+by increasing their birth rate, the rate (per infected host) at which they
 infect new hosts, or by decreasing their death rate, the rate
 at which hosts recover or die from disease.
-The trade-off theory \cite{Ebert1999} --- postulates that
+The trade-off theory \cite{anderson_coevolution_1982,Ebert1999} --- postulates that
 the birth and death rate are both linked to the rate at which
-the pathogen reproduces the host, and that the pathogen
+the pathogen reproduces within the host, and that the pathogen
 evolution will thus strike a balance between the
 pathogen's rate of transmission
 to new hosts and its rate of killing its host (or of provoking
 the host's immune system to eliminate it).
-The tradeoff theory has been criticized
-\cite{EbertBull2003,alizon_adaptive_2015}, but has also been
-successfully applied in a variety of host-pathogen systems \cite{Dwyer+1990,mackinnon1999genetic,jensen2006empirical,deroode2008virulence}. One
-particularly interesting application of these ideas is the work by
-Fraser \etal\ showing that HIV appears to satisfy the prerequisites of
+Some biologists have criticized the tradeoff theory
+\cite{EbertBull2003,alizon_adaptive_2015}, but others have
+successfully applied it to a variety of host-pathogen systems \cite{Dwyer+1990,mackinnon1999genetic,jensen2006empirical,deroode2008virulence}.
+Fraser \etal\ have applied these ideas in a particularly
+interesting way 
+by showing that HIV appears to satisfy the prerequisites of
 the tradeoff theory: in studies of discordant couples (i.e. long-term
 sexual partnerships with one infected and one uninfected partner), HIV
 virulence as measured by the rate of progression to AIDS was both
@@ -329,8 +330,7 @@ that HIV invading a novel population would initially evolve increased
 virulence, peaking after approximately 100-200 years and then declining
 slightly to a long-stable virulence level.
 
-The work of Shirreff \etal\ \cite{shirreff_transmission_2011}, and particularly the predicted
-transient peak in HIV virulence midway through the epidemic,
+The work of Shirreff \etal\ \cite{shirreff_transmission_2011}, and particularly the predicted transient peak in HIV virulence midway through the epidemic,
 highlights the importance of interactions between epidemiological and
 evolutionary factors \cite{day_virulence_2004,alizon_price_2009}.
 However, despite these studies' attention to detail at the individual
@@ -347,10 +347,35 @@ lead to random mixing among infected and uninfected individuals. Here
 we explore the effects of incorporating \emph{explicit}
 epidemiological structure in eco-evolutionary models.
 
-We add complexity to the epidemiological model following the general approach of Champredon \etal\ \cite{champredon_hiv_2013}; individuals join and leave partnerships at a specified rate, and can have sexual contact both within and outside of established partnerships. In order to explore how virulence evolution depends on epidemiological structure, we consider a series of models with increasing levels of complexity. In order to avoid dependence of the results on a particular set of parameters --- as we explain below, finding matching sets of parameters across models with widely differing epidemiological structures is challenging --- we evaluate our models across a wide range of parameters, again following Champredon \etal\ \cite{champredon_hiv_2013} in using a Latin hypercube design. For each model run, we compute a set of metrics (peak virulence, timing of virulence peak, equilibrium virulence) that summarize the evolutionary trajectory of a simulated HIV epidemic.
+We add complexity to the epidemiological model following the general
+approach of Champredon \etal\ \cite{champredon_hiv_2013},
+which is in turn based on work of Dietz and Hadeler
+\cite{dietz_epidemiological_1988}; individuals
+join and leave partnerships at a specified rate, and can have sexual
+contact both within and outside of established partnerships. In order
+to explore how virulence evolution depends on epidemiological
+structure, we consider a series of models with increasing levels of
+complexity. In order to avoid dependence of the results on a
+particular set of parameters --- as we explain below, finding matching
+sets of parameters across models with widely differing epidemiological
+structures is challenging --- we evaluate our models across a wide
+range of parameters, again following Champredon
+\etal\ \cite{champredon_hiv_2013} in using a Latin hypercube
+design. For each model run, we compute a set of metrics (peak
+virulence, timing of virulence peak, equilibrium virulence) that
+summarize the evolutionary trajectory of a simulated HIV epidemic.
 
-As our primary goal is to explore how different epidemiological structures (i.e. partnership dynamics and contact structures) affect our conclusions about the evolution of virulence, our models use a simplified description of within-host dynamics and heritability derived from 
-Shirreff \etal's multi-strain evolutionary model \cite{shirreff_transmission_2011}. Like Shirreff \etal, we use a simple susceptible-infected-susceptible demographic formulation; rather than modeling birth and death (or more specifically, recruitment into the sexually active population and death), we assume that whenever an individual dies from infection, another enters the susceptible compartment.
+As our primary goal is to explore how different epidemiological
+structures (i.e. partnership dynamics and contact structures) affect
+our conclusions about the evolution of virulence, our models use a
+simplified description of within-host dynamics and heritability
+derived from Shirreff \etal's multi-strain evolutionary model
+\cite{shirreff_transmission_2011}. Like Shirreff \etal, we use a
+simple susceptible-infected-susceptible demographic formulation;
+rather than modeling birth and death (or more specifically,
+recruitment into the sexually active population and death), we assume
+that whenever an individual dies from infection, another enters the
+susceptible compartment.
 
 \section*{Materials and Methods}
 
@@ -373,7 +398,7 @@ D_A(\alpha) &= \frac{\tsub{D}{max} D_{50} ^{D_k}}{V_\alpha ^{D_k} + D_{50}^{D_k}
 \end{split}
 \end{equation}
 where $V_{\alpha} = 10^\alpha$. 
-The uncoupled and extra-couple transmission rates are scaled by multiplying the within-couple transmission rate $\beta$ by the contact ratios $c_u/c_w$ and $c_e/c_w$ (see Appendix). Although such simplification affects evolution of virulence, we show that our simplified model is able to produce result that is qualitatively similar to that of Shirreff \etal's \cite{shirreff_transmission_2011} (\figurename~\ref{fig:panel3}). As our focus is not making accurate predictions, we believe that being able to produce qualitatively similar dynamics is sufficient for this study.
+The uncoupled and extra-couple transmission rates are scaled by multiplying the within-couple transmission rate $\beta$ by the contact ratios $c_u/c_w$ and $c_e/c_w$ (see Appendix). Although such simplification could certainly affect the evolution of virulence (Kret\cite{kretzschmar_effect_1998} , our simplified model is able to produce qualitatively similar results that is qualitatively similar to that of Shirreff \etal's \cite{shirreff_transmission_2011} (\figurename~\ref{fig:panel3}). As our focus is not making accurate predictions, we believe that being able to produce qualitatively similar dynamics is sufficient for this study.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig1.pdf}

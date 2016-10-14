@@ -21,6 +21,7 @@ vignettes/*.pdf
 *-tikzDictionary
 *.nav
 *.nsm
+*.snm
 *.toc
 *.bak
 

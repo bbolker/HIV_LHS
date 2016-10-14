@@ -13,4 +13,4 @@ Add brief description of $r$ (and ref to main text section) in Fig 1 caption
 - BMB: how consistent are we talking about SPVL as "virulence"?
 It's really "host exploitation". (Check 'strain' vs 'SPVL')
 - (DP) check equations to references (in supplement) [equation -> model]
-- make sure to refer to
+- check Kretszchmar, Dietz & Hadeler refs to see that we're citing them correctly
