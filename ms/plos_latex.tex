@@ -411,7 +411,7 @@ Our first four models consider explicit partnership dynamics and are based on Ch
 
 The next two models do not explicitly track sexual partnerships.  One (``implicit'') is an implicit serial monogamy model based on the epidemiological model used by Shirreff \etal\ \cite{shirreff_transmission_2011}. It is actually a random mixing model that consist of only two states, $S$ and $I$, and does not consider explicit partnership dynamics. However, to reflect the effect of (instantaneously formed) partnership structure, it uses an adjusted transmission rate that is derived from an approximation of the basic reproduction number of a serial monogamy model \cite{hollingsworth_hiv1_2008}. Another model (``random'') is a simple random-mixing model.
 
-Lastly, we add heterogeneous mixing to pairform+epc model (``hetero''). Individuals are divided into different risk groups based on the sexual activity level, and we assume that sexual activity level is directly proportional to number of non-cohabiting (extra-couple and uncoupled) partners per year [CITE]. Model details can be found in the appendix.
+Lastly, we add heterogeneous mixing to pairform+epc model (``hetero''). Individuals are divided into different risk groups based on the sexual activity level, and we assume that sexual activity level is directly proportional to number of non-cohabiting (extra-couple and uncoupled) partners per year \cite{omori2015dynamics}. Model details can be found in the appendix.
 
 The base model (i.e. pairform+epc) for the first four models and the heterogeneous model is an extension of Champredon \etal's model \cite{champredon_hiv_2013}. Individuals in single compartment acquire a partner at a rate $\rho$, and partnerships dissolve at a rate $c$. Infected individuals in a discordant partnership infect their susceptible partner at a rate $\beta$ (within-couple transmission rate) and susceptible individuals outside the partnership at a rate $c_e$ (extra-couple transmission rate). Likewise, a single infected individual can infect any susceptible individuals at a rate $c_u$ through uncoupled mixing. Extra-couple and uncoupled transmission are modeled in the same way as Champredon \etal's model. All the details have been adapted to a multi-strain scenario. The second through fourth models (pairform, instswitch+epc, instswitch) are derived from the base model by simplifying epidemiological processes (partnership formation and uncoupled/extra-couple contact). Model details are explained in the appendix.
 
@@ -455,8 +455,8 @@ $\sigma_M$ & Mutation standard deviation of $\log_{10}$ SPVL & 0.12 & \cite{shir
 $\tsub{\alpha}{min}$ & Minimum $\log_{10}$ SPVL & 2 & \cite{shirreff_transmission_2011}\\
 $\tsub{\alpha}{max}$ & Maximum $\log_{10}$ SPVL & 7 & \cite{shirreff_transmission_2011}\\
 $n$ & Number of strains & 21 (51*) & Assumption\\
-$\mu$ & Mean number of non-cohabiting sexual partners & 0.103 - 1.206 & CITE\\
-$\kappa$ & Squared coefficient of variation of number of non-cohabiting sexual partners & 0.01 - 100 & CITE\\
+$\mu$ & Mean number of non-cohabiting sexual partners & 0.103 - 1.206 & \cite{omori2015dynamics}\\
+$\kappa$ & Squared coefficient of variation of number of non-cohabiting sexual partners & 0.01 - 100 & Assumption\\
 \hline
 \end{tabular}
 \label{table:parmsTable}
@@ -1204,6 +1204,12 @@ Hollingsworth TD, Anderson RM, Fraser C.
 \newblock {HIV}-1 Transmission, by Stage of Infection.
 \newblock Journal of Infectious Diseases. 2008;198(5):687--693.
 \newblock doi:{10.1086/590501}.
+
+\bibitem{omori2015dynamics}
+Omori R, Chemaitelly H, Abu-Raddad LJ.
+\newblock Dynamics of non-cohabiting sex partnering in sub-Saharan Africa: a
+  modelling study with implications for HIV transmission.
+\newblock Sexually transmitted infections. 2015; p. sextrans--2014.
 
 \bibitem{blower_drugs_1991}
 Blower SM, Hartel D, Dowlatabadi H, Anderson RM, May RM.
