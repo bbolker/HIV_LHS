@@ -2,6 +2,7 @@
 library("knitr")
 library("ggplot2"); theme_set(theme_bw(base_size = 12,
                                        base_family = "Times"))
+library("MASS")  ## must be before dplyr (select)?
 library("dplyr")
 library("tidyr")
 if (.Platform$OS.type=="windows") {
@@ -10,13 +11,13 @@ if (.Platform$OS.type=="windows") {
 zero_margin <- theme(panel.margin=grid::unit(0,"lines"))
 zero_x_margin <-
     theme(panel.margin.x=grid::unit(0, "lines"))
-library("MASS")
 ## use Dark2 rather than Set1 because colour #6 of Set1 is yellow (ugh/too light)
 scale_colour_discrete <- function(...,palette="Dark2") scale_colour_brewer(...,palette=palette)
 scale_fill_discrete <- function(...,palette="Dark2") scale_fill_brewer(...,palette=palette)
 library("gridExtra")
 library("plyr")  ## for ldply()
 library("dplyr") ## for full_join()
+library("magrittr") ## for full_join()
 library("reshape2")  ## for melt()
 library("GGally") ## need BMB version
 ## devtools::install_github("bbolker/GGally")
@@ -55,7 +56,7 @@ shirreff_df_m <- subset(res_sum_df,run==1,select=c(run,Time, Mean.VL))
 shirreff_df_m$run <- "Shirreff"
 df_tot <- rbind(shirreff_df_m,d_littleR_m)
 tlab <- "time (years)"
-g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run))+
+g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run,linetype=run))+
     geom_line()+labs(x=tlab,y=expression(population~mean~set-point~viral~load~(log[10])))+
     theme(legend.position=c(0.75,0.25))
 ###
@@ -213,7 +214,7 @@ sL$model <- factor(sL$model, c("random", "hetero","pairform+epc", "pairform", "i
 sL.mod <- transform(sL, peak_dur = returnDur(peak_vir,HIVpars.skeleton),
 										eq_dur = returnDur(eq_vir,HIVpars.skeleton))
 sL.mod <- transform(sL.mod, rel_dur = peak_dur/eq_dur)
-sL.mod <- sL.mod[,-c(3, 5, 6)]
+sL.mod <- sL.mod %>% dplyr::select(-c(eq_vir,peak_vir,rel_peak))
 mL <- melt(sL.mod,id.vars=c("model","run"))
 ## horrible hack (but doesn't help); subsample
 ## w <- which(mL$model=="random")
@@ -237,6 +238,17 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 
 ggsave(gg_univ,file="fig3.pdf",width=8,height=4.8)
 ggsave(gg_univ,file="fig3.png",width=8,height=4.8,dpi=600)
+
+mLw_res <- mLw  %>%
+    filter(model %in% c("implicit","pairform+epc","hetero","random"))  %>%
+    filter(variable %in% "minimum mean progression time (years)")
+
+gg_univ_0 <- ggplot(mLw_res,aes(value,model,fill=model))+
+	geom_violinh(width=1)+
+	theme(legend.position = "none") +
+	guides(fill=guide_legend(reverse=TRUE))+
+    labs(x="minimum mean progression time (years)")
+saveRDS(gg_univ_0,file="HIV_dur.rds")
 
 fig_objects <- c(fig_objects,"gg_univ")
 
@@ -320,7 +332,8 @@ tweak_colours_gg <- function(gg) {
     for (i in 1:n) {
         for (j in 1:n) {
             inner <- getPlot(gg,i,j)
-            inner <- inner+scale_colour_brewer(palette = 'Dark2')
+            inner <- inner+scale_colour_brewer(palette = 'Dark2')+
+                scale_shape_manual(values=1:7)
             gg <- putPlot(gg,inner,i,j)
         }
     }
@@ -336,10 +349,10 @@ new_sum_labs2 <- gsub("\\s\\(years\\)?", "" ,new_sum_labs[1:3])
 names(sL2)[na.omit(match(orig_sum_labs,names(sL2)))] <- gsub(" ","_",new_sum_labs2)
     ## paste0("`",new_sum_labs,"`")
 ggp1 <- ggpairs(sL2,
-        mapping = ggplot2::aes(color = model),
+        mapping = ggplot2::aes(color = model,pch=model),
         columns=3:5,
         legends=TRUE,
-        lower = list(continuous = wrap("points",size=0.1)), ## alpha = 0.3,size=0.5)),
+        lower = list(continuous = wrap("points",size=0.2)), ## alpha = 0.3,size=0.5)),
         diag = list(continuous = "blankDiag"),
         upper = list(continuous = "blank"))
 ## http://stackoverflow.com/questions/14711550/is-there-a-way-to-change-the-color-palette-for-ggallyggpairs-using-ggplot
@@ -375,7 +388,7 @@ combined_sum_mat <- combined_sum_mat[,-c(3,5)]
 ltab <- cbind(run = 1:1000, ltab)
 comb.m1 <- setNames(melt(combined_sum_mat, id.vars = c("model","run")), c("model", "run", "sumvar", "sumval"))
 comb.m2 <- setNames(melt(ltab, id.vars = "run"), c("run", "LHSvar", "LHSval"))
-comb.mL <- full_join(comb.m1, comb.m2)
+comb.mL <- full_join(comb.m1, comb.m2, by="run")
 
 comb.mL <- subset(comb.mL,
 									!(LHSvar %in% c("Beta1", "Beta3", "Duration3")))
