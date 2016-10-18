@@ -352,7 +352,7 @@ ggp1 <- ggpairs(sL2,
         mapping = ggplot2::aes(color = model,pch=model),
         columns=3:5,
         legends=TRUE,
-        lower = list(continuous = wrap("points",size=0.2)), ## alpha = 0.3,size=0.5)),
+        lower = list(continuous = wrap("points",alpha=0.6,size=1)), ## alpha = 0.3,size=0.5)),
         diag = list(continuous = "blankDiag"),
         upper = list(continuous = "blank"))
 ## http://stackoverflow.com/questions/14711550/is-there-a-way-to-change-the-color-palette-for-ggallyggpairs-using-ggplot
