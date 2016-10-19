@@ -393,8 +393,7 @@ D_A(\alpha) &= \frac{\tsub{D}{max} D_{50} ^{D_k}}{V_\alpha ^{D_k} + D_{50}^{D_k}
 \label{eq:hillfuns}
 \end{equation}
 where $V_{\alpha} = 10^\alpha$. 
-The uncoupled and extra-couple transmission rates are scaled by multiplying the within-couple transmission rate $\beta$ by the contact ratios $c_u/c_w$ and $c_e/c_w$ (see Appendix). Simplifying the model of HIV pathogenesis from three stages to a single stage could affect our conclusions about the evolution of virulence (e.g. Kretzschmar and Dietz \cite{kretzschmar_effect_1998} show that pair formation dynamics and multiple stages of infectivity have interactive effects on $\rzero$). However, our simplified model produces results that are qualitatively similar to those of Shirreff \etal's \cite{shirreff_transmission_2011} model; when our model is calibrated to have a similar initial epidemic growth rate $r$, the peak \Lspvl\ occurs at the same time ($\approx$ 200 years) but slightly higher (4.7 vs. 4.3); the relative height of the peak is \todo{compute difference and fill this in}
-(\figurename~\ref{fig:panel3}).
+The uncoupled and extra-couple transmission rates are scaled by multiplying the within-couple transmission rate $\beta$ by the contact ratios $c_u/c_w$ and $c_e/c_w$ (see Appendix). Simplifying the model of HIV pathogenesis from three stages to a single stage could affect our conclusions about the evolution of virulence (e.g. Kretzschmar and Dietz \cite{kretzschmar_effect_1998} show that pair formation dynamics and multiple stages of infectivity have interactive effects on $\rzero$). However, our simplified model produces results that are qualitatively similar to those of Shirreff \etal's \cite{shirreff_transmission_2011} model; when our model is calibrated to have a similar initial epidemic growth rate $r$, the peak \Lspvl\ occurs at the same time ($\approx$ 200 years) but slightly higher (4.7 vs. 4.3); the relative height of the peak is 1.07 (\figurename~\ref{fig:panel3}).
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig1.pdf}
@@ -489,7 +488,7 @@ $\kappa$ & Squared coefficient of variation of number of non-cohabiting sexual p
 
 The one completely new parameter in our model, the ratio of uncoupled to within-couple transmission $c_u/c_w$, is needed to more flexibly contrast uncoupled and extra-couple transmission dynamics within multi-strain models (Appendix S1); we need to pick a reasonable range for it. Champredon \etal\ \cite{champredon_hiv_2013} assume that the effective within-couple contact rate and effective uncoupled contact rate have the same range of 0.05 - 0.25.  Given Champredon \etal's parameter range, the possible maximum and minimum values of $c_u/c_w$ are 5 and 1/5. Therefore, we use 1/5-5 as the range for the parameter $c_u/c_w$. Although this adds more uncertainty to the parameter $c_u$ --- Champredon \etal's range implies a 5-fold difference whereas ours gives a 25-fold difference --- we consider the wider range appropriate, as little is not much known about the uncoupled transmission rate.
 
-\todo{add something about choice of heterogeneity}
+Two parameters, mean and the squared coefficient of variation (CV) of number of non-cohabiting partners, are sampled for heterogeneity in sexual activity. We decided to use squared CV instead of variance as variance measures is often unreliable \todo{CITE? You mentioned that variance is unreliable and we should use CV but we didn't talk about it very much...}. To allow for a wide range of uncertainty, range for the mean number of non-cohabiting partners was taken from unmarried men as that was the group with the largest variability \cite{omori2015dynamics}. However, we decided to use 0.01 - 100 as the sampling range for squared CV despite the wider CV range given by Omori \etal \cite{omori2015dynamics} (0 - 20.324). Although married female have largest variability for CV, the range of the mean is narrow and small, which might explain for such large variability. Assessing ranges of CV of other groups, we concluded that 0.01 - 100 is both reasonable and wide enough to cover uncertainties in parameters. For simplicity, we assume that the number of non-cohabiting partner follows a gamma distribution.
 
 \subsection*{Simulation runs}
 
@@ -584,7 +583,7 @@ and equilibrium virulence ($\approx 4.25$ vs. $\approx 4.5$ \Lspvl) than Shirref
 
 Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory, making the virulence peaks slightly later and larger as $I(0)$ decreases. Decreasing $I(0)$ allows a longer epidemic phase before the transition to endemic dynamics (\figurename~\ref{fig:panel3}b). Decreasing the initial virulence similarly but more strongly leads to progressively later, larger peaks in virulence (\figurename~\ref{fig:panel3}c).
 
-Across the entire range of parameters covered by the LHS analysis, all of the classes of models we considered produce qualitatively similar virulence trajectories (\figurename~\ref{fig:virtraj}). Although the speed of virulence evolution varies, leading to wide variation in the minimum progression time (means ranging from approximately \todo{fill in}), virulence peaks in all models between 200 and 300 years.
+Across the entire range of parameters covered by the LHS analysis, all of the classes of models we considered produce qualitatively similar virulence trajectories (\figurename~\ref{fig:virtraj}). Although the speed of virulence evolution varies, leading to wide variation in the minimum expected progression time (means ranging from approximately 6 to 12 years), virulence peaks in all models between 200 and 300 years.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig2.pdf}
@@ -653,7 +652,7 @@ within-couple transmission
 probability are even more extreme, about a fourfold difference:
 0.249 (0.24-0.26) and 0.252 (0.19-0.28) per year for the 
 random and pairform+epc models vs. 0.059 (0.02-0.13) per year
-for the implicit model (Figs~???? \todo{fill in!} show univariate distributions
+for the implicit model (\figurename~\ref{fig:unidist} show univariate distributions
 on the epidemiological scales
 of progression time and transmission probability,
 for all summary measures and all models).

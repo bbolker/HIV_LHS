@@ -59,6 +59,19 @@ tlab <- "time (years)"
 g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run,linetype=run))+
     geom_line()+labs(x=tlab,y=expression(population~mean~set-point~viral~load~(log[10])))+
     theme(legend.position=c(0.75,0.25))
+
+## Compute difference
+
+df_tot %>%
+	subset(run %in% c("Shirreff", "r=0.042")) %>%
+	group_by(run) %>%
+	## summarise(max(Mean.VL)) ## Not sure why this only returns one value
+	summarise_at("Mean.VL", max) %>%
+	select(Mean.VL) %>%
+	unlist -> TODO.values
+
+TODO.values[2]/TODO.values[1]
+
 ###
 dimnames(vir_matS2) <- list(Time=tvec,
                run=c("10^{-3}", "10^{-4}", "10^{-5}"))
@@ -223,6 +236,13 @@ w <- with(mL,which(model=="random" & variable=="eq_dur"))
 rval <- mean(mL$value[w])
 mLw <- droplevels(mL[-w,])
 mLw$variable <- fixfac2(mLw$variable)
+
+## TODO: get mean minimum expected time for each model:
+
+mL %>%
+	group_by(model) %>%
+	filter(variable == "peak_dur") %>%
+	summarise_at("value", mean)
 
 gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 	geom_violinh(width=1)+
