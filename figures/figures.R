@@ -31,8 +31,8 @@ load("../simdata/combineResults.rda")
 
 ## setup2
 orig_sum_labs <- c("peak_time","peak_dur","eq_dur","rel_dur")
-new_sum_labs <- c("time at which progression time is minimal (years)","minimum mean progression time (years)",
-									"equilibrium mean progression time (years)","relative ratio: minimum/equilibrium progression time")
+new_sum_labs <- c("peak time (years)","minimum expected progression time (years)",
+									"equilibrium expected progression time (years)","relative minimum ratio")
 fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
     if (atop) new_sum_labs <-
                   gsub("(.*) (.*)","atop(\\1,\\2)",new_sum_labs)
@@ -250,7 +250,7 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 	facet_wrap(~variable,scale="free_x")+
 	guides(fill=guide_legend(reverse=TRUE))+
 	labs(y="")+
-	geom_point(data=data.frame(model="random",variable="equilibrium mean progression time (years)",
+	geom_point(data=data.frame(model="random",variable="equilibrium expected progression time (years)",
                                value=rval),pch=22,size=3,show.legend=FALSE) +
 	zero_x_margin
 
