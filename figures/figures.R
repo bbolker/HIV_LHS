@@ -364,6 +364,11 @@ tweak_colours_gg <- function(gg) {
 
 sL2 <- sL.mod[,c("model", "run", "eq_dur", "peak_time", "peak_dur")]
 
+set.seed(101)
+sL2 <- sL2 %>%
+	group_by(model) %>%
+	sample_n(100)
+
 new_sum_labs2 <- gsub("\\s\\(years\\)?", "" ,new_sum_labs[1:3])
 
 names(sL2)[na.omit(match(orig_sum_labs,names(sL2)))] <- gsub(" ","_",new_sum_labs2)
@@ -372,7 +377,7 @@ ggp1 <- ggpairs(sL2,
         mapping = ggplot2::aes(color = model,pch=model),
         columns=3:5,
         legends=TRUE,
-        lower = list(continuous = wrap("points",alpha=0.6,size=1)), ## alpha = 0.3,size=0.5)),
+        lower = list(continuous = wrap("points",alpha=0.6,size=2)), ## alpha = 0.3,size=0.5)),
         diag = list(continuous = "blankDiag"),
         upper = list(continuous = "blank"))
 ## http://stackoverflow.com/questions/14711550/is-there-a-way-to-change-the-color-palette-for-ggallyggpairs-using-ggplot
