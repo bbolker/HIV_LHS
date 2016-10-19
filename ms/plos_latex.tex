@@ -217,50 +217,43 @@ Benjamin M. Bolker\textsuperscript{1,2,3,*}
 % current is 298!
 \section*{Abstract}
 The evolutionary dynamics of parasite virulence over the
-  course of an emerging epidemic have important implications both for
-  our basic understanding of epidemiological dynamics and,
-  potentially, for the outcomes of public health interventions.
-  Changes in the fitness landscape
-  will generally select for higher virulence during the early
-  phase of an epidemic, but quantitative outcomes
-  may depend sensitively on biological details and the structure of
-  mathematical models used to capture them.  Fraser and
-  co-workers have proposed a series of models for eco-evolutionary
-  dynamics of HIV that are relatively detailed in their portrayal of
-  the tradeoffs between transmission and virulence (mediated by
-  set-point viral load, SPVL) and their heritability between
-  hosts. However, these models use implicit
-  representations of the transmission process that drastically simplify the
-  partnership dynamics that previous research has found to be critical
-  in driving epidemics of sexually transmitted diseases.  We
-  explore models that combine HIV virulence tradeoffs with a range of
-  epidemiological structures, modeling partnership formation and
-  dissolution and allowing for individuals to transmit disease outside
-  of partnerships. We assess summary statistics such as the minimum
-  time of progression to AIDS and the time at which this 
-  extreme value (peak virulence) occurs across all
-  models for a range of 
-  partnership dynamic parameters 
-  applicable to the HIV epidemic in sub-Saharan Africa. In
-  order to account for the different interpretations of parameters
-  across model structures, we scale all parameter sets to constrain
-  the simulated epidemic growth rate to be identical, matching a
-  realistic baseline value. 
-  Although virulence trajectories are broadly similar
-  across model structures --- an initial increase in virulence/decrease
-  in progression time, followed by a minimum and an increase to an equilibrium 
-  progression time slightly higher than the minimum --- the timing and magnitude of the minimum vary
-  considerably.
-  Models of intermediate
-  complexity predicted much lower peak virulence (15 years to
-  progress to AIDS) compared to both more realistic models
-  and simple random-mixing models with no partnership structure
-  at all (both approx. 7.25 years to progress to AIDS).
-  In this range of models, the simplest random-mixing structure is
-  actually the best approximation to the most realistic model; this
-  surprising outcome occurs because the dominance of extra-pair
-  contact in the realistic model tends to mask the effects of
-  partnership structure.
+course of an emerging epidemic have important implications for
+our understanding of epidemiological dynamics.
+While changes in the fitness landscape
+generally select for higher virulence early in an
+epidemic, quantitative outcomes
+may depend sensitively on biological details and the structure of
+mathematical models used to portray them.  Fraser \emph{et al.} 
+have proposed a model for the eco-evolutionary
+dynamics of HIV that captures
+the tradeoffs between transmission and virulence (mediated by
+set-point viral load, SPVL) and their heritability between
+hosts. However, these models use implicit
+representations of the transmission process that drastically simplify the
+partnership dynamics that previous research has found to be critical
+in driving epidemics of sexually transmitted diseases.  
+Our models combine HIV virulence tradeoffs with a range of
+epidemiological structures, modeling partnership formation and
+dissolution and allowing for individuals to transmit disease outside
+of partnerships. We assess summary statistics such as the peak virulence
+(corresponding to the minimum expected time of progression to AIDS) across all
+models for a range of 
+partnership dynamic parameters 
+applicable to the HIV epidemic in sub-Saharan Africa.
+Although virulence trajectories are broadly similar
+across model structures, the timing and magnitude of the 
+minimum expected time to progression vary
+considerably.
+Models of intermediate
+complexity predicted slower progression (a minimum of 15 years to
+progress to AIDS) compared to both more realistic models
+and simple random-mixing models with no partnership structure
+at all (both with a minimum of $\approx$ 7.25 years to progress to AIDS).
+In this range of models, the simplest random-mixing structure best
+approximates the most realistic model; this
+surprising outcome occurs because the dominance of extra-pair
+contact in the realistic model tends to mask the effects of
+partnership structure.
 
 % Please keep the Author Summary between 150 and 200 words
 % Use first person. PLOS ONE authors please skip this step. 
@@ -443,7 +436,7 @@ The next two models, which are intended to bridge the gap between models with fu
 
 The next two models represent extreme simplifications of sexual partnership dynamics.  One (``implicit'') is an implicit serial monogamy model based on the epidemiological model used by Shirreff \etal\ \cite{shirreff_transmission_2011}. It is actually a random mixing model that consist of only two states, $S$ and $I$, and does not consider explicit partnership dynamics. However, to reflect the effect of partnership structure, it uses an adjusted transmission rate that is derived from an approximation of the basic reproduction number of a serial monogamy model with instantaneous pair formation \cite{hollingsworth_hiv1_2008}. The second model of this pair (``random'') is a simple random-mixing model.
 
-Lastly, we add a model of heterogeneity in sexual activity to the pairform+epc model (``hetero''). Individuals are divided into different risk groups based on the sexual activity level; we scale all aspects of sexual activity, assuming that sexual activity level in both within- and extra-couple contacts is directly proportional to number of non-cohabiting (extra-couple and uncoupled) partners per year \cite{omori2015dynamics} (see Appendix for model details). We assume random activity-weighted mixing between risk groups \todo{cite old Anderson-May HIV paper?}. While this model lacks some 
+Lastly, we add a model of heterogeneity in sexual activity to the pairform+epc model (``hetero''). Individuals are divided into different risk groups based on the sexual activity level; we scale all aspects of sexual activity, assuming that sexual activity level in both within- and extra-couple contacts is directly proportional to number of non-cohabiting (extra-couple and uncoupled) partners per year \cite{omori2015dynamics} (see Appendix for model details). We assume random activity-weighted mixing between risk groups \cite{may_transmission_1988}. While this model lacks some 
 important elements, such as age-structured mixing patterns, needed for realistic models of HIV transmission in sub-Saharan Africa, we see it as a first step toward assessing the effects of epidemiological complexity. As even these models are pushing the limits of compartmental-based models, adding further complexity will probably require a shift to an agent-based model framework, as well as considerable effort in model calibration \cite{herbeck_hiv_2014,delva_connecting_2016}.
 
 The base model (i.e. pairform+epc) for the first four models and the heterogeneous model is an extension of Champredon \etal's model \cite{champredon_hiv_2013}. Individuals in single compartment acquire a partner at a rate $\rho$, and partnerships dissolve at a rate $c$. Infected individuals in a discordant partnership infect their susceptible partner at a rate $\beta$ (within-couple transmission rate) and susceptible individuals outside the partnership at a rate $c_e$ (extra-couple transmission rate). Likewise, a single infected individual can infect any susceptible individuals at a rate $c_u$ through uncoupled mixing. Extra-couple and uncoupled transmission are modeled in the same way as Champredon \etal's model. All the details have been adapted to a multi-strain scenario. The second through fourth models (pairform, instswitch+epc, instswitch) are derived from the base model by simplifying epidemiological processes (partnership formation and uncoupled/extra-couple contact). Model details are explained in the appendix.
