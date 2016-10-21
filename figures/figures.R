@@ -416,14 +416,16 @@ inner <- getPlot(ggp2,2,1)
 inner <- inner+geom_abline(intercept=0,slope=1,lty=2)
 ggp2 <- putPlot(ggp2,inner,2,1)
 ## tweak scale
-inner <- getPlot(ggp2,3,1)
-inner <- inner+scale_x_continuous(breaks=seq(2.5,4.5,by=0.5))
-ggp2 <- putPlot(ggp2,inner,3,1)
+for(i in 1:2){
+	inner <- getPlot(ggp2,2,i)
+	inner <- inner+scale_y_continuous(breaks=seq(5,15,by=5))
+	ggp2 <- putPlot(ggp2,inner,2,i)	
+}
 
 ## ``{r fig4,fig.width=7,fig.height=7, echo = FALSE, cache = TRUE,dpi = 600}
 
 pdf(file="fig4.pdf",width=7,height=7)
-print(ggp2,spacingProportion=0)
+print(ggp2,spacingProportion=0, left = 0.14)
 dev.off()
 
 png(file="fig4.png",width=7*600,height=7*600)
