@@ -1,9 +1,20 @@
 ## setup
-library("knitr")
-library("ggplot2"); theme_set(theme_bw(base_size = 12,
+library(knitr)
+library(ggplot2); theme_set(theme_bw(base_size = 12,
                                        base_family = "Times"))
-library("dplyr")
-library("tidyr")
+library(directlabels)
+library(MASS)  ## must be before dplyr (masks 'select')
+library(tidyr)
+library(gridExtra)
+library(plyr)  ## for ldply() -- MUST be before dplyr!
+library(dplyr) ## for full_join()
+## library(magrittr) ## for ???
+library(reshape2)  ## for melt()
+library(GGally) ## need BMB version
+## devtools::install_github("bbolker/GGally")
+## devtools::install_github("lionel-/ggstance")
+library(ggstance)
+
 opts_chunk$set(echo=FALSE,error=FALSE)
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
@@ -11,26 +22,17 @@ if (.Platform$OS.type=="windows") {
 zero_margin <- theme(panel.margin=grid::unit(0,"lines"))
 zero_x_margin <-
     theme(panel.margin.x=grid::unit(0, "lines"))
-library("MASS")
 ## use Dark2 rather than Set1 because colour #6 of Set1 is yellow (ugh/too light)
 scale_colour_discrete <- function(...,palette="Dark2") scale_colour_brewer(...,palette=palette)
 scale_fill_discrete <- function(...,palette="Dark2") scale_fill_brewer(...,palette=palette)
-library("gridExtra")
-library("plyr")  ## for ldply()
-library("dplyr") ## for full_join()
-library("reshape2")  ## for melt()
-library("GGally") ## need BMB version
-## devtools::install_github("bbolker/GGally")
-## devtools::install_github("lionel-/ggstance")
-library("ggstance")
-
-## load data
-load("../simdata/combine_ev_LHS4.rda")
-load("../simdata/combineResults.rda")
 
 source("../R/hivFuns.R")
 source("../R/Param.R")
 
+## load data
+load("../simdata/combineResults.rda")
+
+## FIXME: maybe should go in hivFuns.R ?
 returnDur <- function(lSpvl, parameters){
 	with(as.list(c(parameters)),{
 		v = 10^lSpvl
@@ -46,8 +48,13 @@ returnBeta <- function(lSpvl, parameters){
 }
 
 ## setup2
-orig_sum_labs <- c("peak_time","peak_vir","eq_vir","rel_peak")
-new_sum_labs <- c("peak time","peak SPVL","equilibrium SPVL","relative peak")
+orig_sum_labs <- c("peak_time","peak_dur","eq_dur","rel_dur")
+new_sum_labs <- c("peak time (years)",
+                  "minimum expected progression time (years)",
+                  "equilibrium expected progression time (years)",
+                  "minimum:equilibrium progression ratio")
+m_order <- c("random", "heterogeneous","pairform+epc", "pairform",
+             "instswitch+epc","instswitch" , "implicit")
 fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
     if (atop) new_sum_labs <-
                   gsub("(.*) (.*)","atop(\\1,\\2)",new_sum_labs)
@@ -71,10 +78,23 @@ shirreff_df_m <- subset(res_sum_df,run==1,select=c(run,Time, Mean.VL))
 shirreff_df_m$run <- "Shirreff"
 df_tot <- rbind(shirreff_df_m,d_littleR_m)
 tlab <- "time (years)"
-g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run))+
-    geom_line()+labs(x=tlab,y=expression(population~mean~set-point~viral~load~(log[10])))+
+g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run,linetype=run))+
+    geom_line()+labs(x=tlab,
+            y=expression(population~mean~set-point~viral~load~(log[10])))+
     theme(legend.position=c(0.75,0.25))
-###
+
+## Compute difference between 
+
+df_tot %>%
+    subset(run %in% c("Shirreff", "r=0.042")) %>%
+    group_by(run) %>%
+    summarise(Mean.VL=max(Mean.VL)) %>%
+    select(Mean.VL) %>%
+    unlist -> TODO.values
+
+## ratio of peak SPVL, Shirreff vs. single-stage model with r=0.042
+(shirref_vs_single_ratio <- TODO.values[2]/TODO.values[1])
+
 dimnames(vir_matS2) <- list(Time=tvec,
                run=c("10^{-3}", "10^{-4}", "10^{-5}"))
 g2 <- g1 %+% melt(vir_matS2,id.var="Time",value.name="Mean.VL") +
@@ -99,14 +119,18 @@ afun <- function(label,size=8) {
              ## vjust=0.98,hjust=0.02)
 }
 g1.y <- g1 + scale_y_continuous(limits = limits, breaks = breaks)+
-    scale_colour_discrete(name="run")+afun("a")
+    scale_colour_discrete(name="run")+afun("a")+
+    scale_linetype_discrete(name="run")
 
 g2.labs <- list(bquote(10^{-3}), bquote(10^{-4}), bquote(10^{-5}))
 
 g2.y <- g2 + scale_y_continuous(limits = limits, breaks = breaks)+
-    scale_colour_discrete(name="I(0)", labels = g2.labs)+afun("b")
+    scale_colour_discrete(name="I(0)", labels = g2.labs)+afun("b")+
+    scale_linetype_discrete(name="I(0)",labels=g2.labs)
+
 g3.y <- g3 + scale_y_continuous(limits = limits, breaks = breaks)+
-        scale_colour_discrete(name=bquote(alpha(0)))+afun("c")
+    scale_colour_discrete(name=bquote(alpha(0)))+afun("c")+
+    scale_linetype_discrete(name=bquote(alpha(0)))
 
 ## r fig1,fig.height=3.5,fig.width=10, echo = FALSE, dpi = 600}
 pdf(file="fig1.pdf",height=3.5,width=10)
@@ -123,64 +147,65 @@ fig_objects <- c("g1.y","g2.y","g3.y")
 
 ss <- subset(sum_list[["vir_mat"]],tvec<750)
 
-ss$model <- factor(ss$model, c("random","pairform+epc", "pairform","instswitch+epc","instswitch","implicit","heterogeneous"))
-
+ss$model <- factor(ss$model,levels=m_order)
 
 ss <- transform(ss,
                 cmodel=droplevels(factor(gsub("+epc","",model,fixed=TRUE),
                                          levels=levels(model))))
 
-ss2 <- transform(ss, mean = returnDur(mean,HIVpars.skeleton),
-                 lwr = returnDur(lwr,HIVpars.skeleton),
-                 upr = returnDur(upr,HIVpars.skeleton))
-                                 
-gg_virtraj <- ggplot(ss,
-                     aes(tvec,mean,ymin=lwr,ymax=upr))+
-	geom_line(aes(colour=model,linetype=model),lwd=1)+
-	geom_ribbon(aes(fill = model), alpha=0.3)+
-	labs(x="time (years)",
-             y=expression(population~mean~set-point~viral~load~(log[10]))) +
-	theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
-		axis.title.x = element_text(margin = margin(10,0,0,0)),
+gg_basetraj <- ggplot(ss,aes(tvec,mean,ymin=lwr,ymax=upr))+
+    geom_line(aes(colour=model,linetype=model),lwd=1)+
+    geom_ribbon(aes(fill = model), alpha=0.3)+
+    labs(x="time (years)")+
+    theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
+          axis.title.x = element_text(margin = margin(10,0,0,0)),
 		legend.position = "none") +
 	facet_wrap(~cmodel, nrow = 2) +
 	zero_margin
 
-
-library(directlabels)
-## like top.points, but with vjust=0.5
+## like top.points, but change hjust/vjust
 top.points2 <- gapply.fun(transform(d[which.max(d$y), ],
                                ## *smaller* numbers move labels right/up
                                     hjust = 0.1, vjust = -1))
 
+bottom.points2 <- gapply.fun(transform(d[which.min(d$y), ],
+                               ## *smaller* numbers move labels right/up
+                                    hjust = 0.1, vjust = 2))
+
+## http://stackoverflow.com/questions/10547487/r-removing-facet-wrap-labels-completely-in-ggplot2
+
 nostrips <- theme(strip.background = element_blank(),
                   strip.text.x = element_blank())
-## http://stackoverflow.com/questions/10547487/r-removing-facet-wrap-labels-completely-in-ggplot2
-direct.label(gg_virtraj %+% ss2 +
-             labs(y="progression to AIDS (years)")+nostrips,
-             method=list("top.points2","bumpup"))
+
+gg_virtraj <- direct.label(gg_basetraj + nostrips +
+    labs(y=expression(population~mean~set-point~viral~load~(log[10]))),
+    method=list("top.points2","bumpup"))
+
+ss_dur <- transform(ss, mean = returnDur(mean,HIVpars.skeleton),
+                    lwr = returnDur(lwr,HIVpars.skeleton),
+                    upr = returnDur(upr,HIVpars.skeleton))
+
+gg_durtraj <- direct.label(gg_basetraj %+% ss_dur + nostrips +
+             labs(y="expected progression to AIDS (years)"),
+             method=list("bottom.points2","bumpup"))
 ## r fig2, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400}
 
 ## scale_x_continuous(limits=c(0,2500))
-ggsave(gg_virtraj,file="fig2.pdf",width=6,height=4)
-ggsave(gg_virtraj,file="fig2.png",width=6,height=4,dpi=400)
+ggsave(gg_durtraj,file="fig2.pdf",width=6,height=4)
+ggsave(gg_durtraj,file="fig2.png",width=6,height=4,dpi=400)
 
-fig_objects <- c(fig_objects,"gg_virtraj")
+fig_objects <- c(fig_objects,"gg_durtraj")
 
 ### Figure 2.1 - Transmission rate
 
+ss_trans <- transform(ss, mean = returnBeta(mean,HIVpars.skeleton),
+                      lwr = returnBeta(lwr,HIVpars.skeleton),
+                      upr = returnBeta(upr,HIVpars.skeleton))
 
-gg_betatraj <- ggplot(ss2,
-                     aes(tvec,mean,ymin=lwr,ymax=upr))+
-	geom_line(aes(colour=model,linetype=model),lwd=1)+
-	geom_ribbon(aes(fill = model), alpha=0.3)+
-	labs(x="time (years)",y=expression(mean~transmission~rate~during~asymptomatic~stage~(year^-1))) +
-	theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
-		axis.title.x = element_text(margin = margin(10,0,0,0)),
-		legend.position = "none") +
-	facet_wrap(~model, nrow = 2) +
-	zero_margin
-	
+gg_betatraj <- direct.label(gg_basetraj %+% ss_trans + nostrips +
+           labs(y=expression(mean~transmission~rate~during~asymptomatic~stage~(year^-1))),
+             method=list("top.points2","bumpup"))
+
 ## scale_x_continuous(limits=c(0,2500))
 ## r fig2.1, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400} 
 
@@ -188,25 +213,6 @@ ggsave(gg_betatraj,file="fig_S2_1.pdf",width=6,height=4)
 ggsave(gg_betatraj,file="fig_S2_1.png",width=6,height=4,dpi=400)
 
 
-
-### Figure 2.2 - Duration
-
-
-ss3 <- transform(ss, mean = returnDur(mean,HIVpars.skeleton),
-								 lwr = returnDur(lwr,HIVpars.skeleton),
-								 upr = returnDur(upr,HIVpars.skeleton))
-
-gg_durtraj <- ggplot(ss3,
-                     aes(tvec,mean,ymin=lwr,ymax=upr))+
-	geom_line(aes(colour=model,linetype=model),lwd=1)+
-	geom_ribbon(aes(fill = model), alpha=0.3)+
-	labs(x="time (years)",y=expression(mean~duration~of~asymptomatic~stage~(years))) +
-	theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
-		axis.title.x = element_text(margin = margin(10,0,0,0)),
-		legend.position = "none") +
-	facet_wrap(~model, nrow = 2) +
-	zero_margin
-	
 ## scale_x_continuous(limits=c(0,2500))
 
 ## r fig2.2, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400} 
@@ -216,16 +222,25 @@ ggsave(gg_durtraj,file="fig_S2_2.png",width=6,height=4,dpi=400)
 
 ### Figure 3
 
-sL <- transform(sum_list[["sum_mat"]],rel_peak=peak_vir/eq_vir)
-sL$model <- factor(sL$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
-mL <- melt(sL,id.vars=c("model","run"))
-## horrible hack (but doesn't help); subsample
+sL <- transform(sum_list[["sum_mat"]], rel_peak=peak_vir/eq_vir)
+sL$model <- factor(sL$model, m_order)
+sL.mod <- transform(sL, peak_dur = returnDur(peak_vir,HIVpars.skeleton),
+                    eq_dur = returnDur(eq_vir,HIVpars.skeleton))
+sL.mod <- transform(sL.mod, rel_dur = peak_dur/eq_dur)
+sL.mod <- sL.mod %>% dplyr::select(-c(eq_vir,peak_vir,rel_peak))
+mL <- na.omit(melt(sL.mod,id.vars=c("model","run")))
+## horrible hack for width of random-mixing violin (but doesn't help); subsample
 ## w <- which(mL$model=="random")
 ## mLw <- mL[-sample(w,size=length(w)*9/10,replace=FALSE),]
-w <- with(mL,which(model=="random" & variable=="eq_vir"))
+w <- with(mL,which(model=="random" & variable=="eq_dur"))
 rval <- mean(mL$value[w])
 mLw <- droplevels(mL[-w,])
 mLw$variable <- fixfac2(mLw$variable)
+
+(minprogtime <- mL %>%
+	group_by(model) %>%
+	filter(variable == "peak_dur") %>%
+	summarise(value=mean(value)))
 
 gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 	geom_violinh(width=1)+
@@ -233,14 +248,26 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 	facet_wrap(~variable,scale="free_x")+
 	guides(fill=guide_legend(reverse=TRUE))+
 	labs(y="")+
-	geom_point(data=data.frame(model="random",variable="equilibrium SPVL",
-                               value=rval),pch=22,size=3,show.legend=FALSE) +
-	zero_x_margin
+	geom_point(data=data.frame(model="random",variable="equilibrium expected progression time (years)",
+                                   value=rval),
+                   pch=22,size=3,show.legend=FALSE) +
+    zero_x_margin
 
 ## r fig3, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
 
 ggsave(gg_univ,file="fig3.pdf",width=8,height=4.8)
 ggsave(gg_univ,file="fig3.png",width=8,height=4.8,dpi=600)
+
+mLw_res <- mLw  %>%
+  filter(model %in% c("implicit","pairform+epc","heterogeneous","random"))  %>%
+  filter(variable %in% "minimum mean progression time (years)")
+
+gg_univ_0 <- ggplot(mLw_res,aes(value,model,fill=model))+
+	geom_violinh(width=1)+
+	theme(legend.position = "none") +
+	guides(fill=guide_legend(reverse=TRUE))+
+    labs(x="minimum mean progression time (years)")
+saveRDS(gg_univ_0,file="HIV_dur.rds")
 
 fig_objects <- c(fig_objects,"gg_univ")
 
@@ -264,8 +291,9 @@ w.epi.d <- with(mL.epi,which(model=="random" & variable=="eq_dur"))
 rval.epi.t <- mean(mL.epi$value[w.epi.t])
 rval.epi.d <- mean(mL.epi$value[w.epi.d])
 mLw.epi <- droplevels(mL.epi[-c(w.epi.t,w.epi.d),])
-mLw.epi$variable <- factor(mLw.epi$variable, levels = c("eq_t", "peak_t", "eq_dur", "peak_dur"),
-													 labels = c("Equilbrium asymptomatic transmission rate",
+mLw.epi$variable <- factor(mLw.epi$variable,
+                           levels = c("eq_t", "peak_t", "eq_dur", "peak_dur"),
+                           labels = c("Equilbrium asymptomatic transmission rate",
 													 					 "Maximum transmission rate",
 													 					 "Equilibrium duration of asymptomatic stage",
 													 					 "Minimum duration of asymptomatic stage"))
@@ -276,7 +304,8 @@ gg_univ.epi <- ggplot(mLw.epi,aes(value,model,fill=model))+
 	facet_wrap(~variable,scale="free_x")+
 	guides(fill=guide_legend(reverse=TRUE))+
 	labs(y="")+
-	geom_point(data=data.frame(model="random",variable=c("Equilbrium asymptomatic transmission rate",
+	geom_point(data=data.frame(model="random",
+                   variable=c("Equilbrium asymptomatic transmission rate",
 																											 "Equilibrium duration of asymptomatic stage"),
                                value=c(rval.epi.t, rval.epi.d)),pch=22,size=3,show.legend=FALSE) +
 	zero_x_margin
@@ -357,7 +386,8 @@ tweak_colours_gg <- function(gg) {
     for (i in 1:n) {
         for (j in 1:n) {
             inner <- getPlot(gg,i,j)
-            inner <- inner+scale_colour_brewer(palette = 'Dark2')
+            inner <- inner+scale_colour_brewer(palette = 'Dark2')+
+                scale_shape_manual(values=1:7)
             gg <- putPlot(gg,inner,i,j)
         }
     }
@@ -366,14 +396,22 @@ tweak_colours_gg <- function(gg) {
 
 ### Figure 4
 
-sL2 <- sL
-names(sL2)[na.omit(match(orig_sum_labs,names(sL)))] <- gsub(" ","_",new_sum_labs)
+sL2 <- sL.mod[,c("model", "run", "eq_dur", "peak_time", "peak_dur")]
+
+set.seed(101)
+sL2 <- sL2 %>%
+	group_by(model) %>%
+	sample_n(100)
+
+new_sum_labs2 <- gsub("\\s\\(years\\)?", "" ,new_sum_labs[1:3])
+
+names(sL2)[na.omit(match(orig_sum_labs,names(sL2)))] <- gsub(" ","_",new_sum_labs2)
     ## paste0("`",new_sum_labs,"`")
 ggp1 <- ggpairs(sL2,
-        mapping = ggplot2::aes(color = model),
-        columns=3:6,
+        mapping = ggplot2::aes(color = model,pch=model),
+        columns=3:5,
         legends=TRUE,
-        lower = list(continuous = wrap("points",size=0.1)), ## alpha = 0.3,size=0.5)),
+        lower = list(continuous = wrap("points",alpha=0.6,size=2)), ## alpha = 0.3,size=0.5)),
         diag = list(continuous = "blankDiag"),
         upper = list(continuous = "blank"))
 ## http://stackoverflow.com/questions/14711550/is-there-a-way-to-change-the-color-palette-for-ggallyggpairs-using-ggplot
@@ -404,37 +442,42 @@ fig_objects <- c(fig_objects,"ggp2")
 
 mL3 <- subset(mL2,
        !((model=="implicit" &
-          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
+          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio", "kappa", "mu")) |
          (model=="random" &
-          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
+          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio", "kappa", "mu")) |
          (model=="instswitch" &
-          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio")) |
+          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio", "kappa", "mu")) |
          (model=="instswitch+epc" &
-          LHSvar %in% c("rho_base","c_u_ratio")) |
+          LHSvar %in% c("rho_base","c_u_ratio", "kappa", "mu")) |
          (model=="pairform" &
-          LHSvar %in% c("c_u_ratio","c_e_ratio"))))
+          LHSvar %in% c("c_u_ratio","c_e_ratio", "kappa", "mu")) |
+       		(model == "pairform+epc" &
+       		 	LHSvar %in% c("kappa", "mu"))))
 ## reorder factors
 mL3$LHSvar <- factor(mL3$LHSvar,
-                     levels=c("Beta1","Beta3",
-                              "Duration1","Duration3",
+                     levels=c("Duration1",
                               "c_mean_base","c_e_ratio","rho_base",
-                              "c_u_ratio"),
-                     labels = c("beta[P]", "beta[D]", "D[P]", "D[D]",
-                                "c", "c[e]/c[w]", "rho", "c[u]/c[w]"))
+                              "c_u_ratio",
+                              "kappa", "mu"),
+                     labels = c("D[P]",
+                                "c", "c[e]/c[w]", "rho", "c[u]/c[w]",
+                                "kappa", "mu"))
+
+## drop rows with variables we don't want anyway
+mL3 <- na.omit(mL3) 
 
 ## FIXME: could also use labels argument to rename levels, labeller=label_parsed
 ## in facet_grid to get pretty math
 
-mL3$model <- factor(mL3$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
-
+mL3$model <- factor(mL3$model, levels=m_order)
 mL3$sumvar <- fixfac2(mL3$sumvar)
 
 L <- function(labels,multi_line=TRUE) {
     r <- if (all(grepl(" ",labels[[1]]))) {
              list(as.character(gsub(" ","\n",labels[[1]])))
-    } else {
-        label_parsed(labels,multi_line=multi_line)
-    }
+         } else {
+             label_parsed(labels,multi_line=multi_line)
+         }
     return(r)
 }
 
@@ -466,7 +509,7 @@ brkfun <- function(x) {
 
 ggsens <- ggplot(mL3,aes(LHSval,sumval,colour=model))+
     geom_point(pch=".",alpha=0.5)+
-    facet_grid(sumvar~LHSvar,scales="free",
+    facet_grid(sumvar~LHSvar,scales="free",2
                labeller = L)+
     geom_smooth(se=FALSE)+labs(x="",y="")+
     ## leave a little extra room?
@@ -477,6 +520,5 @@ ggsave(ggsens, file="fig5.pdf",width=10,height=5)
 ggsave(ggsens, file="fig5.png",width=10,height=5,dpi=600)
 
 fig_objects <- c(fig_objects,"ggsens")
-
 
 save(list=c("fig_objects",fig_objects),file="HIVLHS_figures.RData")
