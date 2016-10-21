@@ -169,3 +169,18 @@ find_scale <- function(target,
 geom_mean <- function(a){
   exp(mean(log(a)))
 }
+
+## convert from SPVL to duration
+returnDur <- function(lSpvl, parameters){
+	with(as.list(c(parameters)),{
+		v = 10^lSpvl
+		return(hill(v,Dmax,D50,h))
+	})
+}
+
+returnBeta <- function(lSpvl, parameters){
+	with(as.list(c(parameters)),{
+		v = 10^lSpvl
+		return(hill(K,Bmax,v,a))
+	})
+}

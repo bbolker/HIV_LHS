@@ -1,16 +1,16 @@
 simdatapath <- "../simdata"
 
-library("ggplot2"); theme_set(theme_classic())
+library(ggplot2); theme_set(theme_classic())
 scale_colour_discrete <- function(...,palette="Set1") scale_colour_brewer(...,palette=palette)
 scale_fill_discrete <- function(...,palette="Set1") scale_fill_brewer(...,palette=palette)
-library("gridExtra")
-library("plyr")  ## for ldply()
-library("dplyr") ## for full_join()
-library("reshape2")  ## for melt()
-library("GGally")
-library("knitr")
+library(gridExtra)
+library(plyr)  ## for ldply()
+library(dplyr) ## for full_join()
+library(reshape2)  ## for melt()
+library(GGally)
+library(knitr)
 ## devtools::install_github("lionel-/ggstance")
-library("ggstance")
+library(ggstance)
 
 source("hivFuns.R")
 source("Param.R")
@@ -101,19 +101,30 @@ sum_list[["I_mat"]] <-   fixfac(sum_list[["I_mat"]])
 sL <- transform(sum_list[["sum_mat"]],rel_peak=peak_vir/eq_vir)
 mL <- melt(sL,id.vars=c("model","run"))
 
-m1 <- rename(melt(sum_list[["sum_mat"]],id.vars=c("model","run")),
+sumX <- transform(sum_list[["sum_mat"]],
+                  eq_dur=returnDur(eq_vir,HIVpars.skeleton),
+                  peak_dur=returnDur(peak_vir,HIVpars.skeleton),
+                  eq_beta=returnBeta(eq_vir,HIVpars.skeleton),
+                  peak_beta=returnBeta(peak_vir,HIVpars.skeleton))
+
+m1 <- rename(melt(sumX,id.vars=c("model","run")),
              sumvar=variable,sumval=value)
+
 m2 <- rename(melt(ltab,id.vars="run"),
              LHSvar=variable,LHSval=value)
 mL2 <- full_join(m1,m2,by="run")
 
 ## what are we doing here? why exclude those rows?
 ## need to add columns for het runs, for sensitivity plot ...
-ltab2 <- ltab[,c(2,4,5,6,7)]
-names(ltab2) <- c("Beta1_adj", "Beta3_adj", "rho_ad", "c_mean_adj")
+## was scaling
+ltab2 <- ltab[,c(2,4,6,7)]
+names(ltab2) <- c("Beta1_adj", "Beta3_adj", "rho_adj", "c_mean_adj")
+## val_vec contains _scaling factors_
+## we don't actually use the adjusted values any more, but nice
+## to have them in there ...
 s3 <- ldply(comp_list[["val_vec"]],
                 function(x) {
-                   x <- data.frame(run=1:length(x),ltab2 * x)
+                   x <- data.frame(run=1:length(x),ltab,ltab2 * x)
                  },
                 .id="model")
 
@@ -123,7 +134,9 @@ m3 <- rename(melt(s3, id.vars = c("model", "run")),
 mL3 <- full_join(m1,m3,by=c("model","run"))
 s4 <- ldply(comp_list[["val_vec"]],
                 function(x) {
-                   x <- data.frame(run=1:length(x), c_mean_base = ltab[,7], c_mean_adj = ltab[,7] * x)
+                   x <- data.frame(run=1:length(x),
+                                   c_mean_base = ltab[,"c_mean_base"],
+                                   c_mean_adj = ltab[,"c_mean_base"] * x)
                  },
                 .id="model")
 sL2 <- full_join(s4, sL,by=c("model","run"))

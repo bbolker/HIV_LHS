@@ -33,19 +33,6 @@ source("../R/Param.R")
 load("../simdata/combineResults.rda")
 
 ## FIXME: maybe should go in hivFuns.R ?
-returnDur <- function(lSpvl, parameters){
-	with(as.list(c(parameters)),{
-		v = 10^lSpvl
-		return(hill(v,Dmax,D50,h))
-	})
-}
-
-returnBeta <- function(lSpvl, parameters){
-	with(as.list(c(parameters)),{
-		v = 10^lSpvl
-		return(hill(K,Bmax,v,a))
-	})
-}
 
 ## setup2
 orig_sum_labs <- c("peak_time","peak_dur","eq_dur","rel_dur")
@@ -153,6 +140,7 @@ ss <- transform(ss,
                 cmodel=droplevels(factor(gsub("+epc","",model,fixed=TRUE),
                                          levels=levels(model))))
 
+## base plot for Figure 2 and related (duration, SPVL, beta trajectories)
 gg_basetraj <- ggplot(ss,aes(tvec,mean,ymin=lwr,ymax=upr))+
     geom_line(aes(colour=model,linetype=model),lwd=1)+
     geom_ribbon(aes(fill = model), alpha=0.3)+
@@ -170,7 +158,7 @@ top.points2 <- gapply.fun(transform(d[which.max(d$y), ],
 
 bottom.points2 <- gapply.fun(transform(d[which.min(d$y), ],
                                ## *smaller* numbers move labels right/up
-                                    hjust = 0.1, vjust = 2))
+                                    hjust = 0.1, vjust = 1.5))
 
 ## http://stackoverflow.com/questions/10547487/r-removing-facet-wrap-labels-completely-in-ggplot2
 
@@ -198,11 +186,11 @@ fig_objects <- c(fig_objects,"gg_durtraj")
 
 ### Figure 2.1 - Transmission rate
 
-ss_trans <- transform(ss, mean = returnBeta(mean,HIVpars.skeleton),
+ss_beta <- transform(ss, mean = returnBeta(mean,HIVpars.skeleton),
                       lwr = returnBeta(lwr,HIVpars.skeleton),
                       upr = returnBeta(upr,HIVpars.skeleton))
 
-gg_betatraj <- direct.label(gg_basetraj %+% ss_trans + nostrips +
+gg_betatraj <- direct.label(gg_basetraj %+% ss_beta + nostrips +
            labs(y=expression(mean~transmission~rate~during~asymptomatic~stage~(year^-1))),
              method=list("top.points2","bumpup"))
 
@@ -222,12 +210,12 @@ ggsave(gg_durtraj,file="fig_S2_2.png",width=6,height=4,dpi=400)
 
 ### Figure 3
 
-sL <- transform(sum_list[["sum_mat"]], rel_peak=peak_vir/eq_vir)
+sL <- transform(sum_list[["sum_mat"]], rel_vir=peak_vir/eq_vir)
 sL$model <- factor(sL$model, m_order)
 sL.mod <- transform(sL, peak_dur = returnDur(peak_vir,HIVpars.skeleton),
                     eq_dur = returnDur(eq_vir,HIVpars.skeleton))
 sL.mod <- transform(sL.mod, rel_dur = peak_dur/eq_dur)
-sL.mod <- sL.mod %>% dplyr::select(-c(eq_vir,peak_vir,rel_peak))
+sL.mod <- sL.mod %>% dplyr::select(-c(eq_vir,peak_vir,rel_vir))
 mL <- na.omit(melt(sL.mod,id.vars=c("model","run")))
 ## horrible hack for width of random-mixing violin (but doesn't help); subsample
 ## w <- which(mL$model=="random")
@@ -248,7 +236,8 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 	facet_wrap(~variable,scale="free_x")+
 	guides(fill=guide_legend(reverse=TRUE))+
 	labs(y="")+
-	geom_point(data=data.frame(model="random",variable="equilibrium expected progression time (years)",
+	geom_point(data=data.frame(model="random",
+                variable="equilibrium expected progression time (years)",
                                    value=rval),
                    pch=22,size=3,show.legend=FALSE) +
     zero_x_margin
@@ -260,8 +249,9 @@ ggsave(gg_univ,file="fig3.png",width=8,height=4.8,dpi=600)
 
 mLw_res <- mLw  %>%
   filter(model %in% c("implicit","pairform+epc","heterogeneous","random"))  %>%
-  filter(variable %in% "minimum mean progression time (years)")
+  filter(variable %in% "minimum expected progression time (years)")
 
+## one-panel plot for talks
 gg_univ_0 <- ggplot(mLw_res,aes(value,model,fill=model))+
 	geom_violinh(width=1)+
 	theme(legend.position = "none") +
@@ -273,12 +263,11 @@ fig_objects <- c(fig_objects,"gg_univ")
 
 ### Figure 3.1
 
-sL$model <- factor(sL$model, c("random","pairform+epc", "pairform", "instswitch+epc","instswitch" , "implicit"))
-
+sL$model <- factor(sL$model, m_order)
 sL.epi <- transform(sL, eq_t = returnBeta(eq_vir,HIVpars.skeleton),
-										peak_t = returnBeta(peak_vir,HIVpars.skeleton),
-										eq_dur = returnDur(eq_vir,HIVpars.skeleton),
-										peak_dur = returnDur(peak_vir,HIVpars.skeleton))
+                    peak_t = returnBeta(peak_vir,HIVpars.skeleton),
+                    eq_dur = returnDur(eq_vir,HIVpars.skeleton),
+                    peak_dur = returnDur(peak_vir,HIVpars.skeleton))
 
 sL.epi <- sL.epi[,-c(3:6)]
 
@@ -453,12 +442,17 @@ mL3 <- subset(mL2,
           LHSvar %in% c("c_u_ratio","c_e_ratio", "kappa", "mu")) |
        		(model == "pairform+epc" &
        		 	LHSvar %in% c("kappa", "mu"))))
+
+mL3 <- droplevels(mL3)
+fvals <- c("Duration1","c_mean_base","c_e_ratio","rho_base",
+                              "c_u_ratio",
+                              "kappa", "mu")
+
+mL3 <- subset(mL3,LHSvar %in% fvals)
+
 ## reorder factors
 mL3$LHSvar <- factor(mL3$LHSvar,
-                     levels=c("Duration1",
-                              "c_mean_base","c_e_ratio","rho_base",
-                              "c_u_ratio",
-                              "kappa", "mu"),
+                     levels=fvals,
                      labels = c("D[P]",
                                 "c", "c[e]/c[w]", "rho", "c[u]/c[w]",
                                 "kappa", "mu"))
@@ -470,6 +464,8 @@ mL3 <- na.omit(mL3)
 ## in facet_grid to get pretty math
 
 mL3$model <- factor(mL3$model, levels=m_order)
+
+mL3 <- subset(mL3,sumvar %in% orig_sum_labs)
 mL3$sumvar <- fixfac2(mL3$sumvar)
 
 L <- function(labels,multi_line=TRUE) {
@@ -499,7 +495,11 @@ brkfun <- function(x) {
     }
     if (n==10) browser()
     r <- brks[c(1,length(brks))]
-    ## hacks
+    ## hacks.
+    ## would like to customize x-axis labels for each column,
+    ##  but that's not so easy
+    ## So instead is where we try to adjust the last few axis ticks ...
+    ##    
     if (all(r==c(0.01,1))) r <- c(0.02,0.5)
     if (all(r==c(0.2,5))) r <- c(0.5,5)
     return(r)
@@ -509,7 +509,7 @@ brkfun <- function(x) {
 
 ggsens <- ggplot(mL3,aes(LHSval,sumval,colour=model))+
     geom_point(pch=".",alpha=0.5)+
-    facet_grid(sumvar~LHSvar,scales="free",2
+    facet_grid(sumvar~LHSvar,scales="free",
                labeller = L)+
     geom_smooth(se=FALSE)+labs(x="",y="")+
     ## leave a little extra room?
