@@ -343,7 +343,8 @@ save(list=ls(pattern="^(maxt|mindur)"),file="../ms/maxminstats.RData")
 
 
 ## r fig4_func, echo = FALSE}
-trim_gg <- function(gg,hack_spaces=TRUE) {
+trim_gg <- function(gg,hack_spaces=TRUE,
+										hack_parenthesis = TRUE) {
     n <- gg$nrow
     gg$nrow <- gg$ncol <- n-1
     v <- 1:n^2
@@ -356,6 +357,11 @@ trim_gg <- function(gg,hack_spaces=TRUE) {
         gg$xAxisLabels <- gsub("_"," ",gg$xAxisLabels)
         gg$yAxisLabels <- gsub("_"," ",gg$yAxisLabels)
     }
+    if (hack_parenthesis) {
+    	gg$xAxisLabels <- gsub("years","\\(years\\)",gg$xAxisLabels)
+    	gg$yAxisLabels <- gsub("years","\\(years\\)",gg$yAxisLabels)
+    }
+    
     return(gg)
 }
 
@@ -397,7 +403,7 @@ sL2 <- sL2 %>%
 	group_by(model) %>%
 	sample_n(100)
 
-new_sum_labs2 <- gsub("\\s\\(years\\)?", "" ,new_sum_labs[1:3])
+new_sum_labs2 <- gsub("\\(years\\)", "years", new_sum_labs[1:3])
 
 names(sL2)[na.omit(match(orig_sum_labs,names(sL2)))] <- gsub(" ","_",new_sum_labs2)
     ## paste0("`",new_sum_labs,"`")
