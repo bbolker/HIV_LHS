@@ -212,6 +212,11 @@ ggsave(gg_durtraj,file="fig_S2_2.png",width=6,height=4,dpi=400)
 
 sL <- transform(sum_list[["sum_mat"]], rel_vir=peak_vir/eq_vir)
 sL$model <- factor(sL$model, m_order)
+
+## we get long tails because eq_vir has default value of 0.
+## In other words, all the runs that ended up with error will have eq_vir of 0.
+sL <- sL[-which(is.na(sL$peak_vir)),]
+
 sL.mod <- transform(sL, peak_dur = returnDur(peak_vir,HIVpars.skeleton),
                     eq_dur = returnDur(eq_vir,HIVpars.skeleton))
 sL.mod <- transform(sL.mod, rel_dur = peak_dur/eq_dur)
@@ -428,6 +433,8 @@ dev.off()
 fig_objects <- c(fig_objects,"ggp2")
 
 ### Figure 5
+remove_runs <- unique(subset(mL2, sumvar == "peak_time" & is.na(sumval))[,"run"])
+mL2 <- subset(mL2, !(model == "heterogeneous" & run %in% remove_runs))
 
 mL3 <- subset(mL2,
        !((model=="implicit" &
@@ -499,9 +506,12 @@ brkfun <- function(x) {
     ## would like to customize x-axis labels for each column,
     ##  but that's not so easy
     ## So instead is where we try to adjust the last few axis ticks ...
-    ##    
+    ## r needs to be rounded if we want to compare it.. probably long values causing problems...
+    r <- round(r, digit = 2)
     if (all(r==c(0.01,1))) r <- c(0.02,0.5)
     if (all(r==c(0.2,5))) r <- c(0.5,5)
+    if (all(r==c(0.01,100))) r <- c(0.05, 50)
+    if (all(r==c(0.1,1))) r <- c(0.5, 1)
     return(r)
 }
 
@@ -513,7 +523,8 @@ ggsens <- ggplot(mL3,aes(LHSval,sumval,colour=model))+
                labeller = L)+
     geom_smooth(se=FALSE)+labs(x="",y="")+
     ## leave a little extra room?
-    scale_x_log10(expand=c(0,0.08),breaks=brkfun)+
+    scale_x_log10(expand=c(0,0.08), breaks=brkfun)+
+		scale_y_continuous(expand=c(0,0)) +
     zero_margin
 
 ggsave(ggsens, file="fig5.pdf",width=10,height=5)
