@@ -214,15 +214,15 @@ Benjamin M. Bolker\textsuperscript{1,2,3,*}
 
 \end{flushleft}
 % Please keep the abstract below 300 words
-% current is 298!
+% current is 282
 \section*{Abstract}
-The evolutionary dynamics of parasite virulence over the
-course of an emerging epidemic have important implications for
-our understanding of epidemiological dynamics.
-While changes in the fitness landscape
+The evolutionary dynamics of parasite virulence change
+in important ways over the
+course of an emerging epidemic.
+Changes in the fitness landscape
 generally select for higher virulence early in an
-epidemic, quantitative outcomes
-may depend sensitively on biological details and the structure of
+epidemic; however, quantitative outcomes
+may depend sensitively on epidemiological details and the structure of
 mathematical models used to portray them.  Fraser \emph{et al.} 
 have proposed a model for the eco-evolutionary
 dynamics of HIV that captures
@@ -245,14 +245,15 @@ across model structures, the timing and magnitude of the
 minimum expected time to progression vary
 considerably.
 Models of intermediate
-complexity predicted slower progression (a minimum of 15 years to
+complexity as used by Fraser \emph{et al.} 
+predicted lower slower progression/lower virulence (a minimum of 15 years to
 progress to AIDS) compared to both more realistic models
 and simple random-mixing models with no partnership structure
 at all (both with a minimum of $\approx$ 7.25 years to progress to AIDS).
 In this range of models, the simplest random-mixing structure best
 approximates the most realistic model; this
 surprising outcome occurs because the dominance of extra-pair
-contact in the realistic model tends to mask the effects of
+contact in the realistic model tends to swamp the effects of
 partnership structure.
 
 % Please keep the Author Summary between 150 and 200 words
@@ -262,26 +263,25 @@ partnership structure.
 
 %% 162 words
 
-Pathogens such as HIV can evolve rapidly in response to changes
-in their environments; such changes include both increases in disease
-prevalence over the course of the epidemic and treatment
-interventions. While researchers have successfully used computational
-models to explore these evolutionary dynamics, these models often
-neglect details such as the formation and
-dissolution of sexual partnerships; other research has shown that
-these processes can strongly affect epidemic outcomes. We built and
-compared models that used different methods to
-model both partnership dynamics and sexual
-contact outside of partnerships. Models of intermediate
-complexity predicted much lower peak virulence (15 years to
-progress to AIDS) compared to both more realistic models
-and simple random-mixing models with no partnership structure
-at all (both approx. 7.25 years to progress to AIDS); 
-extra-pair contact tended to wash out the effects
-of epidemiological structure. The large differences
-in evolutionary dynamics among different epidemiological models
-suggests that researchers trying to predict the evolution of
-pathogens should proceed with caution.
+Pathogens such as HIV can evolve rapidly in response to changes in
+their environments; such changes include both increases in disease
+prevalence and disease virulence over the course of an epidemic, or
+decreases in both after treatment interventions. While researchers
+have successfully used computational models to explore these
+evolutionary dynamics, these models often neglect details such as the
+formation and dissolution of sexual partnerships; other research has
+shown that these processes can strongly affect epidemic outcomes. We
+built and compared models that used different methods to model both
+partnership dynamics and sexual contact outside of stable
+partnerships. Models of intermediate complexity predicted much lower
+virulence over the course of the epidemic (a minimum of 15 years to
+progress to AIDS) compared to both more realistic models and simple
+random-mixing models with no partnership structure at all (both
+approx. 7.25 years to progress to AIDS); sexual contact outside of
+stable partnerships tended to wash out the effects of epidemiological
+structure. The large differences in evolutionary dynamics among
+different epidemiological models suggests that researchers trying to
+predict the evolution of pathogens should proceed with caution.
 
 \linenumbers
 
@@ -292,15 +292,16 @@ The evolution of pathogen virulence has both
 theoretical and, potentially, practical
 importance. In general, evolutionary theory suggests that
 disease strains that can reproduce more --- where reproduction
-is defined the amount of \emph{between-host} transmission, or
+is defined here as the amount of \emph{between-host} transmission, or
 the number of new hosts infected --- will increase in prevalence.
 Pathogens can increase their net reproduction rate either
 by increasing their birth rate, the rate (per infected host) at which they
 infect new hosts, or by decreasing their death rate, the rate
 at which hosts recover or die from disease.
-The trade-off theory \cite{anderson_coevolution_1982,Ebert1999} --- postulates that
-the birth and death rate are both linked to the rate at which
-the pathogen reproduces within the host, and that the pathogen
+The \emph{trade-off theory} \cite{anderson_coevolution_1982,Ebert1999} --- postulates that
+the between-host birth and death rate are both linked to the rate at which
+the pathogen exploits host resources for within-host reproduction, 
+and that pathogen
 evolution will thus strike a balance between the
 pathogen's rate of transmission
 to new hosts and its rate of killing its host (or of provoking
@@ -376,8 +377,11 @@ susceptible compartment.
 \subsection*{Infection dynamics}
 
 Like Shirreff \etal\ \cite{shirreff_transmission_2011}, we focus on the evolution of mean $\log_{10}$ set-point viral load, SPVL (which we denote as $\alpha$), rather than the rate of progression to AIDS itself
-(we refer to SPVL as ``virulence'' hereafter).
-In contrast to Shirreff \etal, we use a single-stage disease model instead of accounting explicitly for progression through the three main stages of HIV infection (primary, asymptomatic, and disease), and we use a simple exponentially distributed infectious period instead of a more realistic Weibull-distributed infectious period. We account for varying transmission rates and durations of each disease stage by summing the durations of three stages (again based on Shirreff \etal's model) and taking the duration-weighted average of transmission rates of three stages. Thus the within-couple transmission rate, $\beta$, for our models is given by:
+(hereafter ``virulence'' will refer either to the SPVL, or to 
+the rate of progression to AIDS; these two quantities are
+deterministically linked in the model).
+In contrast to Shirreff \etal, we use a single-stage disease model instead of accounting explicitly for progression through the three main stages of HIV infection (primary, asymptomatic, and disease), and we use a simple exponentially distributed infectious period instead of a more realistic Weibull-distributed infectious period; we show below that our results are not overly
+sensitive to this simplification. We account for varying transmission rates and durations of each disease stage by summing the durations of three stages (again based on Shirreff \etal's model) and taking the duration-weighted average of transmission rates of three stages. Thus the within-couple transmission rate, $\beta$, for our models is given by:
 \begin{equation}
 \beta (\alpha) = \frac{D_P \beta_P + D_A (\alpha) \beta_A (\alpha) + D_D \beta_D}{D_P + D_A (\alpha) + D_D},
 \end{equation}
@@ -393,12 +397,28 @@ D_A(\alpha) &= \frac{\tsub{D}{max} D_{50} ^{D_k}}{V_\alpha ^{D_k} + D_{50}^{D_k}
 \label{eq:hillfuns}
 \end{equation}
 where $V_{\alpha} = 10^\alpha$. 
-The uncoupled and extra-couple transmission rates are scaled by multiplying the within-couple transmission rate $\beta$ by the contact ratios $c_u/c_w$ and $c_e/c_w$ (see Appendix). Simplifying the model of HIV pathogenesis from three stages to a single stage could affect our conclusions about the evolution of virulence (e.g. Kretzschmar and Dietz \cite{kretzschmar_effect_1998} show that pair formation dynamics and multiple stages of infectivity have interactive effects on $\rzero$). However, our simplified model produces results that are qualitatively similar to those of Shirreff \etal's \cite{shirreff_transmission_2011} model; when our model is calibrated to have a similar initial epidemic growth rate $r$, the peak \Lspvl\ occurs at the same time ($\approx$ 200 years) but slightly higher (4.7 vs. 4.3); the relative height of the peak is 1.07 (\figurename~\ref{fig:panel3}).
+
+The uncoupled and extra-couple transmission rates (i.e., the rates of
+transmission among people outside of a stable partnership, or between
+people inside of a stable partnership and people other than their
+partner) are scaled by
+multiplying the within-couple transmission rate $\beta$ by the contact
+ratios $c_u/c_w$ and $c_e/c_w$ (see Appendix). Simplifying the model
+of HIV pathogenesis from three stages to a single stage could affect
+our conclusions about the evolution of virulence (e.g. Kretzschmar and
+Dietz \cite{kretzschmar_effect_1998} show that pair formation dynamics
+and multiple stages of infectivity have interactive effects on
+$\rzero$). However, our simplified model produces results that are
+qualitatively similar to those of Shirreff \etal's
+\cite{shirreff_transmission_2011} model; when our model is calibrated
+to have a similar initial epidemic growth rate $r$, the peak
+\Lspvl\ occurs at the same time ($\approx$ 200 years) but slightly
+higher (4.6 \Lspvl\ vs. 4.3 \Lspvl, or 7\% higher: \figurename~\ref{fig:panel3}).
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig1.pdf}
 \caption{{\bf Baseline dynamics.}
-Time series of mean population \Lspvl. (a) Contrast with three-stage Shirreff model and effects of varying exponential growth rate, $r$. (b) Effects of varying initial infectious density $I(0)$. (c) Effects of varying initial mean virulence $\alpha(0)$. The orange curve in panel (a) shows that our simplified model can produce similar trajectories to those Shirreff \etal's model \cite{shirreff_transmission_2011}. In order to compare the models, we match the initial exponential growth rate (see main text ``Simulation runs"). Furthermore, we experiment with wide ranges of initial values (panels b and c) to show that evolutionary dynamics are not overly sensitive to starting parameter values, which we hold constant in our simulations.}
+Time series of mean population \Lspvl. (a) Contrast between the three-stage Shirreff model and the single-stage model calibrated to varying exponential growth rates, $r$. (b) Effects of varying initial infectious density $I(0)$. (c) Effects of varying initial mean virulence $\alpha(0)$. The orange curve in panel (a) shows that our simplified model can produce similar trajectories to those Shirreff \etal's model \cite{shirreff_transmission_2011}. In order to compare the models, we match the initial exponential growth rate (see main text ``Simulation runs"). Furthermore, we experiment with wide ranges of initial values (panels b and c) to show that evolutionary dynamics are not overly sensitive to starting parameter values, which we hold constant in our simulations.}
 \label{fig:panel3}
 \end{figure}
 

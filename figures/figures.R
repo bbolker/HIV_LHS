@@ -182,7 +182,7 @@ gg_durtraj <- direct.label(gg_basetraj %+% ss_dur + nostrips +
 ggsave(gg_durtraj,file="fig2.pdf",width=6,height=4)
 ggsave(gg_durtraj,file="fig2.png",width=6,height=4,dpi=400)
 
-fig_objects <- c(fig_objects,"gg_durtraj")
+fig_objects <- c(fig_objects,"gg_durtraj","bottom.points2","top.points2")
 
 ### Figure 2.1 - Transmission rate
 
