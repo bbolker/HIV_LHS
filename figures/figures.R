@@ -230,10 +230,17 @@ rval <- mean(mL$value[w])
 mLw <- droplevels(mL[-w,])
 mLw$variable <- fixfac2(mLw$variable)
 
-(minprogtime <- mL %>%
+minprogtime <- mL %>%
 	group_by(model) %>%
 	filter(variable == "peak_dur") %>%
-	summarise(value=mean(value)))
+	summarise(med=median(value),
+                  lwr=quantile(value,0.025),
+                  upr=quantile(value,0.975))
+
+options(digits=3)
+minprogtime
+
+
 
 gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 	geom_violinh(width=1)+
@@ -275,6 +282,12 @@ sL.epi <- transform(sL, eq_t = returnBeta(eq_vir,HIVpars.skeleton),
                     peak_dur = returnDur(peak_vir,HIVpars.skeleton))
 
 sL.epi <- sL.epi[,-c(3:6)]
+
+maxtrans <- sL.epi %>%
+	group_by(model) %>%
+	summarise(med=median(peak_t),
+                  lwr=quantile(peak_t,0.025),
+                  upr=quantile(peak_t,0.975))
 
 mL.epi <- melt(sL.epi,id.vars=c("model","run"))
 ## horrible hack (but doesn't help); subsample
