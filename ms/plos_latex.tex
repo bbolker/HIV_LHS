@@ -663,7 +663,7 @@ time (lower left panel) for the random mixing model is very narrow, and has been
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig4.pdf}
 \caption{{\bf Pairs plot: bivariate relationships among summary statistics for each model structure.}
-Dashed line in equilibrium vs. peak virulence plot shows 1:1 line. 100 values were sampled from each model to allow for clearer distinction between different models}
+Dashed line in equilibrium vs. peak virulence plot shows 1:1 line. 100 values were sampled from each model to allow for clearer distinction between the models}
 \label{fig:pairplot}
 \end{figure}
 
@@ -704,7 +704,7 @@ of \Lspvl\ and transmission probability).
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig5.pdf}
 \caption{{\bf Sensitivity plot.}
-For most parameters in the Latin hypercube sample and each summary statistic, the figure shows the distribution (points) and trend (smooth line) of the summary statistic as a function of the \emph{unscaled} parameter value, i.e. prior to adjusting the parameters to achieve the standard initial epidemic growth rate}
+For most parameters in the Latin hypercube sample and each summary statistic, the figure shows the distribution (points) and trend (smooth line) of the summary statistic as a function of the \emph{unscaled} parameter value, i.e. prior to adjusting the parameters to achieve the standard initial epidemic growth rate.}
 \label{fig:plot_sens}
 \end{figure}
 
@@ -761,8 +761,8 @@ partners has much systematic effect in the heterogeneous model.
 
 \section*{Discussion}
 
-All models must simplify the world.  Many constraints --- such as data
-availability, computation time, or code complexity --- drive the need
+All models must simplify the world.  Many constraints --- among them data
+availability, computation time, and code complexity --- drive the need
 for parsimony, with different constraints applying in different
 contexts. The critical question that modelers must ask is whether the
 simplified model gives adequate answers, or whether the
@@ -775,11 +775,23 @@ and the complexity of epidemiological structures
 we reach the slightly ironic conclusion that the
 effort put into building a more realistic model essentially cancels
 out, putting us back where we started when used a naive random-mixing
-contact model. In Herbeck \etal's \cite{herbeck_hiv_2014} network model of partnerships, the partnership duration is set to 1 day --- very unrealistic in epidemic terms, but perhaps
-actually more true to real-world HIV epidemiological dynamics than a
-model with realistic partnership durations that neglects extra-pair
-contact \cite{herbeck2016evolution}. Making the model even more realistic
-might make the random-mixing model less appropriate. For
+contact model.
+However, we are not quite back where we started, as the
+complex models lead to wider, presumably more realistic
+confidence intervals on the predictions.
+In general, unstructured mixing --- whether occurring through 
+purely random mixing, or through extra-pair contact and contact
+among people outside of stable partnerships --- tends to drive
+faster virulence evolution, leading to higher peak virulence and 
+lower times to progression at the peak time.
+
+%In Herbeck \etal's \cite{herbeck_hiv_2014} network model of partnerships, the partnership duration is set to 1 day --- very unrealistic in epidemic terms, but perhaps
+%actually more true to real-world HIV epidemiological dynamics than a
+%model with realistic partnership durations that neglects extra-pair
+%contact \cite{herbeck2016evolution}. 
+Taking further steps to make the model even more realistic
+might add further structure,
+making the random-mixing model predictions less accurate. For
 example, our model forms partnerships randomly, and assumes that
 extra-pair contact is randomly mixing across the population;
 one could instead model extra-pair contact as arising from
@@ -864,7 +876,7 @@ Below, we use the Kronecker delta (i.e. $\delta_{ij}=1$ if $i=j$ and 1 otherwise
 
 \subsubsection*{Partnership dynamics}
 
-Single individuals acquire partners at per-person rate $\rho$. Partnership formation rate for $S$, $I_i$ are $\rho S$ and $\rho I_i$, respectively. We follow Champredon \etal's results \cite{champredon_hiv_2013} and assume that single individuals are distributed into coupled states with pair-formation (PF) rates as follows:
+Single individuals acquire partners at per-person rate $\rho$. Partnership formation rates for $S$ and $I_i$ are $\rho S$ and $\rho I_i$, respectively. We follow Champredon \etal \cite{champredon_hiv_2013} in assuming that single individuals are distributed into coupled states with pair-formation (PF) rates as follows:
 
 \begin{equation}
 \begin{aligned}
@@ -874,7 +886,7 @@ Single individuals acquire partners at per-person rate $\rho$. Partnership forma
 \end{aligned}
 \end{equation}
 
-Partnerships dissolve at per-partnership rate $c$: the dissolution rates for $SS$, $SI_i$, and $II_{ij}$ pairs are $c SS$, $c SI_i$, and $c II_{ij}$ respectively. Unlike single strain model, where both individuals leaving the $II$ partnership would enter $I$, we have to account for strains which the individuals in concordant partnership are infected with (i.e. both partners in $II_{ii}$ enter $I_i$ whereas one partner in $II_{ij}$ enters the $I_i$ compartment while the other enters $I_j$). Thus, coupled individuals are distributed into single states through partnership dissolution (DS):
+Partnerships dissolve at per-partnership rate $c$: the dissolution rates for $SS$, $SI_i$, and $II_{ij}$ pairs are $c SS$, $c SI_i$, and $c II_{ij}$ respectively. Unlike a single-strain model, where both individuals leaving the $II$ partnership would enter $I$, we have to account for strains with which the individuals in concordant partnership are infected (i.e. both partners in $II_{ii}$ enter $I_i$ whereas one partner in $II_{ij}$ enters the $I_i$ compartment while the other enters $I_j$). Thus, coupled individuals are distributed into single states through partnership dissolution (DS) rates:
 
 \begin{equation}
 \begin{aligned}
@@ -897,7 +909,7 @@ II_{ij}' &= \khalf \cdot \frac{\rho I_i \cdot I_j}{S + \sum_k I_k} - c II_{ij}
 
 \subsubsection*{Pair-formation models: infection dynamics}
 
-Within-couple transmission (WT) occurs in both models. An infected partner in $SI$ partnership transmits virus to a susceptible partner at per-partnership rate $\beta$: $\WT(SI_i) = - \beta_i SI_i$. Since we assume that mutation occurs, $II_{ij}$, where $i \neq j$, can be formed from both $SI_i$ and $SI_j$ partnership: $\WT(II_{ij}) = M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j$. On the other hand, $II_{ii}$ can only be formed from an $SI_i$ partnership: $\WT(II_{ii}) = M_{ii} \beta_i SI_i$. Using the Kronecker delta notation, we obtain the following set of equations that describes within-couple transmission dynamics:
+Within-couple transmission (WT) occurs in both models. An infected partner in $SI$ partnership transmits virus to a susceptible partner at per-partnership rate $\beta$: $\WT(SI_i) = - \beta_i SI_i$. Since we assume that mutation occurs, $II_{ij}$ pairs, where $i \neq j$, can be formed from either $SI_i$ or $SI_j$ partnerships: $\WT(II_{ij}) = M_{ij} \beta_i SI_i + M_{ji} \beta_j SI_j$. On the other hand, $II_{ii}$ can only be formed from an $SI_i$ partnership: $\WT(II_{ii}) = M_{ii} \beta_i SI_i$. Using the Kronecker delta notation, we obtain the following set of equations for within-couple transmission dynamics:
 
 \begin{equation}
 \begin{aligned}
@@ -911,7 +923,7 @@ Champredon \etal\ \cite{champredon_hiv_2013} define the proportion of infectious
 \begin{equation}
 P = \frac{c_u I + c_e (SI + 2 II)}{c_u (S + I) + 2 c_e(SS + SI + II)}.
 \end{equation}
-The effective uncoupled, $c_u$, and extra couple, $c_e$, contact rates are the product of two terms: uncoupled/extra-couple contact rate $\times$ rate of transmission per contact. Therefore, the transmission rate per contact term in $c_u$ and $c_e$ is canceled out in the equation above. Using this property, we modify the equation above as follows:
+The effective uncoupled, $c_u$, and extra couple, $c_e$, contact rates are the product of uncoupled/extra-couple contact rate $\times$ rate of transmission per contact. Therefore, the transmission rate per contact term in $c_u$ and $c_e$ is canceled out in the equation above. Using this property, we modify the equation above as follows:
 
 \begin{equation}
 P = \frac{r_u I + r_e (SI + 2 II)}{r_u (S + I) + 2 r_e(SS + SI + II)},
