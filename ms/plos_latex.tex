@@ -725,7 +725,7 @@ and as such would be expected to match the equilibrium behaviour
 but not necessarily the epidemic-phase behaviour of a model
 with explicit partnership dynamics.
 
-Finally, the sensitivity plots (\figurename~\ref{fig:plot_sens}) show the effects 
+Finally, the sensitivity plot (\figurename~\ref{fig:plot_sens}) shows the effects 
 of each parameter on the summary statistics. In almost every case the
 effects of the parameters are monotonic; note that
 the plot shows the effects of the \emph{unscaled} parameters, i.e.
@@ -737,7 +737,8 @@ decrease the equilibrium virulence, peak virulence, and peak time,
 although the random and pair-formation+epc 
 models have high, relatively
 constant values with respect to these parameters
-(because the 
+(because the patterns are so similar across this set of parameters,
+\figurename~\ref{fig:plot_sens} shows only $D_P$).
 
 The partnership dissolution rate ($c$), which essentially
 acts as a contact rate in the model,
@@ -748,10 +749,15 @@ The ratio of extra-pair to within-pair contact ($c_e/c_w$) affects
 virulence in the instantaneous-switching+epc model, but not the pair-formation+epc
 model (probably because the uncoupled individuals present in the pair-formation+epc
 model make extra-pair contact by coupled individuals less important).
-Surprisingly, neither of the pair-formation models is particularly sensitive to the 
-rate of partnership formation ($\rho$); the rate of uncoupled contact
-increases virulence and peak time in the pair-formation+epc model, 
-which is the only model to which it applies.
+Surprisingly, once calibration
+is taken into account, the remaining parameters have little effect overall.
+The rate of partnership formation ($\rho$) 
+has little impact on the models with finite pair-formation times.
+The relative rate of uncoupled contact ($c_u/c_w$) slightly decreases the
+minimum and equilibrium progression time and delays the peak time in the
+pair-formation+epc model, but neither the uncoupled contact rate nor
+the mean ($\mu$) or CV$^2$ of the number of non-cohabiting sexual
+partners has much systematic effect in the heterogeneous model.
 
 \section*{Discussion}
 
@@ -765,10 +771,10 @@ This question is especially important for modelers who
 are hoping that their conclusions will guide management decisions.
 
 In the particular example of HIV virulence eco-evolutionary dynamics
-and epidemiological, we reach the slightly ironic conclusion that the
+and the complexity of epidemiological structures
+we reach the slightly ironic conclusion that the
 effort put into building a more realistic model essentially cancels
-out, leaving us in the same position as if we had ignored the problem
-of epidemiological complexity entirely and used a naive random-mixing
+out, putting us back where we started when used a naive random-mixing
 contact model. In Herbeck \etal's \cite{herbeck_hiv_2014} network model of partnerships, the partnership duration is set to 1 day --- very unrealistic in epidemic terms, but perhaps
 actually more true to real-world HIV epidemiological dynamics than a
 model with realistic partnership durations that neglects extra-pair
