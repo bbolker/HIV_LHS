@@ -997,7 +997,7 @@ II_{ij}' =& \khalf \cdot \frac{\rho I_i \cdot I_j}{(S + \sum_k I_k)} - c II_{ij}
 \subsection*{Models 3 (``instswitch'') and 4 (``instswitch'')}
 \subsubsection*{Partnership dynamics}
 
-Since model 3 and 4 assume instantaneous partnership formation, there are only three states: $SS$, $SI_i$, and $II_{ij}$. Partnership dissolution rates are equal to those of model 1 and 2: $\DS(SS) = -cSS$, $\DS(SI_i) = - cSI_i$, and $\DS(II_{ij}) = - c II_{ij}$. Once individuals leave a partnership, they are instantaneously distributed into coupled states. In order to make the equations simpler, we introduce the following two terms: $X$ and $Y_i$, where $X$ denotes the number of susceptible individuals that leave the partnership at a given time, and $Y_i$ the number of infected individuals with \Lspvl\ of $\alpha_i$ who leave partnership at a given time. These temporarily single individuals then form couples through the same partnership formation rule described in the previous section:
+Since model 3 and 4 assume instantaneous partnership formation, there are only three states: $SS$, $SI_i$, and $II_{ij}$. Partnership dissolution rates are equal to those of model 1 and 2: $\DS(SS) = -cSS$, $\DS(SI_i) = - cSI_i$, and $\DS(II_{ij}) = - c II_{ij}$. Once individuals leave a partnership, they are instantaneously distributed into coupled states. In order to make the equations simpler, we introduce the following two terms: $X$ and $Y_i$, where $X$ denotes the number of susceptible individuals that leave partnership at a given time, and $Y_i$ the number of infected individuals with \Lspvl\ of $\alpha_i$ who leave partnership at a given time. These temporarily single individuals then form couples through the same partnership formation rule described in the previous section:
 
 \begin{equation}
 \begin{aligned}
@@ -1016,11 +1016,11 @@ Model 3 and 4 share the within-couple transmission term with model 1 and 2. Sinc
 \begin{equation}
 P_i = \frac{r_e (SI_i + \sum_k (II_{ik} + \delta_{ik} II_{ik}))}{r_e(2 SS + \sum_k 2 SI_k + \sum_l \sum_k (2^\delta_{kl} II_{lk}) )}.
 \end{equation}
-Movement from $SS$ state to $SI$ state and $SI$ to $SS$ is modeled through the same equation that is used in models 1 and 2.
+Movement from $SS$ state to $SI$ state and $SI$ to $SS$ is modeled through the same equations that are used in models 1 and 2.
 
 \subsubsection*{Instantaneous-switching models: Disease induced mortality}
 
-Disease-induced mortality is modeled similarly to model 1 and 2. However, as the single state does not exist in model 3 and 4, individuals that leave partnerships due to death of their partners enter temporary compartments and form partnerships instantly:
+Disease-induced mortality is modeled similarly to model 1 and 2. However, as the single state does not exist in model 3 and 4, individuals that leave partnerships due to death of their partners form partnerships instantly:
 
 \begin{equation}
 \begin{aligned}
@@ -1048,7 +1048,7 @@ II_{ij}'& - c II_{ij} +\khalf \frac{Y_i Y_j}{X + \sum_k Y_k} + \khalf \cdot (M_{
 
 \subsection*{Implicit model}
 
-Following \cite{shirreff_transmission_2011}, Model 5 is an implicit instantaneous partnership formation model that uses an adjusted transmission rate, $\beta^\ast$, that is derived from Hollingsworth \etal's approximate basic reproduction number \cite{hollingsworth_hiv1_2008}:
+Following Shirreff \etal \cite{shirreff_transmission_2011}, Model 5 is an implicit instantaneous partnership formation model that uses an adjusted transmission rate, $\beta^\ast$, that is derived from Hollingsworth \etal's approximate basic reproduction number \cite{hollingsworth_hiv1_2008}:
 
 \begin{equation}
 \beta^\ast_i = \frac{c \beta_i}{c + \beta_i + \lambda_i}.
@@ -1068,14 +1068,14 @@ Model 6 is a random-mixing model. It is modeled in a same way as model 5 without
 
 \begin{equation}
 \begin{aligned}
-S' & = \sum_k \lambda_k I_k - \sum_k \beta_k S I_k,\\
-I_i' & = \sum_k M_{ki} \beta_k S I_k - \lambda_i I_i.
+S' & = \sum_k \lambda_k I_k - \sum_k c \beta_k S I_k,\\
+I_i' & = \sum_k M_{ki} c \beta_k S I_k - \lambda_i I_i.
 \end{aligned}
 \end{equation}
 
 \subsection*{Heterogenous model}
 
-We extend the ``pairform+epc'' model by allowing for heterogeneity in sexual behaviour. Since pairform+epc model captures four distinct sexual behaviours -- pair formation, pair dissolution, extra-couple mixing, and uncoupled mixing -- we assume that all four parameters that model these behaviours are scaled by the same factor based on the risk group. In other words, an individual in a higher risk is also more likely to form a stable partnership, leave a stable partnership, and engage in a extra-couple/uncoupled mixing. We denote this scaling parameter as $\varphi_i$ where $i$ is the risk group. For simplicity, we assume that the transmission rate per partnership is unaffected by sexual behaviour.
+We extend the ``pairform+epc'' model by allowing for heterogeneity in sexual behaviour. Since pairform+epc model captures four distinct sexual behaviours -- pair formation, pair dissolution, extra-couple mixing, and uncoupled mixing -- we assume that all four parameters that model these behaviours are scaled by the same factor based on the risk group. In other words, an individual in a higher risk is also more likely to form a \todo{long-term sexual partnership instead of stable?} stable partnership, leave a stable partnership, and engage in a extra-couple/uncoupled mixing. We denote this scaling parameter as $\varphi_i$ where $i$ is the risk group. For simplicity, we assume that the transmission rate per partnership is unaffected by sexual behaviour.
 
 \subsubsection*{Partnership dynamics}
 
@@ -1085,7 +1085,7 @@ Individuals in a risk group $i$ leave single state at per-person rate $\varphi_i
 \PF(XY_{ij, kl}) = \kkhalf \frac{\varphi_k \rho X_{i,k} \varphi_l \rho Y_{j, l}}{\sum\limits_m \varphi_m \rho (S_{\cdot, m} + \sum\limits_n I_{n,m})}
 \end{equation}
 
-For dissolution process, an individual in risk group $i$ leaves its partnership at a rate $\varphi_i c$. If a partnership is formed between two individuals from a different risk group, the rates at which they leave the partnership differ. We resolve this conflict by assuming that a partnership dissolution rate of a couple is equal to the average of that of two partners. Therefore, $XY_{ij, kl}$ dissolve at per-partnership rate $(\varphi_k + \varphi_l)/2 c$, and both $X_{i,k}$ and $Y_{j,l}$ partners return to single state at the same rate.
+For dissolution process, an individual in risk group $i$ leaves its partnership at a rate $\varphi_i c$. If a partnership is formed between two individuals from a different risk group, the rates at which they leave the partnership differ. We resolve this conflict by assuming that a partnership dissolution rate of a couple is equal to the average of that of two partners. Therefore, $XY_{ij, kl}$ dissolve at per-partnership rate $(\varphi_k + \varphi_l)/2 c$, and both $X_{i,k}$ and $Y_{j,l}$ partners return to single state at the same rate. \todo{Herbeck 2016 does this. We can cite them?}
 
 \subsubsection*{Heterogeneous models: Infection dynamics}
 
