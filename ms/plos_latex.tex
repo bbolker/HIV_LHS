@@ -1112,7 +1112,7 @@ We now define $P_{k,i}$ as the proportion of the extra-couple and uncoupled cont
 \begin{equation}
 P_{k,i} = \frac{\varphi_i r_u I_{k,i} + \varphi_i r_e (SI_{k,i} + \sum_j \sum_l 2^{\delta_{kl} \delta_{ij} } II_{kl,ij} )}{\sum_j Q_j}
 \end{equation}
-Since the relative uncoupled/extra couple contact ratios are scaled by the factor of $\varphi_i$, uncoupled and extra-couple transmission rates are scaled by the same factor as well: $U_{k,i} = \varphi_i r_u \beta_k$ and $E_{k,i} = \varphi_i r_e \beta_k$. Once again, we assume random mixing between individuals. Then, a susceptible individual in risk group $i$ becomes infected through extra-couple and uncoupled contact at a per capita rate of $\sum_j \sum_k P_{k,j} X_{k,i}$. Once infected, individuals are distributed into strain categories through mutation.
+Since the relative uncoupled/extra couple contact ratios are scaled by the factor of $\varphi_i$, uncoupled and extra-couple transmission rates are scaled by the same factor as well: $U_{k,i} = \varphi_i r_u \beta_k$ and $E_{k,i} = \varphi_i r_e \beta_k$. Once again, we assume activity-weighted mixing between individuals. Then, a susceptible individual in risk group $i$ becomes infected through extra-couple and uncoupled contact at a per capita rate of $\sum_j \sum_k P_{k,j} X_{k,i}$. Once infected, individuals are distributed into strain categories through mutation.
 
 \subsubsection*{Heterogeneous model: Disease induced mortality}
 
@@ -1120,7 +1120,7 @@ Disease induced mortality is not affected by the sexual behaviour of an individu
 
 \subsection*{Initial distribution of infected individuals}
 
-We follow Champredon \etal's result to calculate the initial distribution of infected individuals. For model 1 and 2, we have disease equilibrium state of $S^* = \frac{c}{c + \rho}$ and $SS^* = \frac{1-S^*}{2}$. We let $\epsilon = 10^{-4}$, which is the total number of infected individuals in the beginning of simulation and $D$ be the vector such that $D_i$ represent the proportion of individuals with \Lspvl\ of $i$. $Y_i$ is taken from the Normal distribution with mean 3 and is normalized so that $\sum_i D_i = 1$. Then, we have the following initial distribution of each states:
+We follow Champredon \etal's result to calculate the initial distribution of infected individuals. For model 1 and 2, we have disease equilibrium state of $S^* = \frac{c}{c + \rho}$ and $SS^* = \frac{1-S^*}{2}$. We let $\epsilon = 10^{-4}$, which is the total number of infected individuals in the beginning of simulation and $D$ be the vector such that $D_i$ represent the proportion of individuals with \Lspvl\ of $i$. $D_i$ is taken from the Gaussian distribution with mean 3 and standard deviation 0.2 and is normalized so that $\sum_i D_i = 1$. Then, we have the following initial distribution of each states:
 
 \begin{equation}
 \begin{aligned}
