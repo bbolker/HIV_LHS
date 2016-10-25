@@ -245,7 +245,7 @@ across model structures, the timing and magnitude of the
 minimum expected time to progression vary
 considerably.
 Models of intermediate
-complexity as used by Fraser \emph{et al.} \todo{why not shirreff et al?} 
+complexity as used by Shirreff \emph{et al.}
 predicted lower slower progression/lower virulence (a minimum of 15 years to
 progress to AIDS) compared to both more realistic models
 and simple random-mixing models with no partnership structure
@@ -316,13 +316,15 @@ interesting way
 by showing that HIV appears to satisfy the prerequisites of
 the tradeoff theory: in studies of discordant couples (i.e. long-term
 sexual partnerships with one infected and one uninfected partner), HIV
-virulence as measured by the rate of progression to AIDS was both
-heritable and covaried with the set-point viral load (i.e., the
+virulence as measured by the rate of progression to AIDS was 
+both heritable and covaried with the set-point viral load (SPVL: i.e., the
 characteristic virus load measured in blood during the intermediate
-stage of infection), which in turn predicted the probability of
-transmission
+stage of infection) and the probability of transmission.
+Higher viral loads led to shorter progression times (higher virulence)
+and faster transmission, with a decelerating relationship
+between virulence and transmission as required by the tradeoff theory
 \cite{Fraser+2007,fraser_virulence_2014}. Subsequent studies
-\cite{shirreff_transmission_2011,herbeck_hiv_2014} used these data to
+\cite{shirreff_transmission_2011,herbeck_hiv_2014,herbeck_evolution_2016} used these data to
 parameterize mechanistic models of HIV virulence evolution, suggesting
 that HIV invading a novel population would initially evolve increased
 virulence, peaking after approximately 100-200 years and then declining
@@ -378,12 +380,24 @@ susceptible compartment.
 
 \subsection*{Infection dynamics}
 
-Like Shirreff \etal\ \cite{shirreff_transmission_2011}, we focus on the evolution of mean $\log_{10}$ set-point viral load, SPVL (which we denote as $\alpha$), rather than the rate of progression to AIDS itself
-(hereafter ``virulence'' will refer either to the SPVL, or to 
-the rate of progression to AIDS; these two quantities are
-deterministically linked in the model) \todo{Doesn't this somewhat contradict with what we say later on? Here, we say we focus on SPVL but later we say we summarize the models using progression time rather than SPVL...}.
-In contrast to Shirreff \etal, we use a single-stage disease model instead of accounting explicitly for progression through the three main stages of HIV infection (primary, asymptomatic, and disease), and we use a simple exponentially distributed infectious period instead of a more realistic Weibull-distributed infectious period; we show below that our results are not overly
-sensitive to this simplification. We account for varying transmission rates and durations of each disease stage by summing the durations of three stages (again based on Shirreff \etal's model) and taking the duration-weighted average of transmission rates of three stages. Thus the within-couple transmission rate, $\beta$, for our models is given by:
+As in Shirreff \etal\ \cite{shirreff_transmission_2011}, our models
+explicitly track the evolution of mean $\log_{10}$ SPVL
+(which we denote as $\alpha$), rather than the rate of progression to
+AIDS itself (hereafter ``virulence'' will refer either to the SPVL, or
+to the rate of progression to AIDS; these two quantities are
+deterministically linked in the model).  
+In contrast to Shirreff \etal, we use a
+single-stage disease model instead of accounting explicitly for
+progression through the three main stages of HIV infection (primary,
+asymptomatic, and disease), and we use a simple exponentially
+distributed infectious period instead of a more realistic
+Weibull-distributed infectious period; we show below that our results
+are not overly sensitive to this simplification. We account for
+varying transmission rates and durations of each disease stage by
+summing the durations of three stages (again based on Shirreff \etal's
+model) and taking the duration-weighted average of transmission rates
+of three stages. Thus the within-couple transmission rate, $\beta$,
+for our models is given by:
 \begin{equation}
 \beta (\alpha) = \frac{D_P \beta_P + D_A (\alpha) \beta_A (\alpha) + D_D \beta_D}{D_P + D_A (\alpha) + D_D},
 \end{equation}
@@ -453,7 +467,8 @@ We developed seven multi-strain evolutionary models covering a gamut including C
 
 Our first four models consider explicit partnership dynamics and are based on Champredon \etal's model \cite{champredon_hiv_2013}. The first two (``pair-formation'' or ``pairform'' for short) assume non-instantaneous partnership formation (i.e. individuals spend some time uncoupled, outside of partnerships) and consist of five states that are classified by infection status and partnership status. $S$ is the number of single (uncoupled) susceptible individuals, and $I$ is the number of single infected individuals. $SS$ is the number of concordant negative (susceptible-susceptible) couples, $SI$ is the number of serodiscordant (susceptible-infected) couples, and $II$ is the number of concordant positive (infected-infected) couples. The first (``pairform+epc'') includes extra-partnership contact (with both uncoupled individuals and individuals in other partnerships) whereas the second (``pairform'') only considers within-couple transmission. 
 
-The next two models, which are intended to bridge the gap between models with fully explicit pair-formation dynamics and the simpler, implicit models used by Shirreff \emph{et al.} \cite{shirreff_transmission_2011}, assume instantaneous partnership formation (``instswitch''). The compartmental structure thus omits the single states $S$ and $I$, comprising only the three partnered states: $SS$, $SI$, and $II$. Like the first two models, this pair of models differs in their inclusion of extra-pair contact: the third model (``instswitch+epc'') includes extra-partnership contact (now only with individuals in other partnerships, since uncoupled individuals do not exist in this model) while the fourth (``instswitch'') only considers within-couple transmission. \todo{Although these models can also be achieved by setting the partnership formation rate of the explicit partnership models to a high value (and we have tested that both methods in fact produce same results), we model instantaneous partnership formation models independently in order to avoid scaling of partnership formation rate during model calibration affecting the virulence trajectory.}
+The next two models, which are intended to bridge the gap between models with fully explicit pair-formation dynamics and the simpler, implicit models used by Shirreff \emph{et al.} \cite{shirreff_transmission_2011}, assume instantaneous partnership formation (``instswitch''). The compartmental structure thus omits the single states $S$ and $I$, comprising only the three partnered states: $SS$, $SI$, and $II$. Like the first two models, this pair of models differs in their inclusion of extra-pair contact: the third model (``instswitch+epc'') includes extra-partnership contact (now only with individuals in other partnerships, since uncoupled individuals do not exist in this model) while the fourth (``instswitch'') only considers within-couple transmission. Although these models can also be implemented
+by setting the partnership formation rate of the explicit partnership models to a high value (and we have tested that both methods in fact produce same results), we model instantaneous partnership formation models independently in order to avoid scaling of partnership formation rate during model calibration affecting the virulence trajectory.
 
 The fifth and sixth models represent extreme simplifications of sexual partnership dynamics.  One (``implicit'') is an implicit serial monogamy model based on the epidemiological model used by Shirreff \etal\ \cite{shirreff_transmission_2011}. It is actually a random mixing model that explicitly tracks only the total number of susceptible and infected individuals. However, to reflect the effect of partnership structure, it uses an adjusted transmission rate derived from an approximation of the basic reproduction number of a serial monogamy model with instantaneous pair formation \cite{hollingsworth_hiv1_2008}. The second model of this pair (``random'') is a simple random-mixing model.
 
@@ -466,7 +481,7 @@ The second through fourth models (pairform, instswitch+epc, instswitch) are deri
 
 \subsection*{Latin hypercube sampling}
 
-Despite considerable effort \cite{hollingsworth_hiv1_2008,champredon_hiv_2013}, the parameters determining the rate and structure of sexual partnership change and contact are still very uncertain; this led Champredon \etal\ \cite{champredon_hiv_2013} to adopt a Latin hypercube sampling (LHS) strategy \cite{blower_drugs_1991} that evaluates model outcomes over a range of parameter values. In order to make sure that our comparisons among models apply across the entire space of reasonable parameter values, and in order to evaluate the differential sensitivity of different model structures to parameter values, we follow a similar protocol and perform LHS over a parameter set including both the early- and late-stage transmission and duration parameters ($\beta_P$, $D_P$, $\beta_D$, $D_D$) and contact/partnership parameters ($\rho$, $c$, $c_u/c_w$, and $c_e/c_w$). \todo{does this sentence regarding heterogeneity feel redundant?} For the heterogeneity model, the mean and squared coefficient of variation (CV) for the number of non-cohabiting partners are sampled as well. We do not allow for uncertainties in parameters that are directly related to the evolutionary process ($\tsub{\beta}{max}$, $\beta_{50}$, $\beta_k$, $\tsub{D}{max}$, $D_{50}$, $D_k$, $\sigma_M$), instead using Shirreff \etal's point estimates throughout \cite{shirreff_transmission_2011}.
+Despite considerable effort \cite{hollingsworth_hiv1_2008,champredon_hiv_2013}, the parameters determining the rate and structure of sexual partnership change and contact are still very uncertain; this led Champredon \etal\ \cite{champredon_hiv_2013} to adopt a Latin hypercube sampling (LHS) strategy \cite{blower_drugs_1991} that evaluates model outcomes over a range of parameter values. In order to make sure that our comparisons among models apply across the entire space of reasonable parameter values, and in order to evaluate the differential sensitivity of different model structures to parameter values, we follow a similar protocol and perform LHS over a parameter set including both the early- and late-stage transmission and duration parameters ($\beta_P$, $D_P$, $\beta_D$, $D_D$) and contact/partnership parameters ($\rho$, $c$, $c_u/c_w$, and $c_e/c_w$). For the heterogeneity model, the mean and squared coefficient of variation (CV) for the number of non-cohabiting partners are sampled as well. We do not allow for uncertainties in parameters that are directly related to the evolutionary process ($\tsub{\beta}{max}$, $\beta_{50}$, $\beta_k$, $\tsub{D}{max}$, $D_{50}$, $D_k$, $\sigma_M$), instead using Shirreff \etal's point estimates throughout \cite{shirreff_transmission_2011}.
 
 Latin hypercube sampling is done as in Champredon \etal\ \cite{champredon_hiv_2013}. For each parameter, $z$, its range is divided into $N = 1000$ equal intervals on a log scale:
 \begin{equation}
@@ -514,7 +529,6 @@ One parameter in our model, the ratio of uncoupled to within-couple transmission
 it appears neither in either Shirreff \etal\ nor Champredon \etal's models,  so we need to pick a reasonable range for it. Champredon \etal\ \cite{champredon_hiv_2013} assume that the effective within-couple contact rate and effective uncoupled contact rate have the same range of 0.05 - 0.25.  Given Champredon \etal's parameter range, the possible maximum and minimum values of $c_u/c_w$ are 5 and 1/5. Therefore, we use 1/5-5 as the range for the parameter $c_u/c_w$. Although this adds more uncertainty to the parameter $c_u$ --- Champredon \etal's range implies a 5-fold difference whereas ours gives a 25-fold difference --- we consider the wider range appropriate, as little is not much known about the uncoupled transmission rate.
 
 Two parameters, mean and the squared coefficient of variation (CV) of number of non-cohabiting partners, are sampled for heterogeneity in sexual activity.
-%%  BMB: I don't think we need to go into detail about variance vs CV
 To allow for a wide range of uncertainty, range for the mean number of non-cohabiting partners was taken from unmarried men, as that was the group with the largest variability \cite{omori2015dynamics}. 
 Omori \etal \cite{omori2015dynamics} give a very wide
 range for the coefficient of variation ($\approx$ 0 - 20, corresponding
@@ -575,7 +589,9 @@ For calibration purposes, we run each model for only 500 years
 enough to capture the exponential growth phase of the model. 
 We use a 4/5 order 
 Runge-Kutta method (\texttt{ode45} from the \texttt{deSolve} package
-\cite{soetaert_solving_2010}) for all simulations. \todo{mention that we got rid of error runs for hetero model?}
+\cite{soetaert_solving_2010}) for all simulations. 
+(For the heterogeneous model, approximately
+10\% of the samples failed due to numerical instability.)
 
 Although each disease strain's core characteristic is its SPVL, the
 SPVL has one-to-one correspondences (based on eq.~\ref{eq:hillfuns})
@@ -997,7 +1013,7 @@ II_{ij}' =& \khalf \cdot \frac{\rho I_i \cdot I_j}{(S + \sum_k I_k)} - c II_{ij}
 \subsection*{Models 3 (``instswitch'') and 4 (``instswitch'')}
 \subsubsection*{Partnership dynamics}
 
-Since model 3 and 4 assume instantaneous partnership formation, there are only three states: $SS$, $SI_i$, and $II_{ij}$. Partnership dissolution rates are equal to those of model 1 and 2: $\DS(SS) = -cSS$, $\DS(SI_i) = - cSI_i$, and $\DS(II_{ij}) = - c II_{ij}$. Once individuals leave a partnership, they are instantaneously distributed into coupled states. In order to make the equations simpler, we introduce the following two terms: $X$ and $Y_i$, where $X$ denotes the number of susceptible individuals that leave partnership at a given time, and $Y_i$ the number of infected individuals with \Lspvl\ of $\alpha_i$ who leave partnership at a given time. These temporarily single individuals then form couples through the same partnership formation rule described in the previous section:
+Since model 3 and 4 assume instantaneous partnership formation, there are only three states: $SS$, $SI_i$, and $II_{ij}$. Partnership dissolution rates are equal to those of model 1 and 2: $\DS(SS) = -cSS$, $\DS(SI_i) = - cSI_i$, and $\DS(II_{ij}) = - c II_{ij}$. Once individuals leave a partnership, they are instantaneously distributed into coupled states. In order to make the equations simpler, we introduce the following two terms: $X$ and $Y_i$, where $X$ denotes the total rate at which susceptible individuals leave partnership at a given time, and $Y_i$ is the total partnership leaving rate of infected individuals with \Lspvl\ of $\alpha_i$ at a given time. These temporarily single individuals then form couples through the same partnership formation rules described in the previous section:
 
 \begin{equation}
 \begin{aligned}
@@ -1075,7 +1091,7 @@ I_i' & = \sum_k M_{ki} c \beta_k S I_k - \lambda_i I_i.
 
 \subsection*{Heterogenous model}
 
-We extend the ``pairform+epc'' model by allowing for heterogeneity in sexual behaviour. Since pairform+epc model captures four distinct sexual behaviours -- pair formation, pair dissolution, extra-couple mixing, and uncoupled mixing -- we assume that all four parameters that model these behaviours are scaled by the same factor based on the risk group. In other words, an individual in a higher risk is also more likely to form a \todo{long-term sexual partnership instead of stable?} stable partnership, leave a stable partnership, and engage in a extra-couple/uncoupled mixing. We denote this scaling parameter as $\varphi_i$ where $i$ is the risk group. For simplicity, we assume that the transmission rate per partnership is unaffected by sexual behaviour.
+We extend the ``pairform+epc'' model by allowing for heterogeneity in sexual behaviour. Since pairform+epc model captures four distinct sexual behaviours -- pair formation, pair dissolution, extra-couple mixing, and uncoupled mixing -- we assume that all four parameters that model these behaviours are scaled by the same factor based on the risk group. In other words, an individual in a higher risk is also more likely to form a long-term sexual partnership, leave a long-term partnership, and engage in a extra-couple/uncoupled mixing. We denote this scaling parameter as $\varphi_i$ where $i$ is the risk group. For simplicity, we assume that the transmission rate per partnership is unaffected by sexual behaviour.
 
 \subsubsection*{Partnership dynamics}
 
@@ -1085,7 +1101,7 @@ Individuals in a risk group $i$ leave single state at per-person rate $\varphi_i
 \PF(XY_{ij, kl}) = \kkhalf \frac{\varphi_k \rho X_{i,k} \varphi_l \rho Y_{j, l}}{\sum\limits_m \varphi_m \rho (S_{\cdot, m} + \sum\limits_n I_{n,m})}
 \end{equation}
 
-For dissolution process, an individual in risk group $i$ leaves its partnership at a rate $\varphi_i c$. If a partnership is formed between two individuals from a different risk group, the rates at which they leave the partnership differ. We resolve this conflict by assuming that a partnership dissolution rate of a couple is equal to the average of that of two partners. Therefore, $XY_{ij, kl}$ dissolve at per-partnership rate $(\varphi_k + \varphi_l)/2 c$, and both $X_{i,k}$ and $Y_{j,l}$ partners return to single state at the same rate. \todo{Herbeck 2016 does this. We can cite them?}
+For dissolution process, an individual in risk group $i$ leaves its partnership at a rate $\varphi_i c$. If a partnership is formed between two individuals from a different risk group, the rates at which they leave the partnership differ. We resolve this conflict by assuming that a partnership dissolution rate of a couple is equal to the average of that of two partners. Therefore, $XY_{ij, kl}$ dissolve at per-partnership rate $(\varphi_k + \varphi_l)/2 c$, and both $X_{i,k}$ and $Y_{j,l}$ partners return to single state at the same rate \cite{herbeck_evolution_2016}.
 
 \subsubsection*{Heterogeneous models: Infection dynamics}
 
