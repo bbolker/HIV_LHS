@@ -245,7 +245,7 @@ across model structures, the timing and magnitude of the
 minimum expected time to progression vary
 considerably.
 Models of intermediate
-complexity as used by Fraser \emph{et al.} 
+complexity as used by Fraser \emph{et al.} \todo{why not shirreff et al?} 
 predicted lower slower progression/lower virulence (a minimum of 15 years to
 progress to AIDS) compared to both more realistic models
 and simple random-mixing models with no partnership structure
@@ -466,7 +466,7 @@ The second through fourth models (pairform, instswitch+epc, instswitch) are deri
 
 \subsection*{Latin hypercube sampling}
 
-Despite considerable effort \cite{hollingsworth_hiv1_2008,champredon_hiv_2013}, the parameters determining the rate and structure of sexual partnership change and contact are still very uncertain; this led Champredon \etal\ \cite{champredon_hiv_2013} to adopt a Latin hypercube sampling (LHS) strategy \cite{blower_drugs_1991} that evaluates model outcomes over a range of parameter values. In order to make sure that our comparisons among models apply across the entire space of reasonable parameter values, and in order to evaluate the differential sensitivity of different model structures to parameter values, we follow a similar protocol and perform LHS over a parameter set including both the early- and late-stage transmission and duration parameters ($\beta_P$, $D_P$, $\beta_D$, $D_D$) and contact/partnership parameters ($\rho$, $c$, $c_u/c_w$, and $c_e/c_w$). For the heterogeneity model, the mean and squared coefficient of variation (CV) for the number of non-cohabiting partners are sampled as well. We do not allow for uncertainties in parameters that are directly related to the evolutionary process ($\tsub{\beta}{max}$, $\beta_{50}$, $\beta_k$, $\tsub{D}{max}$, $D_{50}$, $D_k$, $\sigma_M$), instead using Shirreff \etal's point estimates throughout \cite{shirreff_transmission_2011}.
+Despite considerable effort \cite{hollingsworth_hiv1_2008,champredon_hiv_2013}, the parameters determining the rate and structure of sexual partnership change and contact are still very uncertain; this led Champredon \etal\ \cite{champredon_hiv_2013} to adopt a Latin hypercube sampling (LHS) strategy \cite{blower_drugs_1991} that evaluates model outcomes over a range of parameter values. In order to make sure that our comparisons among models apply across the entire space of reasonable parameter values, and in order to evaluate the differential sensitivity of different model structures to parameter values, we follow a similar protocol and perform LHS over a parameter set including both the early- and late-stage transmission and duration parameters ($\beta_P$, $D_P$, $\beta_D$, $D_D$) and contact/partnership parameters ($\rho$, $c$, $c_u/c_w$, and $c_e/c_w$). \todo{does this sentence regarding heterogeneity feel redundant?} For the heterogeneity model, the mean and squared coefficient of variation (CV) for the number of non-cohabiting partners are sampled as well. We do not allow for uncertainties in parameters that are directly related to the evolutionary process ($\tsub{\beta}{max}$, $\beta_{50}$, $\beta_k$, $\tsub{D}{max}$, $D_{50}$, $D_k$, $\sigma_M$), instead using Shirreff \etal's point estimates throughout \cite{shirreff_transmission_2011}.
 
 Latin hypercube sampling is done as in Champredon \etal\ \cite{champredon_hiv_2013}. For each parameter, $z$, its range is divided into $N = 1000$ equal intervals on a log scale:
 \begin{equation}
@@ -575,7 +575,7 @@ For calibration purposes, we run each model for only 500 years
 enough to capture the exponential growth phase of the model. 
 We use a 4/5 order 
 Runge-Kutta method (\texttt{ode45} from the \texttt{deSolve} package
-\cite{soetaert_solving_2010}) for all simulations.
+\cite{soetaert_solving_2010}) for all simulations. \todo{mention that we got rid of error runs for hetero model?}
 
 Although each disease strain's core characteristic is its SPVL, the
 SPVL has one-to-one correspondences (based on eq.~\ref{eq:hillfuns})
