@@ -74,6 +74,8 @@
 
 \newcommand{\todo}[1]{\textbf{#1}}
 
+\renewcommand\thefigure{S\arabic{figure}}    
+
 %% END MACROS SECTION
 
 \begin{document}
@@ -99,7 +101,7 @@ for each model.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig_S2_2.pdf}
-\caption{{\bf Envelopes of progression trajectories under all models.}
+\caption{{\bf Envelopes of SPVL trajectories under all models.}
 This figure matches Fig 2 in main text, but displays the
 envelope of \Lspvl\ rather than expected progression time to AIDS over time
 for each model.
@@ -109,12 +111,12 @@ for each model.
 
 \clearpage
 
+%% \Lspvl\ doesn't get bolded so I got rid of log10
 \begin{figure}[!ht]
   \includegraphics[width=\textwidth]{../figures/fig_S2_3.pdf}
-\caption{{\bf Univariate distributions of transmission probabilities and \Lspvl\.}
+\caption{{\bf Univariate distributions of transmission probabilities and SPVL.}
 This figure matches Fig 3 in main text, but displays the
-univariate distributions for the transmission probability and 
-\Lspvl\ time at the virulence
+univariate distributions for the transmission probability and \Lspvl\ time at the virulence
 peak and at the epidemiological equilibrium,
 rather than the distributions of progression time to AIDS.
 }
