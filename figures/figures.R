@@ -197,16 +197,15 @@ gg_betatraj <- direct.label(gg_basetraj %+% ss_beta + nostrips +
 ## scale_x_continuous(limits=c(0,2500))
 ## r fig2.1, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400} 
 
-ggsave(gg_betatraj,file="fig_S2_1.pdf",width=6,height=4)
-ggsave(gg_betatraj,file="fig_S2_1.png",width=6,height=4,dpi=400)
-
+ggsave(gg_betatraj,file="fig_S2_1.pdf",width=8,height=6)
+ggsave(gg_betatraj,file="fig_S2_1.png",width=8,height=6,dpi=400)
 
 ## scale_x_continuous(limits=c(0,2500))
 
 ## r fig2.2, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400} 
 
-ggsave(gg_durtraj,file="fig_S2_2.pdf",width=6,height=4)
-ggsave(gg_durtraj,file="fig_S2_2.png",width=6,height=4,dpi=400)
+ggsave(gg_virtraj,file="fig_S2_2.pdf",width=8,height=6)
+ggsave(gg_virtraj,file="fig_S2_2.png",width=8,height=6,dpi=400)
 
 ### Figure 3
 
@@ -277,11 +276,8 @@ fig_objects <- c(fig_objects,"gg_univ")
 
 sL$model <- factor(sL$model, m_order)
 sL.epi <- transform(sL, eq_t = returnBeta(eq_vir,HIVpars.skeleton),
-                    peak_t = returnBeta(peak_vir,HIVpars.skeleton),
-                    eq_dur = returnDur(eq_vir,HIVpars.skeleton),
-                    peak_dur = returnDur(peak_vir,HIVpars.skeleton))
-
-sL.epi <- sL.epi[,-c(3:6)]
+                    peak_t = returnBeta(peak_vir,HIVpars.skeleton)) %>%
+	select(model, run, eq_vir, peak_vir, eq_t, peak_t)
 
 maxtrans <- sL.epi %>%
 	group_by(model) %>%
@@ -294,28 +290,32 @@ mL.epi <- melt(sL.epi,id.vars=c("model","run"))
 ## w <- which(mL$model=="random")
 ## mLw <- mL[-sample(w,size=length(w)*9/10,replace=FALSE),]
 w.epi.t <- with(mL.epi,which(model=="random" & variable=="eq_t"))
-w.epi.d <- with(mL.epi,which(model=="random" & variable=="eq_dur"))
+w.epi.v <- with(mL.epi,which(model=="random" & variable=="eq_vir"))
 rval.epi.t <- mean(mL.epi$value[w.epi.t])
-rval.epi.d <- mean(mL.epi$value[w.epi.d])
-mLw.epi <- droplevels(mL.epi[-c(w.epi.t,w.epi.d),])
+rval.epi.v <- mean(mL.epi$value[w.epi.v])
+mLw.epi <- droplevels(mL.epi[-c(w.epi.t,w.epi.v),])
 mLw.epi$variable <- factor(mLw.epi$variable,
-                           levels = c("eq_t", "peak_t", "eq_dur", "peak_dur"),
-                           labels = c("Equilbrium asymptomatic transmission rate",
-													 					 "Maximum transmission rate",
-													 					 "Equilibrium duration of asymptomatic stage",
-													 					 "Minimum duration of asymptomatic stage"))
+                           levels = c("eq_vir", "peak_vir", "eq_t", "peak_t"),
+                           labels = c("Equilibrium~mean~log[10]~SPVL",
+													 					 "Peak~mean~log[10]~SPVL",
+													 					 "Equilibrium~mean~transmission~rate",
+													 					 "Peak~mean~transmission~rate"))
 
 gg_univ.epi <- ggplot(mLw.epi,aes(value,model,fill=model))+
 	geom_violinh(width=1)+
 	theme(legend.position = "none") +
-	facet_wrap(~variable,scale="free_x")+
+	facet_wrap(~variable,scale="free_x", labeller = label_parsed)+
 	guides(fill=guide_legend(reverse=TRUE))+
 	labs(y="")+
 	geom_point(data=data.frame(model="random",
-                   variable=c("Equilbrium asymptomatic transmission rate",
-																											 "Equilibrium duration of asymptomatic stage"),
-                               value=c(rval.epi.t, rval.epi.d)),pch=22,size=3,show.legend=FALSE) +
+                   variable=c("Equilibrium~mean~transmission~rate",
+																											 "Equilibrium~mean~log[10]~SPVL"),
+                               value=c(rval.epi.t, rval.epi.v)),pch=22,size=3,show.legend=FALSE) +
 	zero_x_margin
+
+# http://stackoverflow.com/questions/19282897/how-to-add-expressions-to-labels-in-facet-wrap
+
+
 
 ## r fig3.1, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
 
