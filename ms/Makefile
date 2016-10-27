@@ -18,4 +18,4 @@ compare: plos_latex.tex
 	../latexdiff/latexdiff plos_latex_old.txt plos_latex.tex >plos_latex_cmp.tex
 	texi2dvi --batch plos_latex_cmp.tex
 clean:
-	rm -f ms.html ms.tex .#* #*
+	rm -f ms.html ms.tex *.log *.snm *.toc *.aux *.out *.blg .#* #*
