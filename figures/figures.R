@@ -15,6 +15,8 @@ library(GGally) ## need BMB version
 ## devtools::install_github("lionel-/ggstance")
 library(ggstance)
 
+do_png <- FALSE
+
 opts_chunk$set(echo=FALSE,error=FALSE)
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
@@ -124,9 +126,11 @@ pdf(file="fig1.pdf",height=3.5,width=10)
 print(grid.arrange(g1.y, g2.y, g3.y, nrow=1))
 dev.off()
 
-png(file="fig1.png",height=3.5*600,width=10*600)
-print(grid.arrange(g1.y, g2.y, g3.y, nrow=1))
-dev.off()
+if (do_png) {
+    png(file="fig1.png",height=3.5*600,width=10*600)
+    print(grid.arrange(g1.y, g2.y, g3.y, nrow=1))
+    dev.off()
+}
 
 fig_objects <- c("g1.y","g2.y","g3.y")
 
@@ -180,7 +184,7 @@ gg_durtraj <- direct.label(gg_basetraj %+% ss_dur + nostrips +
 
 ## scale_x_continuous(limits=c(0,2500))
 ggsave(gg_durtraj,file="fig2.pdf",width=6,height=4)
-ggsave(gg_durtraj,file="fig2.png",width=6,height=4,dpi=400)
+if (do_png) ggsave(gg_durtraj,file="fig2.png",width=6,height=4,dpi=400)
 
 fig_objects <- c(fig_objects,"gg_durtraj","bottom.points2","top.points2")
 
@@ -198,14 +202,14 @@ gg_betatraj <- direct.label(gg_basetraj %+% ss_beta + nostrips +
 ## r fig2.1, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400} 
 
 ggsave(gg_betatraj,file="fig_S2_1.pdf",width=8,height=6)
-ggsave(gg_betatraj,file="fig_S2_1.png",width=8,height=6,dpi=400)
+if (do_png) ggsave(gg_betatraj,file="fig_S2_1.png",width=8,height=6,dpi=400)
 
 ## scale_x_continuous(limits=c(0,2500))
 
 ## r fig2.2, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400} 
 
 ggsave(gg_virtraj,file="fig_S2_2.pdf",width=8,height=6)
-ggsave(gg_virtraj,file="fig_S2_2.png",width=8,height=6,dpi=400)
+if (do_png) ggsave(gg_virtraj,file="fig_S2_2.png",width=8,height=6,dpi=400)
 
 ### Figure 3
 
@@ -256,7 +260,7 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 ## r fig3, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
 
 ggsave(gg_univ,file="fig3.pdf",width=8,height=4.8)
-ggsave(gg_univ,file="fig3.png",width=8,height=4.8,dpi=600)
+if (do_png) ggsave(gg_univ,file="fig3.png",width=8,height=4.8,dpi=600)
 
 mLw_res <- mLw  %>%
   filter(model %in% c("implicit","pairform+epc","heterogeneous","random"))  %>%
@@ -320,7 +324,7 @@ gg_univ.epi <- ggplot(mLw.epi,aes(value,model,fill=model))+
 ## r fig3.1, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
 
 ggsave(gg_univ.epi,file="fig_S2_3.pdf",width=8,height=4.8)
-ggsave(gg_univ.epi,file="fig_S2_3.png",width=8,height=4.8,dpi=600)
+if (do_png) ggsave(gg_univ.epi,file="fig_S2_3.png",width=8,height=4.8,dpi=600)
 
 fig_objects <- c(fig_objects,"gg_univ.epi")
 
@@ -447,9 +451,11 @@ pdf(file="fig4.pdf",width=7,height=7)
 print(ggp2,spacingProportion=0, left = 0.14)
 dev.off()
 
-png(file="fig4.png",width=7*600,height=7*600)
-print(ggp2,spacingProportion=0)
-dev.off()
+if (do_png) {
+    png(file="fig4.png",width=7*600,height=7*600)
+    print(ggp2,spacingProportion=0)
+    dev.off()
+}
 
 fig_objects <- c(fig_objects,"ggp2")
 
@@ -549,7 +555,7 @@ ggsens <- ggplot(mL3,aes(LHSval,sumval,colour=model))+
     zero_margin
 
 ggsave(ggsens, file="fig5.pdf",width=10,height=5)
-ggsave(ggsens, file="fig5.png",width=10,height=5,dpi=600)
+if (do_png) ggsave(ggsens, file="fig5.png",width=10,height=5,dpi=600)
 
 fig_objects <- c(fig_objects,"ggsens")
 
