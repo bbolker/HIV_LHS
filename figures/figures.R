@@ -302,8 +302,8 @@ mLw.epi$variable <- factor(mLw.epi$variable,
                            levels = c("eq_vir", "peak_vir", "eq_t", "peak_t"),
                            labels = c("Equilibrium~mean~log[10]~SPVL",
 													 					 "Peak~mean~log[10]~SPVL",
-													 					 "Equilibrium~mean~transmission~rate",
-													 					 "Peak~mean~transmission~rate"))
+													 					 "Equilibrium~mean~transmission~rate~(years^{-1})",
+													 					 "Peak~mean~transmission~rate~(years^{-1})"))
 
 gg_univ.epi <- ggplot(mLw.epi,aes(value,model,fill=model))+
 	geom_violinh(width=1)+
@@ -312,7 +312,7 @@ gg_univ.epi <- ggplot(mLw.epi,aes(value,model,fill=model))+
 	guides(fill=guide_legend(reverse=TRUE))+
 	labs(y="")+
 	geom_point(data=data.frame(model="random",
-                   variable=c("Equilibrium~mean~transmission~rate",
+                   variable=c("Equilibrium~mean~transmission~rate~\\(years^{-1}\\)",
 																											 "Equilibrium~mean~log[10]~SPVL"),
                                value=c(rval.epi.t, rval.epi.v)),pch=22,size=3,show.legend=FALSE) +
 	zero_x_margin
