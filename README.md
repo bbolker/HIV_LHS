@@ -9,6 +9,5 @@ Understanding effects of epidemiological structure on HIV virulence evolution. M
 - `ms`: text, bibliographic info, etc. for manuscript
 - `poster`: poster presentation from 2016 EEID conference
 - `simdata`: output from simulation runs
-- `tests`: model tests
 
 
