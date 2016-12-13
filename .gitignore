@@ -24,7 +24,8 @@ vignettes/*.pdf
 *.snm
 *.toc
 *.bak
-
+*.dvi
+*concordance*
 *~
 cache
 figure

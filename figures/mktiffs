@@ -1,0 +1,1 @@
+for i in 1 2 3 4 5 _S2_1 _S2_2 _S2_3; do make fig$i.tif; done
