@@ -1,0 +1,227 @@
+\documentclass[10pt]{letter}
+
+\usepackage{graphicx}
+\usepackage{myltr2}
+\usepackage{times}
+%\usepackage[sort&compress]{natbib}
+
+\bibliographystyle{abbrv}
+
+\makeatletter
+% http://tex.stackexchange.com/questions/18033/using-bibtex-with-letter-class
+\newenvironment{thebibliography}[1]
+     {\list{\@biblabel{\@arabic\c@enumiv}}%
+           {\settowidth\labelwidth{\@biblabel{#1}}%
+            \leftmargin\labelwidth
+            \advance\leftmargin\labelsep
+            \usecounter{enumiv}%
+            \let\p@enumiv\@empty
+            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+      \sloppy
+      \clubpenalty4000
+      \@clubpenalty \clubpenalty
+      \widowpenalty4000%
+      \sfcode`\.\@m}
+     {\def\@noitemerr
+       {\@latex@warning{Empty `thebibliography' environment}}%
+      \endlist}
+\newcommand\newblock{\hskip .11em\@plus.33em\@minus.07em}
+\makeatother
+
+\newcommand{\revcomment}[1]{\emph{#1}}
+\newcommand{\response}[1]{#1}
+
+\begin{document}
+
+\date{\today}
+
+\signature{\includegraphics[height=0.35in]{bbsig3.png}\\Benjamin Bolker}
+
+\begin{letter}{
+} 
+
+\opening{To the editor,}
+
+We appreciate the opportunity to revise our manuscript.
+In addition to extensive clarification and correction following
+the reviewers' comments (see detailed response below), 
+we have implemented an additional, more complex model
+that includes heterogeneity in contact rates among individuals,
+in order to address the reviewers' concern that we
+did not look at a sufficiently realistic set of 
+epidemiological models.
+
+\vskip10pt
+\hrule
+
+\textbf{Reviewer \#1}
+\revcomment{The abstract really needs to be improved. It’s missing the main points
+of the paper (that different contact patterns change the predicted
+trajectories and optimums of virulence), and has unnecessary minor
+details (like the fact that parameters were sampled using a Latin
+hypercube).}
+
+\response{We've followed the reviewer's suggestions in adding
+important points and removing unimportant details from the abstract.}
+
+\revcomment{The introduction is really lacking a cogent description of the study of
+the evolution of virulence, and the motivation of the paper would be
+totally unclear to someone not already very familiar with this field.
+The main points that are needed to spell out this issue are:
+[... detailed suggestions omitted ...]
+}
+
+\response{We thank the reviewer for pointing this out --- we've 
+been over this ground so often that we've come to take this basic
+framework for granted!  We've  extensively revised the introduction
+along the lines suggested by the reviewer.}
+
+\revcomment{
+The paper claims to add considerations of population structure to the
+study of virulence but only focuses on the rules of partnership
+formation, while assuming all individuals have identical behavior
+patterns, and not on another major aspect of population structure, which
+is the heterogeneity in the number of partners (or rates of partnership
+change) among individuals. In the case of a static network, this would
+be considered the degree heterogeneity. Many studies have shown that
+sexual contact networks tend to me more on the scale-free spectrum, and
+so the assumption of uniformity of behavior seems weak. This study would
+be most impactful if on top of examining these switch patterns it
+examined the influence of contact heterogeneity.}
+
+\response{We added a new model to our study that allows for 
+discrete classes of heterogeneity 
+in contact rate, with activity-weighted random mixing; this
+is a standard approach for implementing contact heterogeneity
+in a compartmental model. We discuss other avenues for
+increasing epidemiological realism (e.g., an explicitly
+heterosexual model with sex-specific transmission and
+progression characteristics, as well as age-structured
+mixing patterns) and comment that they will require a
+switch from our current compartmental approach to an agent-based
+framework.}
+
+\revcomment{In Figure 3 it would be helpful to also include time to progression to
+AIDS as a figure panel}
+
+\response{Our figures 2-5 are now framed in terms of expected
+progression time rather than SPVL, as we thought this scale
+would generally be more interpretable (as before, the supplementary
+material includes summary figures based on the other metrics, in this
+case SPVL and transmission probability).}
+
+\textbf{Reviewer \#2}
+\revcomment{Modeling studies have shown that HIV could evolve towards
+immediate virulence where the trade-off between host survival and
+transmission is optimized. The aim of this study is to investigate how
+different assumptions about sexual partnership dynamics affect the
+transient evolution of HIV virulence in a population. While this is a
+clear objective, the study is rather technical and, in my opinion, does
+not provide major insights or conclusions.
+}
+
+\response{Importance is in the eye of the beholder, of course; we
+have tried to clarify the take-home points of our study
+(epidemiological structures modify quantitative conclusions about
+virulence evolution; realistic models that account for both
+pair formation and extra-pair contact are best approximated by
+random-mixing models and worst approximated by models with
+intermediate complexity; extra-pair and other forms of unstructured
+contact generally act to increase the rate of virulence evolution).
+}
+
+
+\revcomment{
+The authors argue that they compare more “realistic” models (based on
+ref. 14) to the relatively simple model by Shireff et al. (ref. 10). In
+my view, all these models are quite simplistic in that they do not take
+into account age-structure and heterogeneity in sexual behavior.
+Essentially, all these models are random mixing models where every
+individual can make contact with every other individual. The only
+difference to the random mixing model by Shireff et al. is that
+transmission can occur in ongoing partnerships and that some models
+allow for concurrency. 
+Arguably much more important aspects that affect
+HIV epidemics and virulence evolution are the above-mentioned age- and
+risk-structure.}
+
+\response{As stated above in the response to reviewer \#1, we have
+added a model with contact heterogeneity to our study; while
+important, age-structured mixing is too complex for our current
+modeling framework and will have to be left for future studies.}
+
+\revcomment{
+ Furthermore, the authors use a single-stage disease
+model and do not distinguish between differences in transmissibility
+between the acute (primary) and chronic (asymptomatic) stage of
+infections, which might influence HIV virulence evolution more than
+differences in the sexual partnership dynamics. Hence, I am not
+convinced that the authors use a “more realistic” model than the one by
+Shireff et al.}
+
+\response{We agree that we have compromised the complexity of
+the disease life-history model somewhat in order to explore 
+the effects of epidemiological complexity.
+Figure 1 represents our effort to show that
+this simplification does not have a large impact on the results
+(although it's always possible that there could be an interaction
+between disease life-history complexity and epidemiological complexity
+\ldots); we have tried to clarify this point (see ll. 84ff.).
+
+\textbf{Structure}
+
+\begin{itemize}
+\item \revcomment{The references to the equations are not always correct.}
+\response{We have corrected all the errors we could find.}
+\item \revcomment{Figure 1 is described in Materials and Methods before the model is fully explained. Consequently, the parameter r cannot be understood.}
+\response{We have added some detail to the caption.}
+\item \revcomment{Tables and Figures often lack dimensions, i.e., is is unclear what the axes represent. Table 1 is more or less useless without providing
+dimensions for the various parameters.}
+\response{We have added dimensions throughout.}
+\item \revcomment{The author summary seems to provide more information about the results than the abstract. However, the authors use SPVL and progression to AIDS as two different proxies for virulence which can be confusing.}
+\response{We have thoroughly revised the abstract in response to reviewer \#1's comments. Commenting on both SPVL and progression time is admittedly tricky; in our revised version we have focused on SPVL only where making explicit comparisons with Shirreff \emph{et al.}'s models, and have otherwise stated results in terms of progression time.}
+\end{itemize}
+
+\textbf{Model}
+
+\begin{itemize}
+\item \revcomment{The authors make use of a previously published model from ref. 14. This
+model is based on the pair-formation formalism initially developed by
+Dietz \& Hadeler (1988, J Math Biol, PMID: 3351391) and later used by
+Kretzschmar et al. (1994 \& 1998, Math Biosci, PMID: 7833594 \& 9597826).
+I feel that the authors should refer to some of these original
+publications as well.}
+\response{We have added citations to these references.}
+
+\item \revcomment{Unfortunately, the description of the models in
+appendix S1 seems to be partially erroneous or incorrect. For example,
+the primes for the derivatives are often missing (e.g., equation 22, 24
+and 25) or it is unclear whether equations represent state variables or
+derivates thereof.}
+\response{We have fixed these errors.}
+}
+\item \revcomment{ Also, the reasoning behind the “instswitch” models is
+unclear to me. The authors say that “Once individuals leave a
+partnership, they enter temporary compartments…”. The variables (or
+derivatives?) $X$ and $Y_i$ in equation 19 consist of positive terms only,
+so how do individuals leave these compartments?}
+\response{We have clarified that these terms are partnership
+leaving rates, and have added several lines of text clarifying
+the meaning of the term.}
+\item \revcomment{
+ In my understanding the
+standard pair model (equation 9) can easily account for instantaneous
+partnership formation by simply setting the pair formation rate rho to a
+high value}
+\response{We have added the following sentence (ll. 141-145):
+``Although these models can also be implemented
+by setting the partnership formation rate of the explicit partnership models to a high value (and we have tested that both methods in fact produce same results), we model instantaneous partnership formation models independently in order to avoid scaling of partnership formation rate during model calibration affecting the virulence trajectory.''}
+
+\end{itemize}
+
+\closing{Sincerely,}
+
+\bibliography{virulence}
+
+\end{letter}
+\end{document}
