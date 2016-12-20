@@ -17,7 +17,6 @@ library(GGally) ## need BMB version
 library(ggstance)
 
 do_png <- FALSE
-do_duration <- FALSE
 
 opts_chunk$set(echo=FALSE,error=FALSE)
 if (.Platform$OS.type=="windows") {
@@ -153,9 +152,11 @@ gg_basetraj <- ggplot(ss,aes(tvec,mean,ymin=lwr,ymax=upr))+
     geom_line(aes(colour=model,linetype=model),lwd=1)+
     geom_ribbon(aes(fill = model), alpha=0.3)+
     labs(x="time (years)")+
+    scale_x_continuous(expand=c(0,0))+
     theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
           axis.title.x = element_text(margin = margin(10,0,0,0)),
-		legend.position = "none") +
+		legend.position = "none",
+          panel.grid = element_blank()) +
 	facet_wrap(~cmodel, nrow = 2) +
 	zero_margin
 
@@ -175,9 +176,12 @@ nostrips <- theme(strip.background = element_blank(),
 
 ## r fig2, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400}
 
-gg_virtraj <- direct.label(gg_basetraj + nostrips +
+gg_virtraj <-
+    suppressWarnings(direct.label(gg_basetraj + nostrips +
     labs(y=expression(population~mean~set-point~viral~load~(log[10]))),
-    method=list("top.points2","bumpup"))
+    method=list("top.points2","bumpup")))
+
+## FIXME: make minimal example for direct labels/linetype warning?
 
 ggsave(gg_virtraj,file="fig2.pdf",width=8,height=6)
 if (do_png) ggsave(gg_virtraj,file="fig2.png",width=8,height=6,dpi=400)
@@ -232,9 +236,9 @@ w <- with(mL,which(model=="random" & variable== "eq_vir"))
 rval <- mean(mL$value[w])
 mLw <- droplevels(mL[-w,])
 mLw$variable <- factor(mLw$variable,
-											 levels = c("peak_time", "peak_vir", "eq_vir", "rel_vir"),
-											 labels = c("peak~time~(years)",
-											 					 "maximum~mean~log[10]~SPVL",
+         levels = c("peak_time", "peak_vir", "eq_vir", "rel_vir"),
+         labels = c("peak~time~(years)",
+                    "maximum~mean~log[10]~SPVL",
 											 					 "equilibrium~mean~log[10]~SPVL",
 											 					 "peak:equilibrium~ratio"))
 

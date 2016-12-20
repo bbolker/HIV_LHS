@@ -27,7 +27,9 @@ vignettes/*.pdf
 *.dvi
 *concordance*
 *~
-cache
+*cache/
+*files/
+
 figure
 .Rproj.user
 
