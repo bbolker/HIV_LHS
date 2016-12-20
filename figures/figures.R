@@ -1,5 +1,6 @@
 ## setup
 library(knitr)
+## requires ggplot 2.2.0
 library(ggplot2); theme_set(theme_bw(base_size = 12,
                                        base_family = "Times"))
 library(directlabels)
@@ -16,14 +17,15 @@ library(GGally) ## need BMB version
 library(ggstance)
 
 do_png <- FALSE
+do_duration <- FALSE
 
 opts_chunk$set(echo=FALSE,error=FALSE)
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
 } 
-zero_margin <- theme(panel.margin=grid::unit(0,"lines"))
+zero_margin <- theme(panel.spacing=grid::unit(0,"lines"))
 zero_x_margin <-
-    theme(panel.margin.x=grid::unit(0, "lines"))
+    theme(panel.spacing.x=grid::unit(0, "lines"))
 ## use Dark2 rather than Set1 because colour #6 of Set1 is yellow (ugh/too light)
 scale_colour_discrete <- function(...,palette="Dark2") scale_colour_brewer(...,palette=palette)
 scale_fill_discrete <- function(...,palette="Dark2") scale_fill_brewer(...,palette=palette)
@@ -37,11 +39,11 @@ load("../simdata/combineResults.rda")
 ## FIXME: maybe should go in hivFuns.R ?
 
 ## setup2
-orig_sum_labs <- c("peak_time","peak_dur","eq_dur","rel_dur")
+orig_sum_labs <- c("peak_time","peak_vir","eq_vir","rel_vir")
 new_sum_labs <- c("peak time (years)",
-                  "minimum expected progression time (years)",
-                  "equilibrium expected progression time (years)",
-                  "minimum:equilibrium progression ratio")
+                  "maximum mean log10 SPVL",
+                  "equilibrium mean log10 SPVL",
+                  "maximum:equilibrium ratio")
 m_order <- c("random", "heterogeneous","pairform+epc", "pairform",
              "instswitch+epc","instswitch" , "implicit")
 fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
@@ -51,7 +53,6 @@ fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
            levels=orig_sum_labs,
            labels=new_sum_labs)
 }
-
 
 ### Figure 1
 
@@ -70,7 +71,11 @@ tlab <- "time (years)"
 g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run,linetype=run))+
     geom_line()+labs(x=tlab,
             y=expression(population~mean~set-point~viral~load~(log[10])))+
-    theme(legend.position=c(0.75,0.25))
+		scale_x_continuous(expand = c(0.005, 0), breaks = seq(0, 600, by = 100), 
+											 labels = c("0", "", "200", "", "400", "", "")) +
+    theme(legend.position=c(0.63,0.45),
+    			legend.justification = c(0, 1),
+    			panel.grid = element_blank())
 
 ## Compute difference between 
 
@@ -104,27 +109,26 @@ afun <- function(label,size=8) {
              ## http://stackoverflow.com/questions/20083700/how-to-have-annotated-text-style-to-inherit-from-theme-set-options
              family= theme_get()$text[["family"]],
              size=size,
-             vjust=1.5,hjust=0.1)
+             vjust=1.5,hjust=-0.5)
              ## vjust=0.98,hjust=0.02)
 }
 g1.y <- g1 + scale_y_continuous(limits = limits, breaks = breaks)+
-    scale_colour_discrete(name="run")+afun("a")+
-    scale_linetype_discrete(name="run")
+    scale_colour_discrete(name=bquote(run))+afun("a")+
+    scale_linetype_discrete(name=bquote(run))
 
 g2.labs <- list(bquote(10^{-3}), bquote(10^{-4}), bquote(10^{-5}))
 
 g2.y <- g2 + scale_y_continuous(limits = limits, breaks = breaks)+
-    scale_colour_discrete(name="I(0)", labels = g2.labs)+afun("b")+
-    scale_linetype_discrete(name="I(0)",labels=g2.labs)
+    scale_colour_discrete(name=bquote(I*"(0)"), labels = g2.labs)+afun("b")+
+    scale_linetype_discrete(name=bquote(I*"(0)"),labels=g2.labs)
 
 g3.y <- g3 + scale_y_continuous(limits = limits, breaks = breaks)+
-    scale_colour_discrete(name=bquote(alpha(0)))+afun("c")+
-    scale_linetype_discrete(name=bquote(alpha(0)))
+    scale_colour_discrete(name=bquote(alpha*"(0)"))+afun("c")+
+    scale_linetype_discrete(name=bquote(alpha*"(0)"))
 
 ## r fig1,fig.height=3.5,fig.width=10, echo = FALSE, dpi = 600}
-pdf(file="fig1.pdf",height=3.5,width=10)
-print(grid.arrange(g1.y, g2.y, g3.y, nrow=1))
-dev.off()
+fig1 <- arrangeGrob(g1.y, g2.y, g3.y, nrow=1)
+ggsave("fig1.pdf", fig1, height = 3.5, width = 10)
 
 if (do_png) {
     png(file="fig1.png",height=3.5*600,width=10*600)
@@ -169,24 +173,16 @@ bottom.points2 <- gapply.fun(transform(d[which.min(d$y), ],
 nostrips <- theme(strip.background = element_blank(),
                   strip.text.x = element_blank())
 
+## r fig2, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400}
+
 gg_virtraj <- direct.label(gg_basetraj + nostrips +
     labs(y=expression(population~mean~set-point~viral~load~(log[10]))),
     method=list("top.points2","bumpup"))
 
-ss_dur <- transform(ss, mean = returnDur(mean,HIVpars.skeleton),
-                    lwr = returnDur(lwr,HIVpars.skeleton),
-                    upr = returnDur(upr,HIVpars.skeleton))
+ggsave(gg_virtraj,file="fig2.pdf",width=8,height=6)
+if (do_png) ggsave(gg_virtraj,file="fig2.png",width=8,height=6,dpi=400)
 
-gg_durtraj <- direct.label(gg_basetraj %+% ss_dur + nostrips +
-             labs(y="expected progression to AIDS (years)"),
-             method=list("bottom.points2","bumpup"))
-## r fig2, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400}
-
-## scale_x_continuous(limits=c(0,2500))
-ggsave(gg_durtraj,file="fig2.pdf",width=6,height=4)
-if (do_png) ggsave(gg_durtraj,file="fig2.png",width=6,height=4,dpi=400)
-
-fig_objects <- c(fig_objects,"gg_durtraj","bottom.points2","top.points2")
+fig_objects <- c(fig_objects,"gg_virtraj","bottom.points2","top.points2")
 
 ### Figure 2.1 - Transmission rate
 
@@ -208,8 +204,16 @@ if (do_png) ggsave(gg_betatraj,file="fig_S2_1.png",width=8,height=6,dpi=400)
 
 ## r fig2.2, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400} 
 
-ggsave(gg_virtraj,file="fig_S2_2.pdf",width=8,height=6)
-if (do_png) ggsave(gg_virtraj,file="fig_S2_2.png",width=8,height=6,dpi=400)
+ss_dur <- transform(ss, mean = returnDur(mean,HIVpars.skeleton),
+										lwr = returnDur(lwr,HIVpars.skeleton),
+										upr = returnDur(upr,HIVpars.skeleton))
+
+gg_durtraj <- direct.label(gg_basetraj %+% ss_dur + nostrips +
+													 	labs(y="expected progression to AIDS (years)"),
+													 method=list("bottom.points2","bumpup"))
+
+ggsave(gg_durtraj,file="fig_S2_2.pdf",width=6,height=4)
+if (do_png) ggsave(gg_durtraj,file="fig_S2_2.png",width=6,height=4,dpi=400)
 
 ### Figure 3
 
@@ -218,44 +222,44 @@ sL$model <- factor(sL$model, m_order)
 
 ## we get long tails because eq_vir has default value of 0.
 ## In other words, all the runs that ended up with error will have eq_vir of 0.
-sL <- sL[-which(is.na(sL$peak_vir)),]
+sL <- sL[-which(is.na(sL$peak_vir)),] %>% as_data_frame
 
-sL.mod <- transform(sL, peak_dur = returnDur(peak_vir,HIVpars.skeleton),
-                    eq_dur = returnDur(eq_vir,HIVpars.skeleton))
-sL.mod <- transform(sL.mod, rel_dur = peak_dur/eq_dur)
-sL.mod <- sL.mod %>% dplyr::select(-c(eq_vir,peak_vir,rel_vir))
-mL <- na.omit(melt(sL.mod,id.vars=c("model","run")))
+mL <- na.omit(melt(sL,id.vars=c("model","run")))
 ## horrible hack for width of random-mixing violin (but doesn't help); subsample
 ## w <- which(mL$model=="random")
 ## mLw <- mL[-sample(w,size=length(w)*9/10,replace=FALSE),]
-w <- with(mL,which(model=="random" & variable=="eq_dur"))
+w <- with(mL,which(model=="random" & variable== "eq_vir"))
 rval <- mean(mL$value[w])
 mLw <- droplevels(mL[-w,])
-mLw$variable <- fixfac2(mLw$variable)
+mLw$variable <- factor(mLw$variable,
+											 levels = c("peak_time", "peak_vir", "eq_vir", "rel_vir"),
+											 labels = c("peak~time~(years)",
+											 					 "maximum~mean~log[10]~SPVL",
+											 					 "equilibrium~mean~log[10]~SPVL",
+											 					 "peak:equilibrium~ratio"))
 
-minprogtime <- mL %>%
+maxvir <- mL %>%
 	group_by(model) %>%
-	filter(variable == "peak_dur") %>%
+	filter(variable == "peak_vir") %>%
 	summarise(med=median(value),
                   lwr=quantile(value,0.025),
                   upr=quantile(value,0.975))
 
 options(digits=3)
-minprogtime
-
-
+maxvir
 
 gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 	geom_violinh(width=1)+
-	theme(legend.position = "none") +
-	facet_wrap(~variable,scale="free_x")+
+	theme(legend.position = "none",
+				panel.spacing.y = grid::unit(0.8, "lines")) +
+	facet_wrap(~variable,scale="free_x", labeller = label_parsed)+
 	guides(fill=guide_legend(reverse=TRUE))+
 	labs(y="")+
 	geom_point(data=data.frame(model="random",
-                variable="equilibrium expected progression time (years)",
+                variable="equilibrium~mean~log[10]~SPVL",
                                    value=rval),
                    pch=22,size=3,show.legend=FALSE) +
-    zero_x_margin
+  zero_x_margin
 
 ## r fig3, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
 
@@ -264,46 +268,51 @@ if (do_png) ggsave(gg_univ,file="fig3.png",width=8,height=4.8,dpi=600)
 
 mLw_res <- mLw  %>%
   filter(model %in% c("implicit","pairform+epc","heterogeneous","random"))  %>%
-  filter(variable %in% "minimum expected progression time (years)")
+  filter(variable %in% "maximum~mean~log[10]~SPVL")
 
 ## one-panel plot for talks
 gg_univ_0 <- ggplot(mLw_res,aes(value,model,fill=model))+
 	geom_violinh(width=1)+
 	theme(legend.position = "none") +
 	guides(fill=guide_legend(reverse=TRUE))+
-    labs(x="minimum mean progression time (years)")
+    labs(x= expression(maximum~mean~log[10]~SPVL))
 saveRDS(gg_univ_0,file="HIV_dur.rds")
 
 fig_objects <- c(fig_objects,"gg_univ")
 
 ### Figure 3.1
 
-sL$model <- factor(sL$model, m_order)
 sL.epi <- transform(sL, eq_t = returnBeta(eq_vir,HIVpars.skeleton),
-                    peak_t = returnBeta(peak_vir,HIVpars.skeleton)) %>%
-	select(model, run, eq_vir, peak_vir, eq_t, peak_t)
+                    peak_t = returnBeta(peak_vir,HIVpars.skeleton),
+										eq_dur = returnDur(eq_vir,HIVpars.skeleton),
+										peak_dur = returnDur(peak_vir,HIVpars.skeleton)) %>%
+	select(model, run, eq_t, peak_t, eq_dur, peak_dur) %>%
+	as_data_frame
 
 maxtrans <- sL.epi %>%
 	group_by(model) %>%
-	summarise(med=median(peak_t),
-                  lwr=quantile(peak_t,0.025),
-                  upr=quantile(peak_t,0.975))
+	summarise(med_t=median(peak_t),
+						lwr_t=quantile(peak_t,0.025),
+            upr_t=quantile(peak_t,0.975),
+						med_d=median(peak_dur),
+						lwr_d=quantile(peak_dur,0.025),
+						upr_d=quantile(peak_dur,0.975))
 
 mL.epi <- melt(sL.epi,id.vars=c("model","run"))
 ## horrible hack (but doesn't help); subsample
 ## w <- which(mL$model=="random")
 ## mLw <- mL[-sample(w,size=length(w)*9/10,replace=FALSE),]
 w.epi.t <- with(mL.epi,which(model=="random" & variable=="eq_t"))
-w.epi.v <- with(mL.epi,which(model=="random" & variable=="eq_vir"))
+w.epi.d <- with(mL.epi,which(model=="random" & variable=="eq_dur"))
 rval.epi.t <- mean(mL.epi$value[w.epi.t])
-rval.epi.v <- mean(mL.epi$value[w.epi.v])
-mLw.epi <- droplevels(mL.epi[-c(w.epi.t,w.epi.v),])
+rval.epi.d <- mean(mL.epi$value[w.epi.d])
+mLw.epi <- droplevels(mL.epi[-c(w.epi.t,w.epi.d),])
 mLw.epi$variable <- factor(mLw.epi$variable,
-                           levels = c("eq_vir", "peak_vir", "eq_t", "peak_t"),
-                           labels = c("Equilibrium~mean~log[10]~SPVL",
-													 					 "Peak~mean~log[10]~SPVL",
-													 					 "Equilibrium~mean~transmission~rate~(year^-1)",
-													 					 "Peak~mean~transmission~rate~(year^-1)"))
+                           levels = c("eq_t", "peak_t", "eq_dur", "peak_dur"),
+                           labels = c("equilibrium~mean~transmission~rate~(year^-1)",
+													 					 	"maximum~mean~transmission~rate~(year^-1)",
+													 					 	"equilibrium~mean~progression~time~(years)",
+													 					 	"minimum~mean~progression~time~(years)"))
 
 gg_univ.epi <- ggplot(mLw.epi,aes(value,model,fill=model))+
 	geom_violinh(width=1)+
@@ -312,14 +321,12 @@ gg_univ.epi <- ggplot(mLw.epi,aes(value,model,fill=model))+
 	guides(fill=guide_legend(reverse=TRUE))+
 	labs(y="")+
 	geom_point(data=data.frame(model="random",
-                   variable=c("Equilibrium~mean~transmission~rate~(year^-1)",
-																											 "Equilibrium~mean~log[10]~SPVL"),
-                               value=c(rval.epi.t, rval.epi.v)),pch=22,size=3,show.legend=FALSE) +
+                   variable=c("equilibrium~mean~transmission~rate~(year^-1)",
+                   					 "equilibrium~mean~progression~time~(years)"),
+                               value=c(rval.epi.t, rval.epi.d)),pch=22,size=3,show.legend=FALSE) +
 	zero_x_margin
 
 # http://stackoverflow.com/questions/19282897/how-to-add-expressions-to-labels-in-facet-wrap
-
-
 
 ## r fig3.1, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
 
@@ -348,14 +355,14 @@ if (FALSE) {
 ff <- function(model,variable,r=3) {
     mm <- mLtab[mLtab$model==model & mLtab$variable==variable,3:5]
     round(unlist(mm),r)
-}
-mindur_random <- ff("random","peak_dur",1)
-mindur_pfepc <-  ff("pairform+epc","peak_dur",1)
-mindur_implicit  <- ff("implicit","peak_dur",1)
-maxt_random <- ff("random","peak_t",2)
-maxt_pfepc <- ff("pairform+epc","peak_t",2)
-maxt_implicit  <- ff("implicit","peak_t",2)
-save(list=ls(pattern="^(maxt|mindur)"),file="../ms/maxminstats.RData")
+	}
+	mindur_random <- ff("random","peak_dur",1)
+	mindur_pfepc <-  ff("pairform+epc","peak_dur",1)
+	mindur_implicit  <- ff("implicit","peak_dur",1)
+	maxt_random <- ff("random","peak_t",2)
+	maxt_pfepc <- ff("pairform+epc","peak_t",2)
+	maxt_implicit  <- ff("implicit","peak_t",2)
+	save(list=ls(pattern="^(maxt|mindur)"),file="../ms/maxminstats.RData")
 }
 
 
@@ -413,7 +420,7 @@ tweak_colours_gg <- function(gg) {
 
 ### Figure 4
 
-sL2 <- sL.mod[,c("model", "run", "eq_dur", "peak_time", "peak_dur")]
+sL2 <- sL[,c("model", "run", "eq_vir", "peak_time", "peak_vir")]
 
 set.seed(101)
 sL2 <- sL2 %>%
@@ -441,7 +448,7 @@ ggp2 <- putPlot(ggp2,inner,2,1)
 ## tweak scale
 for(i in 1:2){
 	inner <- getPlot(ggp2,2,i)
-	inner <- inner+scale_y_continuous(breaks=seq(5,15,by=5))
+	inner <- inner+scale_y_continuous(breaks=seq(3,5,by=1))
 	ggp2 <- putPlot(ggp2,inner,2,i)	
 }
 
