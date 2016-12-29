@@ -20,6 +20,14 @@ full_model_rcpp <- function(t, yini, parameters){
 	return(list(grad,  tot_I = tmp[n-1], mean_V = tmp[n]))
 }
 
+full_model_rcpp_noepc <- function(t, yini, parameters){
+	tmp <- unlist(rcppFull_noepc(t, yini, parameters))
+	n <- length(tmp)
+	grad <- tmp[-c(n-1,n)]
+	
+	return(list(grad,  tot_I = tmp[n-1], mean_V = tmp[n]))
+}
+
 partner_model_rcpp <- function(t, yini, parameters){
 	tmp <- unlist(rcppPartner(t, yini, parameters))
 	n <- length(tmp)
@@ -33,7 +41,7 @@ calc_yini_full <- function(parameters){
 	
 	p2 <- transform(parameters, scale_all = 5)
 	
-	r <- rk(unlist(yini0), func = partner_model_rcpp, parms = p2, times = c(1:50))
+	r <- rk(unlist(yini0), func = partner_model_rcpp, parms = p2, times = c(1:50), hmax = 0.3)
 	
 	r2 <- r[50,-1]
 	

@@ -1,7 +1,7 @@
 expand <- function(x, ...) {
     UseMethod("expand")
 }
-expand.HIVvirparlist <- function(x,...) {
+expand.HIVvirparlist <- function(x, pair = TRUE, ...) {
     ## mutate() doesn't work this deeply ...
     x <- within(x,
        {
@@ -40,7 +40,13 @@ expand.HIVvirparlist <- function(x,...) {
           alpha2 <- rep(alpha, n.risk)
           
           cc_mat <- outer(r.risk * c_mean, r.risk * c_mean, "+")/2
-          rho2 <- r.risk * rho
+          
+          if(pair){
+          	rho2 <- r.risk * rho
+          }else{
+          	rho2 <- rep(rho, n.risk)
+          }
+          
           c2 <- r.risk * c_mean
           rho2.I <- rep(rho2, each = n.alpha)
           c2.I <- rep(c2, each = n.alpha)
@@ -95,14 +101,14 @@ hill <- function(x,a,b,p) {
 get_rval <- function(g, yini, pp, plot.it=FALSE,
                      tvec = c(1:500),
                      lims=c(1e-3,1e-2),
-                     verbose=FALSE) {
+                     verbose=FALSE, hmax = 0.3) {
   
     start <- unlist(yini)
     
     r <- rk(y=start,
                  times=tvec,
                  func=g,
-                 parms=pp, hmax = 0.3)
+                 parms=pp, hmax = hmax)
         
     Itot <- r[,(ncol(r)-1)]
     
