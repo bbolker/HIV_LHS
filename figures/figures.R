@@ -18,7 +18,6 @@ library(ggstance)
 
 do_png <- FALSE
 
-opts_chunk$set(echo=FALSE,error=FALSE)
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
 } 
@@ -221,7 +220,7 @@ if (do_png) ggsave(gg_durtraj,file="fig_S2_2.png",width=6,height=4,dpi=400)
 
 ### Figure 3
 
-sL <- transform(sum_list[["sum_mat"]], rel_vir=peak_vir/eq_vir)
+sL <- transform(sum_list[["sum_mat"]], peak_dur = returnDur(peak_vir,HIVpars.skeleton))
 sL$model <- factor(sL$model, m_order)
 
 ## we get long tails because eq_vir has default value of 0.
@@ -236,11 +235,11 @@ w <- with(mL,which(model=="random" & variable== "eq_vir"))
 rval <- mean(mL$value[w])
 mLw <- droplevels(mL[-w,])
 mLw$variable <- factor(mLw$variable,
-         levels = c("peak_time", "peak_vir", "eq_vir", "rel_vir"),
+         levels = c("peak_time", "peak_vir", "eq_vir", "peak_dur"),
          labels = c("peak~time~(years)",
                     "maximum~mean~log[10]~SPVL",
-											 					 "equilibrium~mean~log[10]~SPVL",
-											 					 "peak:equilibrium~ratio"))
+										"equilibrium~mean~log[10]~SPVL",
+         					  "minimum~mean~progression~time~(years)"))
 
 maxvir <- mL %>%
 	group_by(model) %>%
@@ -263,7 +262,9 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
                 variable="equilibrium~mean~log[10]~SPVL",
                                    value=rval),
                    pch=22,size=3,show.legend=FALSE) +
-  zero_x_margin
+  zero_x_margin +
+	theme(panel.grid.major.x = element_blank(),
+				panel.grid.minor.x = element_blank())
 
 ## r fig3, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
 
@@ -328,7 +329,9 @@ gg_univ.epi <- ggplot(mLw.epi,aes(value,model,fill=model))+
                    variable=c("equilibrium~mean~transmission~rate~(year^-1)",
                    					 "equilibrium~mean~progression~time~(years)"),
                                value=c(rval.epi.t, rval.epi.d)),pch=22,size=3,show.legend=FALSE) +
-	zero_x_margin
+	zero_x_margin +
+	theme(panel.grid.major.x = element_blank(),
+				panel.grid.minor.x = element_blank())
 
 # http://stackoverflow.com/questions/19282897/how-to-add-expressions-to-labels-in-facet-wrap
 
@@ -431,20 +434,18 @@ sL2 <- sL2 %>%
 	group_by(model) %>%
 	sample_n(100)
 
-new_sum_labs2 <- gsub("\\(years\\)", "years", new_sum_labs[1:3])
-
-names(sL2)[na.omit(match(orig_sum_labs,names(sL2)))] <- gsub(" ","_",new_sum_labs2)
-    ## paste0("`",new_sum_labs,"`")
 ggp1 <- ggpairs(sL2,
         mapping = ggplot2::aes(color = model,pch=model),
         columns=3:5,
         legends=TRUE,
         lower = list(continuous = wrap("points",alpha=0.6,size=2)), ## alpha = 0.3,size=0.5)),
         diag = list(continuous = "blankDiag"),
-        upper = list(continuous = "blank"))
+        upper = list(continuous = "blank"),
+        columnLabels = expression(peak~time~(years), maximum~mean~log[10]~SPVL, equilibrium~mean~log[10]~SPVL))
+
 ## http://stackoverflow.com/questions/14711550/is-there-a-way-to-change-the-color-palette-for-ggallyggpairs-using-ggplot
 ## have to change plot one panel at a time
-ggp2 <- tweak_colours_gg(tweak_legends_gg(trim_gg(ggp1)))
+ggp2 <- tweak_colours_gg(tweak_legends_gg(trim_gg(ggp1, FALSE, FALSE)))
 ## add 1-to-1 line
 inner <- getPlot(ggp2,2,1)
 inner <- inner+geom_abline(intercept=0,slope=1,lty=2)
@@ -471,25 +472,25 @@ if (do_png) {
 fig_objects <- c(fig_objects,"ggp2")
 
 ### Figure 5
-remove_runs <- unique(subset(mL2, sumvar == "peak_time" & is.na(sumval))[,"run"])
-mL2 <- subset(mL2, !(model == "heterogeneous" & run %in% remove_runs))
+remove_runs <- unique(subset(mL3, sumvar == "peak_time" & is.na(sumval))[,"run"])
+mL3 <- subset(mL3, !(model == "heterogeneous" & run %in% remove_runs))
 
-mL3 <- subset(mL2,
+mL3 <- subset(mL3,
        !((model=="implicit" &
-          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio", "kappa", "mu")) |
+          LHSvar %in% c("rho_base", "rho_adj" ,"c_u_ratio","c_e_ratio", "kappa", "mu")) |
          (model=="random" &
-          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio", "kappa", "mu")) |
+          LHSvar %in% c("rho_base", "rho_adj","c_u_ratio","c_e_ratio", "kappa", "mu")) |
          (model=="instswitch" &
-          LHSvar %in% c("rho_base","c_u_ratio","c_e_ratio", "kappa", "mu")) |
+          LHSvar %in% c("rho_base", "rho_adj","c_u_ratio","c_e_ratio", "kappa", "mu")) |
          (model=="instswitch+epc" &
-          LHSvar %in% c("rho_base","c_u_ratio", "kappa", "mu")) |
+          LHSvar %in% c("rho_base", "rho_adj","c_u_ratio", "kappa", "mu")) |
          (model=="pairform" &
           LHSvar %in% c("c_u_ratio","c_e_ratio", "kappa", "mu")) |
        		(model == "pairform+epc" &
        		 	LHSvar %in% c("kappa", "mu"))))
 
 mL3 <- droplevels(mL3)
-fvals <- c("Duration1","c_mean_base","c_e_ratio","rho_base",
+fvals <- c("Beta1_adj", "Duration1","c_mean_adj","c_e_ratio","rho_adj",
                               "c_u_ratio",
                               "kappa", "mu")
 
@@ -498,12 +499,12 @@ mL3 <- subset(mL3,LHSvar %in% fvals)
 ## reorder factors
 mL3$LHSvar <- factor(mL3$LHSvar,
                      levels=fvals,
-                     labels = c("D[P]",
+                     labels = c("beta[P]", "D[P]",
                                 "c", "c[e]/c[w]", "rho", "c[u]/c[w]",
                                 "kappa", "mu"))
 
 ## drop rows with variables we don't want anyway
-mL3 <- na.omit(mL3) 
+mL3 <- na.omit(mL3)
 
 ## FIXME: could also use labels argument to rename levels, labeller=label_parsed
 ## in facet_grid to get pretty math
@@ -512,6 +513,9 @@ mL3$model <- factor(mL3$model, levels=m_order)
 
 mL3 <- subset(mL3,sumvar %in% orig_sum_labs)
 mL3$sumvar <- fixfac2(mL3$sumvar)
+
+#set.seed(101)
+#mL3_sample <- mL3 %>% filter(run %in% sample(1000, 500))
 
 L <- function(labels,multi_line=TRUE) {
     r <- if (all(grepl(" ",labels[[1]]))) {
@@ -556,7 +560,7 @@ brkfun <- function(x) {
 ## r fig5, echo = FALSE, fig.width = 10, cache = TRUE,dpi = 600}
 
 ggsens <- ggplot(mL3,aes(LHSval,sumval,colour=model))+
-    geom_point(pch=".",alpha=0.5)+
+    geom_point(pch=".",alpha=0.2)+
     facet_grid(sumvar~LHSvar,scales="free",
                labeller = L)+
     geom_smooth(se=FALSE)+labs(x="",y="")+
