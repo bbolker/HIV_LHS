@@ -551,9 +551,11 @@ brkfun <- function(x) {
     ## r needs to be rounded if we want to compare it.. probably long values causing problems...
     r <- round(r, digit = 2)
     if (all(r==c(0.01,1))) r <- c(0.02,0.5)
-    if (all(r==c(0.2,5))) r <- c(0.5,5)
-    if (all(r==c(0.01,100))) r <- c(0.05, 50)
-    if (all(r==c(0.1,1))) r <- c(0.5, 1)
+    else if (all(r==c(0.2,5))) r <- c(0.5,5)
+    else if (all(r==c(0.01,100))) r <- c(0.05, 50)
+    else if (all(r==c(0.1,1))) r <- c(0.2, 1)
+    else if (all(r==c(0.05, 20))) r <- c(0.05, 10)
+    
     return(r)
 }
 
