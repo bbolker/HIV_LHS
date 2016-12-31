@@ -68,16 +68,6 @@ fun <- function(pars, model, i){
 
 if(file.exists(fn)){
 	load(fn)
-	for(i in 3:4){
-		model <- ifelse(i == 1 | i == 3, full_model_rcpp, full_model_rcpp_noepc)
-		cat(2 * i - 1)
-		base_pars <- param_list[[i]]
-		fun(base_pars, model, 2 * i - 1)
-		cat(2 * i)
-		nohetero_pars <- transform(base_pars, n.risk = 1)
-		fun(nohetero_pars, model, 2 * i)
-		save("I_matFull", "vir_matFull", "eq_vecFull", "peak_matFull", "val_vecFull", file = fn)
-	}
 }else{
 	for(i in 1:4){
 		model <- ifelse(i == 1 | i == 3, full_model_rcpp, full_model_rcpp_noepc)
