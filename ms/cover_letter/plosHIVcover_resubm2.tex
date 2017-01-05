@@ -31,6 +31,7 @@
 
 \newcommand{\revcomment}[1]{\emph{#1}}
 \newcommand{\response}[1]{#1}
+\newcommand{\rzero}{\ensuremath{\mathcal R}_0}
 
 \begin{document}
 
@@ -112,17 +113,36 @@ While the intro has been improved since the last version, it is still relatively
 Second sentence - would be much clearer to say something like “… pathogens with higher reproduction numbers - that is, the number of secondary infections caused by a single infected host over the course of its infectious period - will tend to increase in prevalence relative to strains with lower reproductive ratios.” Your definition of “reproduction” was not very clear, and it’s not a good idea to call R0 a rate, as it does not have units of time.
 }
 
+\response{
+We were indeed thinking of reproduction \emph{rates} (i.e., $r$) rather than $\rzero$ here; we may be slightly more
+attuned to $r$ because of our eco-evolutionary work, but we agree that it's clearer to start out with an $\rzero$
+framing, which will be more familiar to technical readers (and clarifying the $r$-$\rzero$ distinction is really too much to try to pack into the first few sentences of the introduction).
+}
+
 \revcomment{
 Confusing sentence “ …in studies of discordant couples (…), HIV virulence as measured by the rate of progression to AIDS was both heritable and covaried with the set-point viral load (..) and the probability of transmission”.
 - You are combining results of multiple different studies here. I don’t think there is a study that compared rate of progression to AIDS with probability of transmission. I think studies have a) compared SPVL to rate of progression, b) showed that SPVL was heritable, c) compared SPVL to probability of transmission. I think b) and c) required studying serodiscordant couples but I don’t think most studies of a) did.
 }
+
+\response{
+This is a good point. We have clarified the text here.
+}
+
 \revcomment{
 The paragraphs starting at line 40 read like methods, not introduction
+}
+
+\response{
+We think some of this material is useful to foreshadow what we're
+going to do in the body of the paper, but we have trimmed the
+technical details.
 }
 
 \revcomment{
 The term “epidemiological structures” is used throughout to mean the dynamics of the contact process (partnership dynamics), but this is not a common phrase and is not at all descriptive of what you want it to mean.
 }
+
+\response{We have changed this term to ``contact structure'' throughout.}
 
 \revcomment{\textbf{Methods:}
 If you refer to parameters here, they must be defined here, not just in the SI (i.e. for $c_u$, $c_w$, etc)
