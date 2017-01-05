@@ -38,9 +38,9 @@ load("../simdata/combineResults.rda")
 
 ## setup2
 orig_sum_labs <- c("peak_time","peak_vir","eq_vir","rel_vir")
-new_sum_labs <- c("peak time (years)",
-                  "maximum mean log10 SPVL",
-                  "equilibrium mean log10 SPVL",
+new_sum_labs <- c(bquote(atop("peak time", "(years)")),
+									bquote(atop("maximum", "mean" ~ log[10] ~ "SPVL")),
+									bquote(atop("equilibrium", "mean" ~ log[10] ~ "SPVL")),
                   "maximum:equilibrium ratio")
 m_order <- c("random", "heterogeneous","pairform+epc", "pairform",
              "instswitch+epc","instswitch" , "implicit")
@@ -564,7 +564,7 @@ brkfun <- function(x) {
 ggsens <- ggplot(mL3,aes(LHSval,sumval,colour=model))+
     geom_point(pch=".",alpha=0.2)+
     facet_grid(sumvar~LHSvar,scales="free",
-               labeller = L)+
+               labeller = label_parsed)+
     geom_smooth(se=FALSE)+labs(x="",y="")+
     ## leave a little extra room?
     scale_x_log10(expand=c(0,0.08), breaks=brkfun)+
