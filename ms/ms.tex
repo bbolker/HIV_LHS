@@ -168,7 +168,7 @@
 % Title must be 250 characters or less.
 \begin{flushleft}
 {\Large
-\textbf\newline{Effects of Epidemiological Structure on the Transient Evolution of HIV Virulence} % Please use "title case" (capitalize all terms in the title except conjunctions, prepositions, and articles).
+\textbf\newline{Effects of Contact Structure on the Transient Evolution of HIV Virulence} % Please use "title case" (capitalize all terms in the title except conjunctions, prepositions, and articles).
 }
 %% short title: Epidemiological Structure and HIV Virulence Evolution
 %% (53/70 characters)
@@ -279,7 +279,7 @@ virulence over the course of the epidemic (a minimum of 15 years to
 progress to AIDS) than either more realistic models or simple models
 without any partnership structure at all (both approx. 7.25 years to
 progress to AIDS), because sexual contact outside of stable
-partnerships tended to wash out the effects of epidemiological
+partnerships tended to wash out the effects of contact
 structure. The large effect of epidemiological details on evolutionary
 dynamics suggests that researchers trying to predict the evolution of
 pathogens should proceed with caution.
@@ -292,17 +292,15 @@ pathogens should proceed with caution.
 The evolution of pathogen virulence has both 
 theoretical and, potentially, practical
 importance. In general, evolutionary theory suggests that
-disease strains that can reproduce more --- where reproduction
-is defined here as the amount of \emph{between-host} transmission, or
-the number of new hosts infected --- will increase in prevalence.
-Pathogens can increase their net reproduction rate either
+pathogens with higher reproduction numbers ($\rzero$) --- that is, the number of secondary infections caused by a single infected host over the course of its infectious period --- will tend to increase in prevalence relative to strains with lower reproductive ratios.
+Pathogens can increase their reproduction numbers either
 by increasing their transmission rate, 
 the rate (per infected host) at which they
 infect new hosts, or by decreasing their clearance or disease-induced
 mortality rate, the rate
 at which hosts recover or die from disease.
 The \emph{trade-off theory} \cite{alizon_virulence_2009} postulates that
-the transmission and disease-induced mortality rate are both linked to the rate at which
+transmission and disease-induced mortality rates are both driven by the rate at which
 the pathogen exploits host resources for within-host reproduction, 
 and that pathogen
 evolution will thus strike a balance between the
@@ -312,19 +310,29 @@ the host's immune system to eliminate it).
 Some biologists have criticized the tradeoff theory
 \cite{EbertBull2003,alizon_adaptive_2015}, but others have
 successfully applied it to a variety of host-pathogen systems \cite{Dwyer+1990,mackinnon1999genetic,jensen2006empirical,deroode2008virulence}.
-Fraser \etal\ have applied these ideas in a particularly
-interesting way 
-by showing that HIV appears to satisfy the prerequisites of
-the tradeoff theory: in studies of discordant couples (i.e. long-term
-sexual partnerships with one infected and one uninfected partner), HIV
-virulence as measured by the rate of progression to AIDS was 
-both heritable and covaried with the set-point viral load (SPVL: i.e., the
+
+Fraser \etal\ have applied these ideas to HIV,
+showing that the virus appears to satisfy the prerequisites of
+the tradeoff theory.
+The \emph{set-point viral load} (SPVL: i.e., the
 characteristic virus load measured in blood during the intermediate
-stage of infection) and the probability of transmission.
-Higher viral loads led to shorter progression times (higher virulence)
-and faster transmission, with a decelerating relationship
-between virulence and transmission as required by the tradeoff theory
-\cite{Fraser+2007,fraser_virulence_2014}. Subsequent studies
+stage of infection) is a measurable proxy for the rate of HIV within-host
+reproduction. Higher viral loads are correlated with 
+shorter progression times (higher virulence).
+Studies of discordant couples --- stable
+sexual partnerships with one infected and one uninfected partner --- %
+have shown that SPVL is (1) correlated with faster transmission
+(the time to infection of the uninfected partner is shorter when
+their partner has a higher SPVL) and (2) heritable
+(when the uninfected member of
+the couple does become infected, their SPVL is similar to their
+partner's).
+Furthermore, the rate of transmission increases with
+increasing SPVL (and hence with decreasing progression time)
+but with a decreasing slope as progression time decreases,
+fulfilling the requirements of the tradeoff theory
+ \cite{Fraser+2007}.
+Subsequent studies
 \cite{shirreff_transmission_2011,herbeck_hiv_2014,herbeck_evolution_2016} used these data to
 parameterize mechanistic models of HIV virulence evolution, suggesting
 that HIV invading a novel population would initially evolve increased
@@ -335,47 +343,30 @@ The work of Shirreff \etal\ \cite{shirreff_transmission_2011}, and particularly 
 highlights the importance of interactions between epidemiological and
 evolutionary factors \cite{day_virulence_2004,alizon_price_2009}.
 However, despite these studies' attention to detail at the individual
-or physiological level, the epidemiological structures used in these
+or physiological level, the contact structures used in these
 models are relatively simple.
 
 As we discuss in detail below,
 existing models of HIV eco-evolutionary dynamics either use implicit
 models that incorporate the average effects of within-couple sexual
 contact --- without representing the explicit dynamics of pair
-formation and dissolution or accounting for extra-partnership contact
+formation and dissolution or accounting for extra-partnership contact %
 --- or use an agent-based formulation with parameters that effectively
 lead to random mixing among infected and uninfected individuals. Here
 we explore the effects of incorporating \emph{explicit}
-epidemiological structure in eco-evolutionary models.
+contact structure in eco-evolutionary models.
 
-We add complexity to the epidemiological model following the general
-approach of Champredon \etal\ \cite{champredon_hiv_2013},
-which is in turn based on work of Dietz and Hadeler
-\cite{dietz_epidemiological_1988}; individuals
-join and leave partnerships at a specified rate, and can have sexual
-contact both within and outside of established partnerships. In order
-to explore how virulence evolution depends on epidemiological
-structure, we consider a series of models with increasing levels of
-complexity. In order to avoid dependence of the results on a
-particular set of parameters --- as we explain below, finding matching
-sets of parameters across models with widely differing epidemiological
-structures is challenging --- we evaluate our models across a wide
-range of parameters, again following Champredon
-\etal\ \cite{champredon_hiv_2013} in using a Latin hypercube
-design. For each model run, we compute a set of metrics (minimum
-progression time/peak virulence, timing of maximum virulence, equilibrium virulence) that summarize the evolutionary trajectory of a simulated HIV epidemic.
-
-As our primary goal is to explore how different epidemiological
-structures (i.e. partnership dynamics and contact structures) affect
-our conclusions about the evolution of virulence, our models use a
-simplified description of within-host dynamics and heritability
-derived from Shirreff \etal's multi-strain evolutionary model
-\cite{shirreff_transmission_2011}. Like Shirreff \etal, we use a
-simple susceptible-infected-susceptible demographic formulation;
-rather than modeling birth and death (or more specifically,
-recruitment into the sexually active population and death), we assume
-that whenever an individual dies from infection, another enters the
-susceptible compartment.
+Because our main goal is to explore how conclusions about virulence
+evolution depend on the way in which contact structure
+is modeled, we consider a series of
+models with increasing levels of complexity in the contact
+structure, but simplify some of the other epidemiological
+processes (such as the within-host life history of HIV). 
+We evaluate our models
+across a wide range of parameters, using a Latin hypercube design; for
+each model run, we compute a set of metrics 
+that summarize the evolutionary trajectory of SPVL
+over the course of the epidemic.
 
 \section*{Materials and Methods}
 
@@ -464,7 +455,7 @@ where $\Phi(x;i)$ is the Gaussian cumulative distribution function with mean $\a
 
 \subsection*{Contact structure and partnership dynamics}
 
-We developed seven multi-strain evolutionary models covering a gamut including Champredon \etal's relatively realistic \cite{champredon_hiv_2013} and Shirreff \etal's relatively simple \cite{shirreff_transmission_2011} epidemiological structures, each of which is based on different assumptions regarding contact structure and partnership dynamics. Specifically, we focus on the effects of the assumptions of (1) instantaneous vs. non-instantaneous partnership formation; (2) zero vs. positive extra-partnership sexual contact and transmission; and (3) homogeneous vs. heterogeneous levels of sexual activity on the evolution of mean \Lspvl.
+We developed seven multi-strain evolutionary models covering a gamut including Champredon \etal's relatively realistic \cite{champredon_hiv_2013} and Shirreff \etal's relatively simple \cite{shirreff_transmission_2011} contact structures, each of which is based on different assumptions regarding contact structure and partnership dynamics. Specifically, we focus on the effects of the assumptions of (1) instantaneous vs. non-instantaneous partnership formation; (2) zero vs. positive extra-partnership sexual contact and transmission; and (3) homogeneous vs. heterogeneous levels of sexual activity on the evolution of mean \Lspvl.
 
 Our first four models consider explicit partnership dynamics and are based on Champredon \etal's model \cite{champredon_hiv_2013}. The first two (``pair-formation'' or ``pairform'' for short) assume non-instantaneous partnership formation (i.e. individuals spend some time uncoupled, outside of partnerships) and consist of five states that are classified by infection status and partnership status. $S$ is the number of single (uncoupled) susceptible individuals, and $I$ is the number of single infected individuals. $SS$ is the number of concordant negative (susceptible-susceptible) couples, $SI$ is the number of serodiscordant (susceptible-infected) couples, and $II$ is the number of concordant positive (infected-infected) couples. The first (``pairform+epc'') includes extra-partnership contact (with both uncoupled individuals and individuals in other partnerships) whereas the second (``pairform'') only considers within-couple transmission. 
 
@@ -788,7 +779,7 @@ This question is especially important for modelers who
 are hoping that their conclusions will guide management decisions.
 
 In the particular example of HIV virulence eco-evolutionary dynamics
-and the complexity of epidemiological structures
+and the complexity of contact structures
 we reach the slightly ironic conclusion that the
 effort put into building a more realistic model essentially cancels
 out, putting us back where we started when used a naive random-mixing
@@ -839,7 +830,7 @@ based on population genetic reconstructions \cite{faria_early_2014}).
 However, our reason for calibrating was not to match any
 specific observed epidemic, but rather to make sure that
 we were making meaningful comparisons across a range of
-models with radically different epidemiological structures, and
+models with radically different contact structures, and
 hence involving different interpretations of the same quantitative
 parameters.  For example, in models with instantaneous switching the
 partnership dissolution rate $c$ is identical to the partnership
@@ -870,13 +861,14 @@ estimated rate of change of 1.3 \Lspvl\ per century [95\% CI -0.1 to
 attempt to describe how interventions such as mass antiretroviral
 therapy (ART) can be expected to change the trajectory of virulence
 evolution \cite{payne_impact_2014,roberts2015impact,herbeck_evolution_2016}.  While these
-efforts are well-intentioned, we caution that epidemiological and
-other structural details that are currently omitted from these models
+efforts are well-intentioned, we caution that 
+structural details that are currently omitted from these models
 could significantly change their conclusions.
 
 \section*{Acknowledgements}
 We would like to thank Christophe Fraser and
-David Champredon for access to simulation code;
+David Champredon for access to simulation code
+and Wim Delva and an anonymous reviewer for useful comments;
 this work was funded by NSERC Discovery Grant 386590-2010.
 Computational resources were provided by SHARCnet.
 
