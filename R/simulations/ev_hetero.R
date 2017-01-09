@@ -12,7 +12,7 @@ HIVpars.mean <- transform(HIVpars.mean, ini_V = 3)
 
 param_list <- rep(list(HIVpars.mean), 4)
 
-param_list[[3]]$rho_base <- param_list[[4]]$rho_base <- 5
+param_list[[3]]$rho_base <- param_list[[4]]$rho_base <- 4
 
 param_list[[2]][c("c_u_ratio", "c_e_ratio")] <- 
 	param_list[[4]][c("c_u_ratio", "c_e_ratio")] <- 
@@ -34,7 +34,7 @@ fn <- "ev_hetero.rda"
 
 fun <- function(pars, model, i){
 	HIVpars <- pars
-	if(i == 3 | i == 4){
+	if(i > 4){
 		pair = FALSE
 	}else{
 		pair = TRUE
@@ -51,7 +51,7 @@ fun <- function(pars, model, i){
 	}
 	cat("adj...")
 	val_vecFull[i] <<- find_scale(0.04, model, yini, HIVpars, interval=interval,
-															adjpar = "scale_all", full = TRUE, hmax = 0.5, tvec = c(1:200))
+															adjpar = "scale_all", full = TRUE, hmax = 0.5, tvec = 1:400, verbose = TRUE)
 	HIVpars_adj <- transform(HIVpars, scale_all = val_vecFull[i])
 	pp_adj <- expand(HIVpars_adj)
 	cat("sim...\n")

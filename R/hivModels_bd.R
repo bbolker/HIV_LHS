@@ -51,7 +51,7 @@ gfun_bd <- function(parameters, experimental=FALSE) {
 				 	
 				 	tot_V <- sum(SI * alpha) + sum(I * alpha) +
 				 		sum(sweep(II_adj, 2, alpha, "*"))
-				 	list(c(dS, dSS, dSI, dI, dII), tot = tot, tot_I = tot_I, mean_V = tot_V/tot_I)
+				 	list(c(dS, dSS, dSI, dI, dII), tot = tot, I = tot_I/tot, mean_V = tot_V/tot_I)
 				 })
 	}
 	return(g)
@@ -93,8 +93,26 @@ gfun2_bd <- function(parameters) {
 				 	
 				 	tot_V = sum(SI * alpha) + sum(I * alpha) + sum(sweep(II_adj, 2, alpha, "*"))
 				 	
-				 	list(c(dS, dSS, dSI, dI, dII), tot = tot, tot_I = tot_I, mean_V = tot_V/tot_I)
+				 	list(c(dS, dSS, dSI, dI, dII), tot = tot, I = tot_I/tot, mean_V = tot_V/tot_I)
 				 })
 	} 
 	return(g)
+}
+
+calc_yini_bd <- function(parameters){
+	with(c(expand(parameters)),{
+		x = (c_mean + 2 * m)/(c_mean + rho + 2 * m)
+		N = (1-x)/2
+		c = Ini_I
+		I_vec = c * I_initialize(parameters)
+		I_mat = 2 * outer(I_vec, I_vec)
+		diag(I_mat) = diag(I_mat)/2
+		yini <- list(
+			S  = (1 - c) * x,
+			SS = (1 - c)^2 * N,
+			SI = 2 * (1-c) * N * I_vec,
+			I = x * I_vec,
+			II = N * I_mat)
+		return(yini)
+	})
 }

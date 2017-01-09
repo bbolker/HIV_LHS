@@ -1,5 +1,3 @@
-## setup
-library(knitr)
 ## requires ggplot 2.2.0
 library(ggplot2); theme_set(theme_bw(base_size = 12,
                                        base_family = "Times"))
@@ -33,6 +31,8 @@ source("../R/Param.R")
 
 ## load data
 load("../simdata/combineResults.rda")
+load("../simdata/ev_hetero.rda")
+load("../simdata/ev_bd.rda")
 
 ## FIXME: maybe should go in hivFuns.R ?
 
@@ -253,23 +253,58 @@ maxvir
 
 gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 	geom_violinh(width=1)+
-	theme(legend.position = "none",
-				panel.spacing.y = grid::unit(0.8, "lines")) +
 	facet_wrap(~variable,scale="free_x", labeller = label_parsed)+
 	guides(fill=guide_legend(reverse=TRUE))+
-	labs(y="")+
-	geom_point(data=data.frame(model="random",
-                variable="equilibrium~mean~log[10]~SPVL",
-                                   value=rval),
-                   pch=22,size=3,show.legend=FALSE) +
-  zero_x_margin +
+	labs(y="")
+	
+
+random_point <- geom_point(data=data.frame(model="random",
+																					 variable="equilibrium~mean~log[10]~SPVL",
+																					 value=rval),
+													 pch=22,size=3,show.legend=FALSE)
+
+gg_univ_fig <- gg_univ + 
+	random_point +
+	zero_x_margin +
 	theme(panel.grid.major.x = element_blank(),
-				panel.grid.minor.x = element_blank())
+				panel.grid.minor.x = element_blank(),
+				legend.position = "none",
+				panel.spacing.y = grid::unit(0.8, "lines"))
 
 ## r fig3, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
 
-ggsave(gg_univ,file="fig3.pdf",width=8,height=4.8)
-if (do_png) ggsave(gg_univ,file="fig3.png",width=8,height=4.8,dpi=600)
+ggsave(gg_univ_fig,file="fig3.pdf",width=8,height=4.8)
+if (do_png) ggsave(gg_univ_fig,file="fig3.png",width=8,height=4.8,dpi=600)
+
+hetero <- seq(1, 7, 2)
+
+compare_df <- data.frame(
+	model = c(rep(m_order[3:6], each = 2), m_order[3:6]),
+	type = c(rep(c("base", "bd"), 4), rep("hetero", 4)),
+	eq_vir = c(eq_vec_bd, eq_vecFull[hetero])) %>%
+	bind_cols(rbind(peak_mat_bd, peak_matFull[hetero,]) %>% 
+							as.data.frame %>% 
+							setNames(c("peak_time", "peak_vir"))) %>%
+	gather(data, key, -model, -type) %>%
+	setNames(c("model", "type", "variable", "value"))
+
+compare_df$variable <- factor(compare_df$variable,
+														 levels = c("peak_time", "peak_vir", "eq_vir"),
+														 labels = c("peak~time~(years)",
+														 					 "maximum~mean~log[10]~SPVL",
+														 					 "equilibrium~mean~log[10]~SPVL"))
+
+gg_univ_aug <- gg_univ %+% 
+	filter(mLw, 
+		!(model %in% c("heterogeneous", "random", "implicit")), 
+		variable != "minimum~mean~progression~time~(years)") +
+	geom_point(data = compare_df, aes(shape = type), size = 3, col = "black") +
+	scale_shape_discrete(solid = FALSE, labels = c("baseline", "vital dynamics", "heterogeneity")) +
+	guides(fill = FALSE) +
+	zero_x_margin
+
+ggsave(gg_univ_aug,file="fig3_aug.pdf",width=10,height=4.8)
+if (do_png) ggsave(gg_univ_aug,file="fig3_aug.png",width=10,height=4.8,dpi=600)
 
 mLw_res <- mLw  %>%
   filter(model %in% c("implicit","pairform+epc","heterogeneous","random"))  %>%
