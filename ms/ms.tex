@@ -408,6 +408,40 @@ D_A(\alpha) &= \frac{\tsub{D}{max} D_{50} ^{D_k}}{V_\alpha ^{D_k} + D_{50}^{D_k}
 \end{equation}
 where $V_{\alpha} = 10^\alpha$. 
 
+%Tables need to be placed after the first paragraph in which they are cited.
+
+\begin{table}[h!]
+\caption{Parameter ranges/values. Parameters with fixed values are kept constant throughout simulations while other parameter values are taken from Latin hypercube samples using ranges specified in the table. Values of $c$ and $\rho$ are doubled from those given by Champredon \etal\ because we keep track of 	individuals in the model, while they keep track of couples. Starred (*) parameters (used in \figurename~\ref{fig:panel3}), and descriptions of Hill function coefficients, are taken from \cite{shirreff_transmission_2011}.}
+\centering
+\begin{tabular}{c p{2in} c l}
+\hline 
+Notation & Description & Range/Value & Source\\
+\hline % inserts single horizontal line
+$\rho$ & Partnership formation rate & 1/10-2/5 per year & \cite{champredon_hiv_2013} \\
+$c$ & Partnership dissolution rate & 1/15-1/5 (1.25*) per year & \cite{champredon_hiv_2013} \\
+$c_u/c_w$ & Relative contact rate for uncoupled transmission & 1/5-5 & Assumption \\
+$c_e/c_w$ & Relative contact rate extra-couple & 0.01-1 & \cite{champredon_hiv_2013} \\
+$\beta_P$ & Rate of transmission during primary infection & 1.31-5.09 (2.76*) per year & \cite{hollingsworth_hiv1_2008} \\
+$\beta_D$ & Rate of transmission during high transmission disease stage & 0.413-1.28 (0.76*) per year & \cite{hollingsworth_hiv1_2008} \\
+$D_P$ & Duration of primary infection & 1.23/12-6/12 (0.25*) years & \cite{hollingsworth_hiv1_2008} \\
+$D_D$ & Duration of high transmission disease stage & 4.81/12-14/12 (0.75*) years & \cite{hollingsworth_hiv1_2008} \\
+$\tsub{\beta}{max}$ & Maximum rate of transmission during asymptomatic stage & 0.317 per year & \cite{shirreff_transmission_2011} \\
+$\beta_{50}$ & SPVL at which infectiousness is half maximum & 13938 copies per ml & \cite{shirreff_transmission_2011} \\
+$\beta_k$ & Hill coefficient: steepness of increase in infectiousness as a function of SPVL & 1.02 & \cite{shirreff_transmission_2011} \\
+$\tsub{D}{max}$ & Duration of primary infection & 25.4 years & \cite{shirreff_transmission_2011} \\
+$D_{50}$ & SPVL at which duration of asymptomatic infection is half maximum & 3058 copies per ml & \cite{shirreff_transmission_2011} \\
+$D_{k}$ & Hill coefficient: steepness of decrease in duration as a function of SPVL & 0.41 & \cite{shirreff_transmission_2011} \\
+$\sigma_M$ & Mutation standard deviation of $\log_{10}$ SPVL & 0.12 & \cite{shirreff_transmission_2011} \\
+$\tsub{\alpha}{min}$ & Minimum $\log_{10}$ SPVL & 2 & \cite{shirreff_transmission_2011}\\
+$\tsub{\alpha}{max}$ & Maximum $\log_{10}$ SPVL & 7 & \cite{shirreff_transmission_2011}\\
+$n$ & Number of strains & 21 (51*) & Assumption\\
+$\mu$ & Mean number of non-cohabiting sexual partners & 0.103 - 1.206 & \cite{omori2015dynamics}\\
+$\kappa$ & Squared coefficient of variation of number of non-cohabiting sexual partners & 0.01 - 100 & Assumption\\
+\hline
+\end{tabular}
+\label{table:parmsTable}
+\end{table}
+
 The uncoupled and extra-couple transmission rates (i.e., the rates of
 transmission among people outside of a stable partnership, or between
 people inside of a stable partnership and people other than their
@@ -490,40 +524,6 @@ z_i = \exp\left(\log(\tsub{z}{min}) + [\log(\tsub{z}{max}) - \log(\tsub{z}{min})
 Random permutations of these vectors form columns in a sample parameter matrix; each row contains a different parameter set that is used for one simulation run.
 
 Table~\ref{table:parmsTable} gives the ranges of the model parameters used for LHS. Parameter ranges regarding contact and partnership dynamics ($\rho$, $c$, and $c_e/c_w$) are taken from Champredon \etal\ \cite{champredon_hiv_2013}, whereas those regarding infection ($\beta_P$, $D_P$, $\beta_D$, and $D_D$) are taken from Hollingsworth \etal\ \cite{hollingsworth_hiv1_2008}. The remaining parameters are taken from Shirreff \etal\ \cite{shirreff_transmission_2011}.
-
-%Tables need to be placed after the first paragraph in which they are cited.
-
-\begin{table}[h!]
-\caption{Parameter ranges/values. Parameters with fixed values are kept constant throughout simulations while other parameter values are taken from Latin hypercube samples using ranges specified in the table. Values of $c$ and $\rho$ are doubled from those given by Champredon \etal\ because we keep track of 	individuals in the model, while they keep track of couples. Starred (*) parameters (used in \figurename~\ref{fig:panel3}), and descriptions of Hill function coefficients, are taken from \cite{shirreff_transmission_2011}.}
-\centering
-\begin{tabular}{c p{2in} c l}
-\hline 
-Notation & Description & Range/Value & Source\\
-\hline % inserts single horizontal line
-$\rho$ & Partnership formation rate & 1/10-2/5 per year & \cite{champredon_hiv_2013} \\
-$c$ & Partnership dissolution rate & 1/15-1/5 (1.25*) per year & \cite{champredon_hiv_2013} \\
-$c_u/c_w$ & Relative contact rate for uncoupled transmission & 1/5-5 & Assumption \\
-$c_e/c_w$ & Relative contact rate extra-couple & 0.01-1 & \cite{champredon_hiv_2013} \\
-$\beta_P$ & Rate of transmission during primary infection & 1.31-5.09 (2.76*) per year & \cite{hollingsworth_hiv1_2008} \\
-$\beta_D$ & Rate of transmission during high transmission disease stage & 0.413-1.28 (0.76*) per year & \cite{hollingsworth_hiv1_2008} \\
-$D_P$ & Duration of primary infection & 1.23/12-6/12 (0.25*) years & \cite{hollingsworth_hiv1_2008} \\
-$D_D$ & Duration of high transmission disease stage & 4.81/12-14/12 (0.75*) years & \cite{hollingsworth_hiv1_2008} \\
-$\tsub{\beta}{max}$ & Maximum rate of transmission during asymptomatic stage & 0.317 per year & \cite{shirreff_transmission_2011} \\
-$\beta_{50}$ & SPVL at which infectiousness is half maximum & 13938 copies per ml & \cite{shirreff_transmission_2011} \\
-$\beta_k$ & Hill coefficient: steepness of increase in infectiousness as a function of SPVL & 1.02 & \cite{shirreff_transmission_2011} \\
-$\tsub{D}{max}$ & Duration of primary infection & 25.4 years & \cite{shirreff_transmission_2011} \\
-$D_{50}$ & SPVL at which duration of asymptomatic infection is half maximum & 3058 copies per ml & \cite{shirreff_transmission_2011} \\
-$D_{k}$ & Hill coefficient: steepness of decrease in duration as a function of SPVL & 0.41 & \cite{shirreff_transmission_2011} \\
-$\sigma_M$ & Mutation standard deviation of $\log_{10}$ SPVL & 0.12 & \cite{shirreff_transmission_2011} \\
-$\tsub{\alpha}{min}$ & Minimum $\log_{10}$ SPVL & 2 & \cite{shirreff_transmission_2011}\\
-$\tsub{\alpha}{max}$ & Maximum $\log_{10}$ SPVL & 7 & \cite{shirreff_transmission_2011}\\
-$n$ & Number of strains & 21 (51*) & Assumption\\
-$\mu$ & Mean number of non-cohabiting sexual partners & 0.103 - 1.206 & \cite{omori2015dynamics}\\
-$\kappa$ & Squared coefficient of variation of number of non-cohabiting sexual partners & 0.01 - 100 & Assumption\\
-\hline
-\end{tabular}
-\label{table:parmsTable}
-\end{table}
 
 One parameter in our model, the ratio of uncoupled to within-couple transmission $c_u/c_w$, is needed to more flexibly contrast uncoupled and extra-couple transmission dynamics within multi-strain models (see Appendix S1);
 it appears neither in either Shirreff \etal\ nor Champredon \etal's models,  so we need to pick a reasonable range for it. Champredon \etal\ \cite{champredon_hiv_2013} assume that the effective within-couple contact rate and effective uncoupled contact rate have the same range of 0.05 - 0.25.  Given Champredon \etal's parameter range, the possible maximum and minimum values of $c_u/c_w$ are 5 and 1/5. Therefore, we use 1/5-5 as the range for the parameter $c_u/c_w$. Although this adds more uncertainty to the parameter $c_u$ --- Champredon \etal's range implies a 5-fold difference whereas ours gives a 25-fold difference --- we consider the wider range appropriate, as little is not much known about the uncoupled transmission rate.
