@@ -381,7 +381,7 @@ deterministically linked in the model).
 In contrast to Shirreff \etal, we use a
 single-stage disease model instead of accounting explicitly for
 progression through the three main stages of HIV infection (primary,
-asymptomatic, and disease), and we use a simple exponentially
+asymptomatic, and disease), and we use an exponentially
 distributed infectious period instead of a more realistic
 Weibull-distributed infectious period; we show below that our results
 are not overly sensitive to this simplification. We account for
@@ -394,7 +394,9 @@ for our models is given by:
 \beta (\alpha) = \frac{D_P \beta_P + D_A (\alpha) \beta_A (\alpha) + D_D \beta_D}{D_P + D_A (\alpha) + D_D},
 \end{equation}
 where the duration of infection ($D_P$ and $D_D$) and rate of transmission ($\beta_P$ and $\beta_D$) of the Primary and Disease stages
-of infection are independent of the host's SPVL. Following Shirreff \etal, the duration of infection ($D_A$) and rate of transmission ($\beta_A$) for the Asymptomatic stage are Hill functions of the SPVL:
+of infection are independent of the host's SPVL
+(Table~\ref{table:parmsTable} gives definitions, units, and values for all parameters).
+. Following Shirreff \etal, the duration of infection ($D_A$) and rate of transmission ($\beta_A$) for the Asymptomatic stage are Hill functions of the SPVL:
 
 \begin{equation}
 \begin{split}
@@ -420,8 +422,8 @@ $\rzero$). However, our simplified model produces results that are
 qualitatively similar to those of Shirreff \etal's
 \cite{shirreff_transmission_2011} model; when our model is calibrated
 to have a similar initial epidemic growth rate $r$, the peak
-\Lspvl\ occurs at the same time ($\approx$ 200 years) but slightly
-higher (4.6 \Lspvl\ vs. 4.3 \Lspvl, or 7\% higher: \figurename~\ref{fig:panel3}).
+\Lspvl\ occurs at the same time ($\approx 200$ years) but slightly
+higher (4.6 \Lspvl\ vs. 4.3 \Lspvl: \figurename~\ref{fig:panel3}).
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig1.pdf}
