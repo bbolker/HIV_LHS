@@ -428,13 +428,13 @@ higher (4.6 \Lspvl\ vs. 4.3 \Lspvl: \figurename~\ref{fig:panel3}).
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig1.pdf}
 \caption{{\bf Baseline dynamics.}
-Time series of mean population \Lspvl\ using mean parameters. Each initial condition was varied independently while rest were kept constant in order to test their effects on the transient dynamics of virulence evolution. Note that the initial condition has negligible effect on equilibrium virulence.
+Time series of mean population \Lspvl\ using baseline parameters. Each initial condition was varied independently in order to test their effects on transient dynamics of virulence evolution. Note that the initial condition has negligible effect on equilibrium virulence.
 (a) Contrast between the three-stage Shirreff model and the single-stage model calibrated to varying initial exponential growth rates, $r$. achieved quicker.
 (b) Effects of varying initial infectious density $I(0)$.
 (c) Effects of varying initial mean virulence $\alpha(0)$.
 The $r=0.042$ (orange, dotted) curve in panel (a), calibrated to match the epidemic dynamics of Shirreff \etal's model \cite{shirreff_transmission_2011}, shows that our simplified model can produce similar virulence trajectories. 
-Although the virulence dynamics are sensitive to each initial condition, we are still able to achieve similar qualitative dynamics dynamics across a range of parameters. 
-For fair comparison, we hold them constant in our simulations.}
+Although virulence dynamics are sensitive to initial conditions, we are still able to achieve similar qualitative dynamics dynamics across a range of parameters. 
+For fair comparison, we hold them constant throughout our simulations.}
 \label{fig:panel3}
 \end{figure}
 
@@ -494,7 +494,7 @@ Table~\ref{table:parmsTable} gives the ranges of the model parameters used for L
 %Tables need to be placed after the first paragraph in which they are cited.
 
 \begin{table}[h!]
-\caption{Parameter ranges/values.  Values of $c$ and $\rho$ are doubled from those given by Champredon \etal\ because we keep track of individuals in the model, while they keep track of couples. Starred (*) parameters (used in \figurename~\ref{fig:panel3}), and descriptions of Hill function coefficients, are taken from \cite{shirreff_transmission_2011}.}
+\caption{Parameter ranges/values. Parameters with fixed values are kept constant throughout simulations while other parameter values are taken from Latin hypercube samples using ranges specified in the table. Values of $c$ and $\rho$ are doubled from those given by Champredon \etal\ because we keep track of 	individuals in the model, while they keep track of couples. Starred (*) parameters (used in \figurename~\ref{fig:panel3}), and descriptions of Hill function coefficients, are taken from \cite{shirreff_transmission_2011}.}
 \centering
 \begin{tabular}{c p{2in} c l}
 \hline 
@@ -645,7 +645,7 @@ to higher virulence). Although the speed of virulence evolution varies, leading 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig2.pdf}
 \caption{{\bf Envelopes of virulence trajectories (population mean \Lspvl) under all models.}
-All models were run until $t=4000~\textrm{years}$ using 1000 parameter sets obtained from Latin Hypercube Sampling to illustrate the range of dynamics each model can display. Envelope contains middle 95\% trajectories and lines within the envelope show mean trajectories. Truncated series are shown here.}
+All models were run until $t=4000~\textrm{years}$ using parameters from 1000 Latin hypercube samples to illustrate the range of dynamics each model can exhibit. Envelopes contain mid 95\% trajectories, while lines within the envelopes show mean trajectories. Truncated series (up to year 800) are shown here.}
 \label{fig:virtraj}
 \end{figure}
 
@@ -670,8 +670,10 @@ of peak times near zero.
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig3.pdf}
 \caption{{\bf Univariate distributions of summary statistics.}
-For every simulation using LHS parameters, three summary statistics were obtained: peak time, maximum mean \Lspvl, and equilibrium mean \Lspvl.
-Minimum mean progression time was obtained by by applying the hill function to maximum mean \Lspvl\ of each run.
+For every simulation, three summary statistics were obtained: peak time, maximum mean \Lspvl, and equilibrium mean \Lspvl. 
+Peak time is the time at which a virulence trajectory achieves its maximum value (maximum mean \Lspvl).
+Equilibrium mean \Lspvl\ is taken by taking the mean \Lspvl\ value at $t = 4000$.
+Minimum mean progression time is obtained by applying the hill function to maximum mean \Lspvl\ of each run.
 The distribution of equilibrium mean \Lspvl\
 (lower left panel) for the random mixing model is very narrow, and has been replaced by a point in order to preserve the vertical axis scaling.}
 \label{fig:unidist}
@@ -680,8 +682,7 @@ The distribution of equilibrium mean \Lspvl\
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig4.pdf}
 \caption{{\bf Pairs plot: bivariate relationships among summary statistics for each model structure.}
-Three summary statistics obtained from each simulation have been plotted against each other to visualize the relationship among the summary statistics.
-All models follow a similar trend but each have distinguishing features.
+Three summary statistics obtained from each simulation have been plotted against each other to visualize the relationship among the summary statistics and to allow for clearer comparison between models.
 Surprisingly, the implicit model, an approximation for instantaneous partnership formation model (instswitch), shows an almost identical trend with a model that has pair formation dynamics (pairform).
 Dashed line in equilibrium vs. peak virulence plot shows 1:1 line, where equilibrium and peak virulence are equal.
 100 values were sampled from each model to allow for clearer distinction between the models}
@@ -725,7 +726,7 @@ of \Lspvl\ and transmission probability).
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig5.pdf}
 \caption{{\bf Sensitivity plot.}
-For most parameters in the Latin hypercube sample and each summary statistic, the figure shows the distribution (points) and trend (smooth line) of the summary statistic as a function of the parameter value, some of which have adjusted to achieve the standard initial epidemic growth rate (see Methods).}
+For most parameters in the Latin hypercube samples, the figure shows the distribution (points) and trend (smooth line) of the summary statistic as a function of the parameter value, some of which have adjusted to achieve the standard initial epidemic growth rate (see Methods).}
 Opposing trends in summary statistics with respect to partnership dissolution rate, $c$, (third column) between the model with and without extra-pair contact illustrates that similar model with different assumptions may yield opposing predictions.
 \label{fig:plot_sens}
 \end{figure}
