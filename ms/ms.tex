@@ -157,7 +157,8 @@
 \newcommand{\ET}{\textrm{ET}}
 \newcommand{\DM}{\textrm{DM}}
 
-\newcommand{\todo}[1]{\textbf{#1}}
+\usepackage{color}
+\newcommand{\todo}[1]{\color{red} \textbf{#1}}
 
 %% END MACROS SECTION
 
@@ -532,11 +533,10 @@ with an initial \Lspvl\ of 3.0, to match the value used by
 Shirreff \etal. Shirreff \etal\ use an initial $I(0)=10^{-3}$;
 we show results for this value in \figurename~\ref{fig:panel3}.
 Because we calibrated parameters based on the initial epidemic growth rate
-(see next section), we set $I(0)$
+(see ``Simulation runs'' below), we set $I(0)$ to $10^{-4}$ to ensure
+that the exponential growth phase lasted long enough for reliable
+estimation of the initial growth rate.
 
-
-lead to very low equilibrium prevalence, we switched to 
-$I(0)=10^{-4}$ for the remainder of our analysis.
 We ran one small set of sensitivity analyses with baseline values of the
 epidemiological parameters (Table~1) to test the effects of the
 initial conditions. Appendix~S1 provides
@@ -671,7 +671,7 @@ Changing the initial infectious density ($I(0)$), while it produces the expected
 
 Across the entire range of parameters covered by the LHS analysis, all of the classes of models we considered produce qualitatively similar virulence trajectories, which we quantify in terms of the expected time of progression
 to AIDS (\figurename~\ref{fig:virtraj}: lower progression time corresponds
-to higher virulence). Although the speed of virulence evolution varies, leading to wide variation in the minimum expected progression time (means ranging from approximately 6 to 12 years), virulence peaks in all models between 200 and 300 years.
+to higher virulence). Although the speed of virulence evolution varies, leading to wide variation in the peak SPVL (ranging from \todo{XX} to \todo{YY})), virulence peaks in all models between 200 and 300 years.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig2.pdf}
