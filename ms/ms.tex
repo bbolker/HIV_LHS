@@ -466,7 +466,7 @@ Time series of mean population \Lspvl\ using baseline parameters. Each initial c
 (a) Contrast between the three-stage Shirreff model and the single-stage model calibrated to varying initial exponential growth rates, $r$.
 (b) Effects of varying initial infectious density $I(0)$.
 (c) Effects of varying initial mean virulence $\alpha(0)$.
-The $r=0.042$ (orange, dotted) curve in panel (a), calibrated to match the epidemic dynamics of Shirreff \etal's model \cite{shirreff_transmission_2011}, shows that our simplified single-stage HIV model can produce similar SPVL trajectories to the original three-stage model; the other $r$ values are chosen to show the effects of doubling or halving the initial epidemic growth rate.
+The middle $r=0.042$ (orange, dotted) curve in panel (a), calibrated to match the epidemic dynamics of Shirreff \etal's three-stage model \cite{shirreff_transmission_2011}, shows that our simplified single-stage HIV model can produce similar SPVL trajectories to the original three-stage model; the other $r$ values are chosen to show the effects of doubling or halving the initial epidemic growth rate. 
 The eco-evolutionary dynamics are qualitatively similar
 across a range of initial conditions (panels b,c).}
 \label{fig:panel3}
@@ -528,11 +528,15 @@ and variance of the distribution of SPVL at the point when the
 pandemic strain of HIV-1 entered the human population; in any case,
 the level of realism of our model does not support such a detailed
 consideration of the early dynamics of HIV.  In most cases, we started
-with an initial \Lspvl\ of 3.0, and an initial fraction infected of
-$10^{-4}$, to match the parameters used by Shirreff \etal; we ran one
-small set of sensitivity analyses with baseline values of the
+with an initial \Lspvl\ of 3.0, to match the value used by
+Shirreff \etal. Shirreff \etal\ use an initial $I(0)=10^{-3}$;
+we show results for this value in \figurename~\ref{fig:panel3}.
+Since some parameters in our sampling process (see next section)
+lead to very low equilibrium prevalence, we switched to 
+$I(0)=10^{-4}$ for the remainder of our analysis.
+We ran one small set of sensitivity analyses with baseline values of the
 epidemiological parameters (Table~1) to test the effects of the
-initial conditions. Appendix TODO provides
+initial conditions. Appendix~S1 provides
 further details on initial conditions, such
 as the initial distribution of SPVL around the mean and the
 distribution of initial infected density across single people
@@ -657,7 +661,7 @@ treatment, the epidemic would probably still be increasing in virulence.
 % Results and Discussion can be combined.
 \section*{Results}
 
-Our simplifications of Shirreff \etal's model \cite{shirreff_transmission_2011} reproduce its qualitative behaviour --- in particular, its predictions of virulence dynamics --- reasonably well. As $r$ decreases from 0.084 to 0.42 (the latter value matching the initial rate of increase in prevalence in Shirreff \etal's full model) the initial trajectory of increasing virulence brackets the rate from the original model (\figurename~\ref{fig:panel3}a). However, our model produces lower peak virulence ($\approx 4.3$ vs. $\approx 4.6$ \Lspvl) 
+Our simplifications of Shirreff \etal's model \cite{shirreff_transmission_2011} reproduce its qualitative behaviour --- in particular, its predictions of virulence dynamics --- reasonably well. As we change $r$ from 0.42 to 0.84 (the former value matching the initial rate of increase in prevalence in Shirreff \etal's full model) the initial trajectory of increasing virulence brackets the rate from the original model (\figurename~\ref{fig:panel3}a). However, our model produces lower peak virulence ($\approx 4.3$ vs. $\approx 4.6$ \Lspvl) 
 and equilibrium virulence ($\approx 4.25$ vs. $\approx 4.5$ \Lspvl) than Shirreff's, even for matching initial incidence trajectories (i.e., $r=0.042~\textrm{year}^{-1}$).
 
 Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory. Decreasing $I(0)$ makes SPVL peak slightly later and higher, because it allows a longer epidemic phase before the transition to endemic dynamics (\figurename~\ref{fig:panel3}b). Decreasing the initial SPVL also leads to progressively later, higher peaks in SPVL (\figurename~\ref{fig:panel3}c). In this case the delay in the peak is more pronounced than for low $I(0)$, because the rate of SPVL increase is eventually limited by the mutation rate. The peak SPVL is actually larger for a lower starting SPVL, presumably because lower SPVL also allows for a longer epidemic phase. However, the peaks are similar across the entire range of initial conditions, because even in the most limited (high-$I(0)$, high-$\alpha(0)$) cases HIV is able to evolve most of the way to the SPVL that would be optimal in an indefinitely prolonged growth phase.

@@ -163,6 +163,8 @@ What is the rationale behind starting at SPVL of 3? All of your results about th
 Figure 1 is not well explained in the text or the caption. What is the point of these comparisons? Like where do these three values of r come from? Which one did Shirreff use? Same for other quantities.
 }
 
+\response{We have added some text here.}
+
 \revcomment{
 You can’t assume that your reader knows exactly what was done in Shirreff’s paper. Instead of always saying what you did relative to Shirreff, the comparison between your methods and theirs should be written in a way that is clear, even if the reader has never read Shirreff.
 }
@@ -179,12 +181,26 @@ Why did you assume a constant population size - that is, replace any dead indivi
 I would highly recommend that the figures and descriptions of the results refer mainly to SPVL, and augment with results on time to progression. It is just much simpler and more intuitive to think about SPVL. SPVL is the only quantity that is actually observed in most cases. Referring to time to progression is very confusing because LOWER time to progress = HIGHER virulence so just takes more effort to interpret.
 }
 
+\response{
+We agree that this causes some difficulties. Earlier drafts
+actually focused on SPVL as the output measure, but we thought
+that non-technical readers would have a better feeling for the
+real-world significance of progression time; furthermore, because
+progression time (unlike log(SPVL) is on a ratio scale, it becomes
+reasonable to quote results in terms of proportional changes. 
+We are taking the reviewer's advice and switching back to SPVL.
+}
+
 \revcomment{
 Throughout the paper you refer to the conclusion that the simplest and most complex models give the same results, and that models of intermediate complexity give different results. But none of the figures are really presenting this point, as someone looking at the figure probably does not remember the details of each model based only on its code-word, and the series in the figures do not seem to be organized in terms of model complexity.
 }
 
 \revcomment{
 First paragraph: Don’t understand “As r decreases from 0.084 to 0.42" . Where did these r values come from? Is r changing over time? Or over different iterations? Why not just fit to the observed r value? And this change you’ve described is an INCREASE, not a decrease.
+}
+
+\response{
+We have changed the wording, and corrected a typo (the first value should have been 0.84 --- sorry!) As we say in our responses above, we have added more information about the choice of $r$, $I(0)$, $\alpha(0)$ in our sensitivity analyses (Figure 1).
 }
 
 \revcomment{
