@@ -38,7 +38,7 @@ get_rval <- function(g, yini, pp, plot.it=FALSE,
     }
 }
 
-HIVpars.shirreff <- transform(HIVpars.shirreff, ini_V = 3)
+HIVpars.shirreff <- transform(HIVpars.shirreff, ini_V = 3, kappa = 0, mu = 1)
 
 tvec = seq(from =1, to =600, by = 0.1)
 
