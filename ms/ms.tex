@@ -712,7 +712,8 @@ endemic phase, virulence peaks in all models between 200 and
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig2.pdf}
 \caption{{\bf Envelopes of virulence trajectories (population mean \Lspvl) under all models.}
-All models were run until $t=4000~\textrm{years}$ using parameters from 1000 Latin hypercube samples to illustrate the range of dynamics each model can exhibit. Envelopes contain mid 95\% trajectories, while lines within the envelopes show mean trajectories. Truncated series (up to year 800) are shown here.}
+Models arranged in order of complexity of contact structure, from ``random'' (least complex) to ``hetero'' (most complex).
+All models were run until $t=4000~\textrm{years}$ using parameters from 1000 Latin hypercube samples to illustrate the range of dynamics each model can exhibit. Envelopes contain the middle 95\% of trajectories (i.e. we select all points between the 0.025 and 0.975 quantiles for each model at each year), while lines within the envelopes show mean trajectories. Truncated series (up to year 800) are shown here.}
 \label{fig:virtraj}
 \end{figure}
 
@@ -737,12 +738,14 @@ high peak virulence (5.6 \Lspvl).
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig3.pdf}
 \caption{{\bf Univariate distributions of summary statistics.}
+Models arranged in order of complexity, as in \figurename~\ref{fig:virtraj}.
 For every simulation, three summary statistics were obtained: peak time, maximum mean \Lspvl, and equilibrium mean \Lspvl. 
-Peak time is the time at which a virulence trajectory achieves its maximum value (maximum mean \Lspvl).
+Peak time is the time at which the SPVL reaches its maximum for each simulation run (maximum mean \Lspvl).
 Equilibrium mean \Lspvl\ is taken by taking the mean \Lspvl\ value at $t = 4000$.
-Minimum mean progression time is obtained by applying the hill function to maximum mean \Lspvl\ of each run.
-The distribution of equilibrium mean \Lspvl\
-(lower left panel) for the random mixing model is very narrow, and has been replaced by a point in order to preserve the vertical axis scaling.}
+Minimum mean progression time is obtained by applying the Hill function to maximum mean \Lspvl\ of each run.
+Because the distribution of equilibrium mean \Lspvl\
+(lower left panel) for the random mixing model is very narrow, it
+has been replaced by a point in order to preserve the vertical axis scaling.}
 \label{fig:unidist}
 \end{figure}
 

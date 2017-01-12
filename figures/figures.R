@@ -42,8 +42,8 @@ new_sum_labs <- c(bquote(atop("peak time", "(years)")),
 									bquote(atop("peak", "mean" ~ log[10] ~ "SPVL")),
 									bquote(atop("equilibrium", "mean" ~ log[10] ~ "SPVL")),
                   "peak:equilibrium ratio")
-m_order <- c("random", "heterogeneous","pairform+epc", "pairform",
-             "instswitch+epc","instswitch" , "implicit")
+m_order <- c("heterogeneous","pairform+epc", "pairform",
+             "instswitch+epc","instswitch" , "implicit", "random")
 fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
     if (atop) new_sum_labs <-
                   gsub("(.*) (.*)","atop(\\1,\\2)",new_sum_labs)
