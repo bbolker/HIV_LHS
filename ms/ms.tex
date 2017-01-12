@@ -664,9 +664,8 @@ and equilibrium virulence ($\approx 4.25$ vs. $\approx 4.5$ \Lspvl) than Shirref
 
 Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory. Decreasing $I(0)$ makes SPVL peak slightly later and higher, because it allows a longer epidemic phase before the transition to endemic dynamics (\figurename~\ref{fig:panel3}b). Decreasing the initial SPVL also leads to progressively later, higher peaks in SPVL (\figurename~\ref{fig:panel3}c). In this case the delay in the peak is more pronounced than for low $I(0)$, because the rate of SPVL increase is eventually limited by the mutation rate. The peak SPVL is actually larger for a lower starting SPVL, presumably because lower SPVL also allows for a longer epidemic phase. However, the peaks are similar across the entire range of initial conditions, because even in the most limited (high-$I(0)$, high-$\alpha(0)$) cases HIV is able to evolve most of the way to the SPVL that would be optimal in an indefinitely prolonged growth phase.
 
-Across the entire range of parameters covered by the LHS analysis, all of the classes of models we considered produce qualitatively similar virulence trajectories, which we quantify in terms of the expected time of progression
-to AIDS (\figurename~\ref{fig:virtraj}: lower progression time corresponds
-to higher virulence). Although the speed of virulence evolution varies, leading to wide variation in the peak SPVL (ranging from \todo{XX} to \todo{YY})), virulence peaks in all models between 200 and 300 years.
+Across the entire range of parameters covered by the LHS analysis, all of the classes of models we considered produce qualitatively similar virulence trajectories, which we quantify in terms of population mean \Lspvl\ (\figurename~\ref{fig:virtraj}: higher population mean \Lspvl\ corresponds
+to higher virulence). Although the speed of virulence evolution varies, leading to wide variation in the peak SPVL (ranging from 3 to 5.5), virulence peaks in all models between 200 and 300 years.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig2.pdf}
@@ -675,23 +674,21 @@ All models were run until $t=4000~\textrm{years}$ using parameters from 1000 Lat
 \label{fig:virtraj}
 \end{figure}
 
-Our chosen summary statistics (peak time, minimum expected progression time, equilibrium expected
-progression time, and relative progression time) all vary considerably across models
+Our chosen summary statistics (peak time, maximum mean \Lspvl, equilibrium mean \Lspvl, and minimum mean progression time) all vary considerably across models
 (\figurename~\ref{fig:unidist}).
 We first consider the models of intermediate realism: implicit,
 instantaneous-switching with and without extra-pair contact, and
 pair formation without extra-pair contact. Some parameter
-sets for these models lead to low equilibrium virulence ($\approx 18$ years
-to progression);
+sets for these models lead to low equilibrium virulence ($\approx 2.3$ \Lspvl);
 these same sets lead to correspondingly low
-peak virulence (16 years to progression) and early peak times (before 200 years: \figurename~\ref{fig:pairplot}).
-At the opposite extreme, parameter sets that produce high equilibrium virulence (8 years to progression)
+peak virulence (\Lspvl\ of 3 \todo{This is same as the initial value... how did you decide on this value in terms of progression time before? Peak time is 0 in this case...}) and early peak times (before 200 years: \figurename~\ref{fig:pairplot}).
+At the opposite extreme, parameter sets that produce high equilibrium virulence (4.7 \Lspvl)
 also produce late peaks ($> 200~\text{years}$) and
-high peak virulence (4 years to progression).
+high peak virulence (5.6 \Lspvl).
 The pair-formation without extra-pair contact and implicit models
 occasionally have parameter sets that select for such low virulence across
 the board that they never exceed their initial virulence, leading to a tail
-of peak times near zero.
+of peak times near zero \todo{and also implying that we can observe a peak virulence lower than 3 \Lspvl\ if we start with a lower initial condition}.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig3.pdf}
@@ -734,20 +731,22 @@ the variability in the outcomes.
 
 These differences are practically as well as 
 scientifically important. The random-mixing, pairform+epc,
-and heterogeneous models all predict rapid
-progression to AIDS at the virulence peak
-(median/95\% CI = 6.1 (5.7-6.3), 
-6.02 (5.04-7.7), 6.03  (4.8-9.2)). 
+and heterogeneous models all predict high population mean \Lspvl\ at the virulence peak
+(median/95\% CI = 4.7 (4.65-4.79), 
+4.72 (4.37-4.96), 4.72  (4.09-5.03)). 
 In contrast, 
-the implicit model predicts minimum progression times about twice as long:
-12.5 (9.6-15.6) years. The corresponding differences in 
+the implicit model predicts a much lower peak \Lspvl\ value:
+3.52 (3-4.02) years.
+\todo{I'm not sure if you want to leave the transmission rates here or not...}
+\todo{I guess we can keep the progression time here because we have it in our plot?}
+The corresponding differences in 
 within-couple transmission
 probability are even more extreme, about a fourfold difference:
 0.249 (0.24-0.26), 0.252 (0.19-0.28), and 0.252 (0.15-0.28) per year for the 
 random and pairform+epc models vs. 0.059 (0.02-0.13) per year
 for the implicit model (see Appendix S2 for 
 plots showing univariate summaries
-of \Lspvl\ and transmission probability).
+of expected progression time to AIDS and transmission probability).
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig5.pdf}
@@ -759,7 +758,7 @@ Opposing trends in summary statistics with respect to partnership dissolution ra
 
 The bivariate relationships (\figurename~\ref{fig:pairplot}) help distinguish the results of 
 different models with similar univariate dynamical summaries. While the
-relationship between equilibrium progression time and peak time is
+relationship between equilibrium \Lspvl\ and peak time is
 similar for all model structures (top left panel), the other
 relationships show more variation. In particular, the implicit
 and pair-formation (without extra-pair contact) are very similar
@@ -827,7 +826,7 @@ confidence intervals on the predictions.
 In general, unstructured mixing --- whether occurring through 
 purely random mixing, or through extra-pair contact and contact
 among people outside of stable partnerships --- tends to drive
-faster virulence evolution, leading to higher peak virulence and 
+faster virulence evolution, leading to higher peak virulence and \todo{I'm guessing you still want to keep progression time here?}
 lower times to progression at the peak time.
 
 %In Herbeck \etal's \cite{herbeck_hiv_2014} network model of partnerships, the partnership duration is set to 1 day --- very unrealistic in epidemic terms, but perhaps
