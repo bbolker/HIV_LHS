@@ -39,9 +39,9 @@ load("../simdata/ev_bd.rda")
 ## setup2
 orig_sum_labs <- c("peak_time","peak_vir","eq_vir","rel_vir")
 new_sum_labs <- c(bquote(atop("peak time", "(years)")),
-									bquote(atop("maximum", "mean" ~ log[10] ~ "SPVL")),
+									bquote(atop("peak", "mean" ~ log[10] ~ "SPVL")),
 									bquote(atop("equilibrium", "mean" ~ log[10] ~ "SPVL")),
-                  "maximum:equilibrium ratio")
+                  "peak:equilibrium ratio")
 m_order <- c("random", "heterogeneous","pairform+epc", "pairform",
              "instswitch+epc","instswitch" , "implicit")
 fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
@@ -237,7 +237,7 @@ mLw <- droplevels(mL[-w,])
 mLw$variable <- factor(mLw$variable,
          levels = c("peak_time", "peak_vir", "eq_vir", "peak_dur"),
          labels = c("peak~time~(years)",
-                    "maximum~mean~log[10]~SPVL",
+                    "peak~mean~log[10]~SPVL",
 										"equilibrium~mean~log[10]~SPVL",
          					  "minimum~mean~progression~time~(years)"))
 
@@ -291,7 +291,7 @@ compare_df <- data.frame(
 compare_df$variable <- factor(compare_df$variable,
 														 levels = c("peak_time", "peak_vir", "eq_vir"),
 														 labels = c("peak~time~(years)",
-														 					 "maximum~mean~log[10]~SPVL",
+														 					 "peak~mean~log[10]~SPVL",
 														 					 "equilibrium~mean~log[10]~SPVL"))
 
 gg_univ_aug <- gg_univ %+% 
@@ -308,14 +308,14 @@ if (do_png) ggsave(gg_univ_aug,file="fig3_aug.png",width=10,height=4.8,dpi=600)
 
 mLw_res <- mLw  %>%
   filter(model %in% c("implicit","pairform+epc","heterogeneous","random"))  %>%
-  filter(variable %in% "maximum~mean~log[10]~SPVL")
+  filter(variable %in% "peak~mean~log[10]~SPVL")
 
 ## one-panel plot for talks
 gg_univ_0 <- ggplot(mLw_res,aes(value,model,fill=model))+
 	geom_violinh(width=1)+
 	theme(legend.position = "none") +
 	guides(fill=guide_legend(reverse=TRUE))+
-    labs(x= expression(maximum~mean~log[10]~SPVL))
+    labs(x= expression(peak~mean~log[10]~SPVL))
 saveRDS(gg_univ_0,file="HIV_dur.rds")
 
 fig_objects <- c(fig_objects,"gg_univ")
@@ -350,7 +350,7 @@ mLw.epi <- droplevels(mL.epi[-c(w.epi.t,w.epi.d),])
 mLw.epi$variable <- factor(mLw.epi$variable,
                            levels = c("eq_t", "peak_t", "eq_dur", "peak_dur"),
                            labels = c("equilibrium~mean~transmission~rate~(year^-1)",
-													 					 	"maximum~mean~transmission~rate~(year^-1)",
+													 					 	"peak~mean~transmission~rate~(year^-1)",
 													 					 	"equilibrium~mean~progression~time~(years)",
 													 					 	"minimum~mean~progression~time~(years)"))
 
@@ -476,7 +476,7 @@ ggp1 <- ggpairs(sL2,
         lower = list(continuous = wrap("points",alpha=0.6,size=2)), ## alpha = 0.3,size=0.5)),
         diag = list(continuous = "blankDiag"),
         upper = list(continuous = "blank"),
-        columnLabels = expression(peak~time~(years), maximum~mean~log[10]~SPVL, equilibrium~mean~log[10]~SPVL))
+        columnLabels = expression(equilibrium~mean~log[10]~SPVL, peak~time~(years), peak~mean~log[10]~SPVL))
 
 ## http://stackoverflow.com/questions/14711550/is-there-a-way-to-change-the-color-palette-for-ggallyggpairs-using-ggplot
 ## have to change plot one panel at a time
