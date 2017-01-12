@@ -3,6 +3,7 @@
 \usepackage{graphicx}
 \usepackage{myltr2}
 \usepackage{times}
+\usepackage{color}
 \usepackage[utf8]{inputenc}
 %\usepackage[sort&compress]{natbib}
 
@@ -32,6 +33,7 @@
 \newcommand{\revcomment}[1]{\emph{#1}}
 \newcommand{\response}[1]{#1}
 \newcommand{\rzero}{\ensuremath{\mathcal R}_0}
+\newcommand{\todo}[1]{{\color{red} \bf #1}}
 
 \begin{document}
 
@@ -44,7 +46,7 @@
 
 \opening{To the editor,}
 
-\textbf{ADD GENERAL POINTS HERE}
+\todo{ADD GENERAL POINTS HERE}
 
 \vskip10pt
 \hrule
@@ -96,7 +98,7 @@ The point about initial virulence being measured immediately after
 a species jump is interesting, but since it is somewhat peripheral
 to our main exploration here, we have opted to include in the 
 Discussion rather than trying to squeeze it into the abstract
-\textbf{don't forget to do this}
+\todo{don't forget to do this}
 }
 
 \revcomment{
@@ -156,13 +158,14 @@ we now refer to it near the beginning of the Methods section.}
 What is the rationale behind starting at SPVL of 3? All of your results about the general time course of the mean SPVL depend on this. If it is simply to compare to Shirreff, then should state this.
 }
 
-
-
-\response{comparing to Shirreff \ldots Figure 1 shows comparison \ldots picking high start virulence, won't see peak at all \ldots very much unknown \ldots implicit assumption that there's not an \emph{interaction} between starting SPVL and characteristics of models \ldots}
+\response{Thanks to this comment, we realized that we did not say enough in the main text about our choice of initial conditions.  We have added a subsection in the Methods section about initial conditions; we have also extended our discussion of our sensitivity tests of initial conditions (emphasizing that the peak SPVL is relatively insensitive to starting conditions).
+}
 
 \revcomment{
 Figure 1 is not well explained in the text or the caption. What is the point of these comparisons? Like where do these three values of r come from? Which one did Shirreff use? Same for other quantities.
 }
+
+\response{We have added some text here.}
 
 \revcomment{
 You can’t assume that your reader knows exactly what was done in Shirreff’s paper. Instead of always saying what you did relative to Shirreff, the comparison between your methods and theirs should be written in a way that is clear, even if the reader has never read Shirreff.
@@ -180,6 +183,16 @@ Why did you assume a constant population size - that is, replace any dead indivi
 I would highly recommend that the figures and descriptions of the results refer mainly to SPVL, and augment with results on time to progression. It is just much simpler and more intuitive to think about SPVL. SPVL is the only quantity that is actually observed in most cases. Referring to time to progression is very confusing because LOWER time to progress = HIGHER virulence so just takes more effort to interpret.
 }
 
+\response{
+We agree that this causes some difficulties. Earlier drafts
+actually focused on SPVL as the output measure, but we thought
+that non-technical readers would have a better feeling for the
+real-world significance of progression time; furthermore, because
+progression time (unlike log(SPVL) is on a ratio scale, it becomes
+reasonable to quote results in terms of proportional changes. 
+We are taking the reviewer's advice and switching back to SPVL.
+}
+
 \revcomment{
 Throughout the paper you refer to the conclusion that the simplest and most complex models give the same results, and that models of intermediate complexity give different results. But none of the figures are really presenting this point, as someone looking at the figure probably does not remember the details of each model based only on its code-word, and the series in the figures do not seem to be organized in terms of model complexity.
 }
@@ -188,24 +201,51 @@ Throughout the paper you refer to the conclusion that the simplest and most comp
 First paragraph: Don’t understand “As r decreases from 0.084 to 0.42" . Where did these r values come from? Is r changing over time? Or over different iterations? Why not just fit to the observed r value? And this change you’ve described is an INCREASE, not a decrease.
 }
 
+\response{
+We have changed the wording, and corrected a typo (the second value should have been 0.042 --- sorry!) As we say in our responses above, we have added more information about the choice of $r$, $I(0)$, $\alpha(0)$ in our sensitivity analyses (Figure 1).
+}
+
 \revcomment{
 Why are you changing the initial infectious density?
+}
+
+\response{As part of a sensitivity analysis, to determine the effect of $I(0)$ on the results (since we see that the results are relatively insensitive, we fix a value of $I(0)$ thereafter)
 }
 
 \revcomment{
 Line 306: Why would the speed of virulence evolution affect the maximum attained virulence? Doesn’t make sense. Should just influence the time to peak.
 }
 
+\response{
+  Because the total evolutionary change in SPVL over the course of the growth phase is
+equal to the time until the epidemic peak (years) times the 
+speed of virulence evolution (change in SPVL/year); the faster
+evolution proceeds, the closer SPVL can get to its growth-phase optimum (i.e., to the
+SPVL that maximizes $r$).
+}
+
 \revcomment{
 It is very hard as a reader to maintain any interest in the results of different models when there was so little description of them, and, there is just too much detail for one to store in one’s head throughout the paper. I would recommend having a diagram, or a table, that clearly compares each model, for what features it does and doesn’t have, so the reader can keep referring back to this to try to make sense of the findings.
+}
+
+\response{
+\todo{diagram of models}
 }
 
 \revcomment{
 I don’t understand why Figure 5 shows the unscaled parameters, when in reality you had to scale the parameters. Does not make sense to show summary statistics for scenarios that you know are unrealistic (because they would lead to epidemics with r values that do not match the observed value)
 }
 
+\response{
+For clarity, we have changed Figure 5 to show the scaled parameters.
+}
+
 \revcomment{
 Figure captions are not publication level. Some general advice on figure captions, taken from another source: Figures should be able to be interpreted relatively independently of the text. Most readers will go straight to the figures before reading the text in detail, and so the captions should not assume the reader has internalized every detail of the text preceding the figure citation. Figure captions should walk the reader through what experiment (simulation) was done, what analysis (statistics) was done on the data, and what quantities are shown in each axis. 100-200 words is a normal length. The first sentence (might be called the title), is often bolded, and can be either a summary of what data (or model, etc) the figure is showing, or a statement of the main results. Try to be consistent. In general, figures are supposed to describe results, not conclusions. Next, describe each panel of the figure, referring to it by label (eg A)). For each panel, or at the end of the caption (if this info is the same for all panels), describe the values of any important quantities that were held constant in during the experiment that generated the figure, state any important assumptions, and state sampling size or time if relevant. Avoid using parameter symbols or abbreviations, but if they are used, provide definitions in the caption. These conventions are often ignored in technical mathematical biology papers (i.e. those in JTB), but are crucial for making theoretical papers palatable for interdisciplinary audiences.
+}
+
+\response{
+
 }
 
 \revcomment{
@@ -222,16 +262,25 @@ It would be very helpful to be able to give a intuitive or at least qualitative 
  The authors have appropriately dealt with my previous comments. Furthermore, I think that the addition of a model with heterogeneity in sexual activity is useful.
 }
 
+\response{
+Thank you!
+}
+
 \textbf{Reviewer \#3:}
 \revcomment{
 p. 10 if not counteracted by increased mortality among hosts infected by these reproductive strains.
 }
 
 \response{(confusion between transmission rate and  ${\mathcal R}_0$ ---
-  clarify in text)}
+  clarify in text)
+}
 
 \revcomment{
 p. 11 instead of calling this "epidemiological structure" it may be more appropriate to refer to it as "contact structure". The authors investigated the effect of adding structure to the pattern of sexual contacts. There is nothing intrinsically "epidemiological" about forming (stable and/or once-off) sexual relationships.
+}
+
+\response{
+  We have changed this wording to ``contact structure'' throughout
 }
 
 \revcomment{
@@ -284,6 +333,10 @@ trends in sexual risk behaviour may have changed both in the pre-ART
 and ART era.
 }
 
+\response{
+  
+}
+
 \revcomment{
 p. 22  The model with heterogeneous levels of sexual activity (the
 "heterogeneity" model) is an extension of the pair formation + epc
@@ -292,6 +345,10 @@ sexual contact rate could have been added to the other 5 "base" models
 as well. In the current comparison it is not possible to assess the
 relative effect of adding extra-couple and uncouple transmission
 versus contact heterogeneity.
+}
+
+\response{
+  added \ldots
 }
 
 \revcomment{
