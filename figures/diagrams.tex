@@ -1,0 +1,47 @@
+\documentclass{article}
+
+\usepackage[vcentering]{geometry}
+% 2.4in is the smallest height for current version of sirbd
+% \geometry{papersize={6in,2.4in}, top=0.2in, bottom=0.2in}
+%% play with height: need enough to accommodate last figure
+%%   (the tallest because of all the funky shapes), but
+%%   still want to break between first two figures!
+\geometry{papersize={6in,3.5in}, top=0.2in, bottom=0.2in}
+
+\pagestyle{empty}
+
+\input{tikzlib.tex}
+\input{diagram_geom.tex}
+\input{partnerSIR.tex}
+
+\begin{document}
+
+\begin{tikzpicture}[font=\LARGE]
+\instswitchboxes
+\instswitchflowvec
+\instswitchnoepcinf
+\end{tikzpicture}
+
+\begin{tikzpicture}[font=\LARGE]
+\instswitchboxes
+\instswitchflowvec
+\instswitchnoepcinf
+\instswitchepcinf
+\end{tikzpicture}
+
+
+\begin{tikzpicture}[font=\LARGE]
+\pairformboxes
+\pairformnoepcflowvec
+\pairformnoepcinf
+\end{tikzpicture}
+
+\begin{tikzpicture}[font=\LARGE]
+\pairformboxes
+\pairformnoepcflowvec
+\pairformepcflowvec
+\pairformnoepcinf
+\pairformepcinf
+\end{tikzpicture}
+
+\end{document}

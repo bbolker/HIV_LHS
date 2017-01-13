@@ -1,0 +1,35 @@
+
+\newcommand{\instswitchflowvec}{ 
+	\draw[->, very thick] (SS) to (SI); 
+	\draw[->, very thick] (SI) to (II); 
+}
+
+
+\newcommand{\instswitchnoepcinf}{
+	\draw[->, blue, dashed, very thick] (SI)
+		to [bend right=45] (SItoII);
+	\draw[->, blue, dashed, very thick] (SI)
+		to [bend left=45] (SStoSI);
+
+}
+
+\newcommand{\instswitchboxes}{
+	\node(SS)[bigcompartment]{SS};
+	\node(SStoSI)[right=of SS]{};
+	\node(SI)[bigcompartment, right=of SStoSI]{SI};
+	\node(SItoII)[right=of SI]{};
+	\node(II)[bigcompartment, right=of SItoII]{II};
+}
+
+\newcommand{\pairformboxes}{
+        \node(S)[bigcompartment]{S};
+        \node(StoI)[right= of S]{};
+        \node(I)[bigcompartment,right= of StoI]{I};
+	\node(SS)[bigcompartment,below left= of S]{SS};
+	\node(SStoSI)[right=of SS]{};
+	\node(SI)[bigcompartment, right=of SStoSI]{SI};
+	\node(SItoII)[right=of SI]{};
+	\node(II)[bigcompartment, right=of SItoII]{II};
+}
+
+

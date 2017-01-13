@@ -1,0 +1,85 @@
+
+\newcommand{\instswitchflowvec}{ 
+	\draw[->, very thick] (SS) to (SI); 
+	\draw[->, very thick] (SI) to (II); 
+}
+
+
+\newcommand{\instswitchnoepcinf}{
+	\draw[->, blue, dashed, very thick] (SI)
+		to [bend right=45] (SItoII);
+	\draw[->, blue, dashed, very thick] (SI)
+		to [bend left=45] (SStoSI);
+}
+
+\newcommand{\instswitchepcinf}{
+	\draw[->, red, dashed, very thick] (II)
+		to [bend right=45] (SItoII);
+	\draw[->, red, dashed, very thick] (II)
+		to [bend left=70] (SStoSI);
+}
+
+\newcommand{\pairformnoepcflowvec}{ 
+	\draw[->, very thick] (SI) to (II); 
+	\draw[<->, very thick, dotted] (I) to (II); 
+	\draw[<->, very thick, dotted] (S) to (SS); 
+	\draw[<->, very thick, dotted] (S) to (SI); 
+	\draw[<->, very thick, dotted] (I) to (SI); 
+}
+
+\newcommand{\pairformepcflowvec}{ 
+	\draw[->, very thick] (S) to (I); 
+	\draw[->, very thick] (SS) to (SI); 
+}
+
+\newcommand{\pairformnoepcinf}{
+	\draw[->, blue, dashed, very thick] (SI)
+		to [bend right=45] (SItoII);
+}
+
+\newcommand{\pairformepcinf}{
+	\draw[->, red, dashed, very thick] (I)
+		to [bend right=45] (StoI);
+	\draw[->, red, dashed, very thick] (SI)
+		to  (StoI);
+	\draw[->, red, dashed, very thick] (SI)
+		to [bend right=45] (SStoSI);
+	\draw[->, red, dashed, very thick] (II)
+		to [bend left=60] (SStoSI);
+	\draw[->, red, dashed, very thick] (I)
+		to  (SItoII);
+	\draw[->, red, dashed, very thick] (II)
+		to [bend left=70] (SItoII);
+%% these are the problematic ones
+% does this help?
+%   http://tex.stackexchange.com/questions/209942/curved-arrows-in-tikz
+% http://tex.stackexchange.com/questions/40388/avoid-arrow-crossing-over-blocks-in-flow-chart
+        %\path (k) |- ([xshift=-0.5cm,yshift=-0.5cm]j.south west) |- (h)
+        % \path[line, purple, very thick] (II) -- ([xshift=0.5cm,yshift=0.5cm]I.north east) -- ([yshift=0.5cm]I.north west) -- (StoI);
+         \draw[->, red, dashed, very thick] plot [smooth, tension=0.4] coordinates
+            { (II.north) ([xshift=0.5cm,yshift=0.5cm]I.north east) ([yshift=0.5cm]I.north west) ([yshift=0.5cm]StoI) (StoI) };
+	\draw[->, green, dashed, very thick] (I)
+		to [bend right=45] (SStoSI);
+
+}
+
+\newcommand{\instswitchboxes}{
+	\node(SS)[bigcompartment]{SS};
+	\node(SStoSI)[right=of SS]{};
+	\node(SI)[bigcompartment, right=of SStoSI]{SI};
+	\node(SItoII)[right=of SI]{};
+	\node(II)[bigcompartment, right=of SItoII]{II};
+}
+
+\newcommand{\pairformboxes}{
+        \node(S)[bigcompartment]{S};
+        \node(StoI)[right= of S]{};
+        \node(I)[bigcompartment,right= of StoI]{I};
+	\node(SS)[bigcompartment,below left= of S]{SS};
+	\node(SStoSI)[right=of SS]{};
+	\node(SI)[bigcompartment, right=of SStoSI]{SI};
+	\node(SItoII)[right=of SI]{};
+	\node(II)[bigcompartment, right=of SItoII]{II};
+}
+
+
