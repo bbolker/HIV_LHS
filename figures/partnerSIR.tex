@@ -38,7 +38,7 @@
 }
 
 \newcommand{\pairformepcinf}{
-	\draw[->, red, dashed, very thick] (I)
+	\draw[->, purple, dashed, very thick] (I)
 		to [bend right=45] (StoI);
 	\draw[->, red, dashed, very thick] (SI)
 		to  (StoI);
@@ -46,7 +46,7 @@
 		to [bend right=45] (SStoSI);
 	\draw[->, red, dashed, very thick] (II)
 		to [bend left=60] (SStoSI);
-	\draw[->, red, dashed, very thick] (I)
+	\draw[->, purple, dashed, very thick] (I)
 		to  (SItoII);
 	\draw[->, red, dashed, very thick] (II)
 		to [bend left=70] (SItoII);
@@ -54,12 +54,13 @@
 % does this help?
 %   http://tex.stackexchange.com/questions/209942/curved-arrows-in-tikz
 % http://tex.stackexchange.com/questions/40388/avoid-arrow-crossing-over-blocks-in-flow-chart
-        %\path (k) |- ([xshift=-0.5cm,yshift=-0.5cm]j.south west) |- (h)
-        % \path[line, purple, very thick] (II) -- ([xshift=0.5cm,yshift=0.5cm]I.north east) -- ([yshift=0.5cm]I.north west) -- (StoI);
          \draw[->, red, dashed, very thick] plot [smooth, tension=0.4] coordinates
-            { (II.north) ([xshift=0.5cm,yshift=0.5cm]I.north east) ([yshift=0.5cm]I.north west) ([yshift=0.5cm]StoI) (StoI) };
-	\draw[->, green, dashed, very thick] (I)
-		to [bend right=45] (SStoSI);
+            { (II.north) ([xshift=0.2cm,yshift=0.2cm]I.north east) ([xshift=-0.5cm,yshift=0.2cm]I.north west) (StoI) } (StoI);
+            \draw[->, purple, dashed, very thick] plot [smooth] coordinates {
+             ([yshift=0.3cm]I.west) ([xshift=0.5cm,yshift=0.5cm]S.north east)
+             ([xshift=-0.2cm,yshift=0.2cm]S.north west) 
+             ([xshift=0.5cm,yshift=0.5cm]SS.north east)
+             (SStoSI) } (SStoSI);
 
 }
 
