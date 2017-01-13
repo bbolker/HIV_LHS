@@ -248,7 +248,7 @@ Previously developed implicit models predicted
 lower virulence and slower progression
 at the peak (a maximum of 3.5 \Lspvl) compared both to more realistic models
 and to simple random-mixing models with no partnership structure
-at all (both with a maximum of $\approx$ 4.7 years to \Lspvl).
+at all (both with a maximum of $\approx$ 4.7 \Lspvl).
 In this range of models, the simplest random-mixing structure best
 approximates the most realistic model; this
 surprising outcome occurs because the dominance of extra-pair
@@ -260,27 +260,32 @@ partnership structure.
 % Author Summary not valid for PLOS ONE submissions.   
 \section*{Author Summary}
 
-%% 199 words
+%% 196 words
 
 Pathogens such as HIV can evolve rapidly when the environment changes.
-Such changes include decreases in the probability that an infectious
-contact (such as a sneeze for a respiratory disease, or an unprotected
-sex act for a sexually transmitted disease) encounters an uninfected,
-susceptible person and thus has a chance to transmit the
-pathogen. Disease spread during an epidemic reduces the fraction of
-susceptible people in the population and thus changes the direction of
-parasite evolution.  While researchers have explored these
-evolutionary dynamics with simulations, their models have neglected
+One important aspect of a pathogen's environment is the probability that an infectious
+contact (a sneeze for a respiratory disease, or an unprotected
+sex act for a sexually transmitted disease) encounters an uninfected
+person and thus has a chance to transmit the
+pathogen. As an epidemic grows the number of
+uninfected people shrinks, changing
+evolutionary pressures on the pathogen.
+While researchers have used models to explore
+pathogen evolution during epidemics, their models usually neglect
 important processes such as people entering and leaving sexual
-partnerships. We compared several evolutionary models that include
-partnership dynamics and sexual contact outside of stable
+partnerships. We compared several evolutionary models for HIV that include
+partnership dynamics as well as sexual contact outside of stable
 partnerships. Models of intermediate complexity predicted lower
-virulence over the course of the epidemic (a maximum of 3.5 \Lspvl) than either more realistic models or simple models
-without any partnership structure at all (both approx. 4.7 \Lspvl), because sexual contact outside of stable
-partnerships tended to wash out the effects of contact
-structure. The large effect of epidemiological details on evolutionary
-dynamics suggests that researchers trying to predict the evolution of
-pathogens should proceed with caution.
+virulence midway through the epidemic
+(a minimum of 15 years to
+progress to AIDS) than either more realistic models
+or simple models with no partnership structure
+(both with a minimum of $\approx$ 7.25 years to progress to AIDS), 
+because random sexual contacts tended to wash out the effects of stable partnerships.
+Researchers trying to predict the evolution of
+pathogens must try to understand the implications of their
+modeling choices; models of intermediate complexity may not
+produce intermediate conclusions.
 
 \linenumbers
 
@@ -341,7 +346,7 @@ The work of Shirreff \etal\ \cite{shirreff_transmission_2011}, and particularly 
 highlights the importance of interactions between epidemiological and
 evolutionary factors \cite{day_virulence_2004,alizon_price_2009}.
 However, despite these studies' attention to detail at the individual
-or physiological level, the contact structures used in these
+or physiological level, the population-level contact structures used in these
 models are relatively simple.
 
 As we discuss in detail below,
@@ -350,7 +355,8 @@ models that incorporate the average effects of within-couple sexual
 contact --- without representing the explicit dynamics of partnership
 formation and dissolution or accounting for extra-partnership contact %
 --- or use an agent-based formulation with parameters that effectively
-lead to random mixing among infected and uninfected individuals. Here
+lead to random mixing among infected and uninfected individuals
+\todo{may not be true any more, Herbeck may have fixed this in their revised versions}. Here
 we explore the effects of incorporating \emph{explicit}
 contact structure in eco-evolutionary models.
 
@@ -374,10 +380,10 @@ Our models
 explicitly track the evolution of the distribution of $\log_{10}$ SPVL
 (which we denote as $\alpha$)
 rather than the rate of progression to
-AIDS itself (hereafter ``virulence'' will refer to \Lspvl).
+AIDS itself (hereafter we use ``virulence'' to denote \Lspvl).
 We use a single-stage model of HIV that assumes constant
 infectivity over the course of an exponentially
-distributed infectious period; this contrasts
+distributed infectious period. This assumption contrasts
 with Shirreff \etal's previous model which
 explicitly tracked three stages of HIV infection (primary,
 asymptomatic, and AIDS) and used a more realistic
@@ -400,7 +406,7 @@ for our models is given by:
 where the duration of infection ($D_P$ and $D_D$) and rate of transmission ($\beta_P$ and $\beta_D$) of the Primary and Disease stages
 of infection are independent of the host's SPVL
 (Table~\ref{table:parmsTable} gives definitions, units, and values for all parameters).
-. Following Shirreff \etal, the duration of infection ($D_A$) and rate of transmission ($\beta_A$) for the Asymptomatic stage are Hill functions of the SPVL:
+Following Shirreff \etal, the duration of infection ($D_A$) and rate of transmission ($\beta_A$) for the Asymptomatic stage are Hill functions of the SPVL:
 
 \begin{equation}
 \begin{split}
@@ -488,7 +494,7 @@ step at the time of transmission. First, the distribution of \Lspvl\ is discreti
 \end{equation}
 We have experimented with varying degrees of discretization in the strain distribution (i.e., values of $n$); in our model runs comparing results with Shirreff \etal\ \cite{shirreff_transmission_2011} (\figurename~\ref{fig:panel3}) we use $n=51$ (i.e. a bin width of 0.1 \Lspvl\ for $\alpha$), but reducing $n$ to 21 (bin width = 0.25 \Lspvl) makes little difference; we use this coarser grid for all other simulations reported.
 
-We construct an $n$ by $n$ mutational matrix, $M$ --- which is multiplied with the transmission term ---  so that $M_{ij}$ is the probability that a newly infected individual will have \Lspvl\ of $\alpha_j$ given that the infector has \Lspvl\ of $\alpha_i$. Finally, the probabilities are normalized so that each row sums to 1:
+We construct an $n \times n$ mutational matrix, $M$ --- which is multiplied with the transmission term ---  so that $M_{ij}$ is the probability that a newly infected individual will have \Lspvl\ of $\alpha_j$ given that the infector has \Lspvl\ of $\alpha_i$. Finally, the probabilities are normalized so that each row sums to 1:
 \begin{equation}
 M_{ij} = \frac{\Phi(\alpha_j + d/2;i) - \Phi(\alpha_j - d/2;i)}{\Phi(\tsub{\alpha}{max} + d/2;i) - \Phi(\tsub{\alpha}{min} - d/2;i)},
 \end{equation}
@@ -522,7 +528,7 @@ by setting the partnership formation rate of the explicit partnership models to 
 
 The fifth and sixth models represent extreme simplifications of sexual partnership dynamics.  One (``implicit'') is an implicit serial monogamy model based on the epidemiological model used by Shirreff \etal\ \cite{shirreff_transmission_2011}. It is actually a random mixing model that explicitly tracks only the total number of susceptible and infected individuals. However, to reflect the effect of partnership structure, it uses an adjusted transmission rate derived from an approximation of the basic reproduction number of a serial monogamy model with instantaneous pair formation \cite{hollingsworth_hiv1_2008}. The second model of this pair (``random'') is a simple random-mixing model.
 
-Lastly, we add a model of heterogeneity in sexual activity to the models. Individuals are divided into different risk groups based on the sexual activity level; we scale all aspects of sexual activity, assuming that sexual activity level in both within- and extra-couple contacts is directly proportional to number of non-cohabiting (extra-couple and uncoupled) partners per year \cite{omori2015dynamics} (see Appendix S1). We assume random activity-weighted mixing between risk groups \cite{may_transmission_1988}. 
+Lastly, we incorporate heterogeneity in sexual activity into the models. Individuals are divided into different risk groups based on their level of sexual activity; we scale all aspects of sexual activity, assuming that sexual activity level in both within- and extra-couple contacts is directly proportional to number of non-cohabiting (extra-couple and uncoupled) partners per year \cite{omori2015dynamics} (see Appendix S1). We assume random activity-weighted mixing between risk groups \cite{may_transmission_1988}. 
 (In the main text we focus on the model with non-instantaneous pair formation, extra-partnership contact (``pairform+epc'') and heterogeneous sexual activity, which we denote as ``hetero''; Figure S4 in Appendix S2 presents results on the effect of adding heterogeneity to other model variants.)
 While this model lacks some 
 important elements, such as age-structured mixing patterns, needed for realistic models of HIV transmission in sub-Saharan Africa, it represents a first step toward assessing the effects of epidemiological complexity. As even the models shown here push the limits of compartmental-based models (the heterogeneity model comprises 24530 coupled ordinary differential equations), adding further complexity will probably require a shift to an agent-based model framework, as well as considerable effort in model calibration \cite{herbeck_hiv_2014,delva_connecting_2016}.
@@ -530,14 +536,15 @@ important elements, such as age-structured mixing patterns, needed for realistic
 For simplicity (and following
 Shirreff \etal), all of our base models use an SIS (susceptible-infected-susceptible) formulation, where 
 there is no natural mortality (and no explicit introduction of newly sexually active individuals into
-the susceptible pool) individuals
-who die from AIDS are immediately replaced by an individual in the single susceptible compartment.
+the susceptible pool). Individuals
+who die from AIDS are immediately replaced by an individual in the uncoupled-susceptible compartment.
 While admittedly unrealistic, this approach is reasonable given that (1) the natural mortality rate is low relative to
 the epidemiological dynamics and (2) the infectious period is long, so that the overall rates of
 disease-induced mortality and recruitment of newly sexually active individuals would roughly
-balance. We also built models with vital dynamics where individuals dying from AIDS
+balance. To check the importance of this assumption,
+we also built models with vital dynamics where individuals dying from AIDS
 are removed from the population, with constant recruitment rates and constant low
-\emph{per capita} natural mortality rates; this additional structure had minor effects on
+\emph{per capita} natural mortality rates; this additional structure had only minor effects on
 the results.
 
 \subsection*{Initial conditions}
@@ -570,8 +577,6 @@ further details on initial conditions, such
 as the initial distribution of SPVL around the mean and the
 distribution of initial infected density across single people
 and different partnership types.
-
-
 
 \subsection*{Latin hypercube sampling}
 
@@ -850,6 +855,8 @@ Similarly, increasing the ratio of uncoupled to within-pair contact, $c_u/c_w$, 
 Neither the uncoupled contact rate nor
 the mean ($\mu$) or CV$^2$ of the number of non-cohabiting sexual
 partners has much systematic effect in the heterogeneous model.
+
+\todo{discussion of effect of heterogeneity and vital dynamics here (referring to supp material)}
 
 \section*{Discussion}
 
