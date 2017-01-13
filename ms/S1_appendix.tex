@@ -272,7 +272,9 @@ I_i' & = \sum_k M_{ki} c \beta_k S I_k - \lambda_i I_i.
 
 \subsection*{Heterogenous model}
 
-We extend the ``pairform+epc'' model by allowing for heterogeneity in sexual behaviour. Since pairform+epc model captures four distinct sexual behaviours -- pair formation, pair dissolution, extra-couple mixing, and uncoupled mixing -- we assume that all four parameters that model these behaviours are scaled by the same factor based on the risk group. In other words, an individual in a higher risk is also more likely to form a long-term sexual partnership, leave a long-term partnership, and engage in a extra-couple/uncoupled mixing. We denote this scaling parameter as $\varphi_i$ where $i$ is the risk group. For simplicity, we assume that the transmission rate per partnership is unaffected by sexual behaviour.
+We extend the explicit models by allowing for heterogeneity in sexual behaviour. We first extend the ``pairform+epc'' model and obtain rest of the models by adjusting the heterogeneous ``pairform+epc'' model. Since pairform+epc model captures four distinct sexual behaviours -- pair formation, pair dissolution, extra-couple mixing, and uncoupled mixing -- we assume that all four parameters that model these behaviours are scaled by the same factor based on the risk group. In other words, an individual in a higher risk is also more likely to form a long-term sexual partnership, leave a long-term partnership, and engage in a extra-couple/uncoupled mixing. We denote this scaling parameter as $\varphi_i$ where $i$ is the risk group. For simplicity, we assume that the transmission rate per partnership is unaffected by sexual behaviour. 
+
+We allow for hetereogeneity in other three explicit models as well by adjusting the parameters of the heterogeneous ``pairform+epc model''. Heterogeneous ``pairform model'' is easily obtained by removing the extra-pair and uncoupled contact structure (setting $c_e/c_w = c_u/c_w = 0$, equivalently) from the heterogeneous ``pairform+epc'' model. We approximate heterogeneous ``instswitch'' and ``instswitch+epc'' models by setting the baseline pair formation rate, $\tsub{\rho}{base}$, to a high value to let individuals to enter partnership almost instantaneously as soon as they achieve a single state. For ``instswitch'' model, both $c_e/c_w$ and $c_u/c_w$ were set to 0, whereas only $c_u/c_w$ was set to 0 for ``instswitch+epc'' model. The following sections describe the heterogeneous ``pairform+epc'' model:
 
 \subsubsection*{Partnership dynamics}
 
@@ -315,9 +317,25 @@ Since the relative uncoupled/extra couple contact ratios are scaled by the facto
 
 Disease induced mortality is not affected by the sexual behaviour of an individual. 
 
+\subsection*{Vital dynamics}
+
+We extend four explicit models by adding vital dynamics and removing the SIS assumption). We follow Champredon \etal's \cite{champredon_hiv_2013} and assume that all individuals suffer from per-capita death rate of $m$ and that new susceptibles are born at a constant rate. Since we remove SIS assumption, individuals that die from disease induced mortality are simply removed from the population. Therefore, changes in the population due to birth and (both natural and disease induced) death in ``pairform+epc'' model can be written as follows (note that infection and partnership formation/dissolution processes have been ommitted in the equations for clarity):
+
+$$
+\begin{aligned}
+S' &= m(1 - S) + \sum_k \lambda_k SI_k + 2 m SS + \sum_k m SI_k \\
+I_i' &= - \lambda_i I_i + \sum_k 2^{\lambda_{ik}} \lambda_k II_{ik} - m I_i + m SI_k + \sum_k 2^{\lambda_{ik}} m II_{ik} \\
+SS' &= - 2 m SS \\
+SI_i' &= - \lambda_i SI_i - 2 m SI_i \\
+II_{ij}' &= - (\lambda_i + \lambda_j) II_{ij} - 2 m II_{ij} \\
+\end{aligned}
+$$
+
+By adding partnership dynamics and infection process, we obtain a ``pairform+epc'' model with vital dynamics. Other three explicit models with vital dynamics is obtained by adjusting the paraemters as discussed in the previous section.
+
 \subsection*{Initial distribution of infected individuals}
 
-We follow Champredon \etal's result to calculate the initial distribution of infected individuals. For model 1 and 2, we have disease equilibrium state of $S^* = \frac{c}{c + \rho}$ and $SS^* = \frac{1-S^*}{2}$. We let $\epsilon = 10^{-4}$, which is the total number of infected individuals in the beginning of simulation and $D$ be the vector such that $D_i$ represent the proportion of individuals with \Lspvl\ of $i$. $D_i$ is taken from the Gaussian distribution with mean 3 and standard deviation 0.2 and is normalized so that $\sum_i D_i = 1$. Then, we have the following initial distribution of each states:
+We follow Champredon \etal's result to calculate the initial distribution of infected individuals \cite{champredon_hiv_2013}. For model 1 and 2, we have disease equilibrium state of $S^* = \frac{c}{c + \rho}$ and $SS^* = \frac{1-S^*}{2}$. We let $\epsilon = 10^{-4}$, which is the total number of infected individuals in the beginning of simulation and $D$ be the vector such that $D_i$ represent the proportion of individuals with \Lspvl\ of $i$. $D_i$ is taken from the Gaussian distribution with mean 3 and standard deviation 0.2 and is normalized so that $\sum_i D_i = 1$. Then, we have the following initial distribution of an each state:
 
 \begin{equation}
 \begin{aligned}
@@ -328,6 +346,8 @@ I_i(0) &=  \epsilon S^* D_i,\\
 II_{ij}(0) &=  \khalf 2\epsilon^2 SS^* D_i D_j.
 \end{aligned}
 \end{equation}
+Note that we use this exact approach to calculate the initial distribution of an each state of the models with vital dynamics after redefining $S^* = \frac{c + 2m}{c + \rho + 2m}$.
+
 Since model 3 and 4 do not have single states, $SS^*=1$ at the disease free equilibrium and the initial distribution becomes:
 
 \begin{equation}
