@@ -279,7 +279,7 @@ if (do_png) ggsave(gg_univ_fig,file="fig3.png",width=8,height=4.8,dpi=600)
 hetero <- seq(1, 7, 2)
 
 compare_df <- data.frame(
-	model = c(rep(m_order[3:6], each = 2), m_order[3:6]),
+	model = c(rep(m_order[2:5], each = 2), m_order[2:5]),
 	type = c(rep(c("base", "bd"), 4), rep("hetero", 4)),
 	eq_vir = c(eq_vec_bd, eq_vecFull[hetero])) %>%
 	bind_cols(rbind(peak_mat_bd, peak_matFull[hetero,]) %>% 
@@ -303,8 +303,8 @@ gg_univ_aug <- gg_univ %+%
 	guides(fill = FALSE) +
 	zero_x_margin
 
-ggsave(gg_univ_aug,file="fig3_aug.pdf",width=10,height=4.8)
-if (do_png) ggsave(gg_univ_aug,file="fig3_aug.png",width=10,height=4.8,dpi=600)
+ggsave(gg_univ_aug,file="fig_S2_4.pdf",width=10,height=4.8)
+if (do_png) ggsave(gg_univ_aug,file="fig_S2_4.png",width=10,height=4.8,dpi=600)
 
 mLw_res <- mLw  %>%
   filter(model %in% c("implicit","pairform+epc","heterogeneous","random"))  %>%
