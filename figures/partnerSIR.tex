@@ -55,12 +55,17 @@
 %   http://tex.stackexchange.com/questions/209942/curved-arrows-in-tikz
 % http://tex.stackexchange.com/questions/40388/avoid-arrow-crossing-over-blocks-in-flow-chart
          \draw[->, red, dashed, very thick] plot [smooth, tension=0.4] coordinates
-            { (II.north) ([xshift=0.2cm,yshift=0.2cm]I.north east) ([xshift=-0.5cm,yshift=0.2cm]I.north west) (StoI) } (StoI);
+            { (II.north) ([xshift=0.2cm,yshift=0.2cm]I.north east) 
+              ([xshift=-0.5cm,yshift=0.2cm]I.north west) 
+              ([yshift=0.25cm]StoI) }
+              to (StoI) ;
+
             \draw[->, purple, dashed, very thick] plot [smooth] coordinates {
              ([yshift=0.3cm]I.west) ([xshift=0.5cm,yshift=0.5cm]S.north east)
              ([xshift=-0.2cm,yshift=0.2cm]S.north west) 
              ([xshift=0.5cm,yshift=0.5cm]SS.north east)
-             (SStoSI) } (SStoSI);
+              %% hack to get arrows in the right direction
+               ([yshift=0.25cm]SStoSI) } to (SStoSI);
 
 }
 
