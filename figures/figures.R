@@ -1,15 +1,17 @@
 ## requires ggplot 2.2.0
 library(ggplot2); theme_set(theme_bw(base_size = 12,
-                                       base_family = "Times"))
+                                      base_family = "Times"))
+stopifnot(packageVersion("ggplot2")>="2.2.0")
 library(directlabels)
+## stopifnot(length(grep("package:dplyr",search()))==0)
 library(MASS)  ## must be before dplyr (masks 'select')
 library(tidyr)
 library(gridExtra)
 library(plyr)  ## for ldply() -- MUST be before dplyr!
 library(dplyr) ## for full_join()
-## library(magrittr) ## for ???
 library(reshape2)  ## for melt()
 library(GGally) ## need BMB version
+stopifnot(packageVersion("GGally")>="1.3.0")
 ## devtools::install_github("bbolker/GGally")
 ## devtools::install_github("lionel-/ggstance")
 library(ggstance)
@@ -66,8 +68,8 @@ shirreff_df_m <- subset(res_sum_df,run==1,select=c(run,Time, Mean.VL))
 shirreff_df_m$run <- "Shirreff"
 df_tot <- rbind(shirreff_df_m,d_littleR_m)
 tlab <- "time (years)"
-g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run,linetype=run))+
-    geom_line()+labs(x=tlab,
+g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run))+
+    geom_line(aes(linetype=run))+labs(x=tlab,
             y=expression(population~mean~set-point~viral~load~(log[10])))+
 		scale_x_continuous(expand = c(0.005, 0), breaks = seq(0, 600, by = 100), 
 											 labels = c("0", "", "200", "", "400", "", "")) +
@@ -277,29 +279,32 @@ ggsave(gg_univ_fig,file="fig3.pdf",width=8,height=4.8)
 if (do_png) ggsave(gg_univ_fig,file="fig3.png",width=8,height=4.8,dpi=600)
 
 hetero <- seq(1, 7, 2)
-
 compare_df <- data.frame(
 	model = c(rep(m_order[2:5], each = 2), m_order[2:5]),
-	type = c(rep(c("base", "bd"), 4), rep("hetero", 4)),
+	type = c(rep(c("base", "bd"), 4),
+                 rep("hetero", 4)),
 	eq_vir = c(eq_vec_bd, eq_vecFull[hetero])) %>%
 	bind_cols(rbind(peak_mat_bd, peak_matFull[hetero,]) %>% 
-							as.data.frame %>% 
-							setNames(c("peak_time", "peak_vir"))) %>%
+	     as.data.frame %>% 
+             setNames(c("peak_time", "peak_vir"))) %>%
 	gather(data, key, -model, -type) %>%
 	setNames(c("model", "type", "variable", "value"))
 
+## FIXME: match columnLabels from above ...
 compare_df$variable <- factor(compare_df$variable,
-														 levels = c("peak_time", "peak_vir", "eq_vir"),
-														 labels = c("peak~time~(years)",
-														 					 "peak~mean~log[10]~SPVL",
-														 					 "equilibrium~mean~log[10]~SPVL"))
+											 levels = c("peak_time", "peak_vir", "eq_vir"),
+											 labels = c("peak~time~(years)",
+											            "peak~mean~log[10]~SPVL",
+                                                                                                    "equilibrium~mean~log[10]~SPVL"))
 
 gg_univ_aug <- gg_univ %+% 
 	filter(mLw, 
 		!(model %in% c("heterogeneous", "random", "implicit")), 
 		variable != "minimum~mean~progression~time~(years)") +
-	geom_point(data = compare_df, aes(shape = type), size = 3, col = "black") +
-	scale_shape_discrete(solid = FALSE, labels = c("baseline", "vital dynamics", "heterogeneity")) +
+	geom_point(data = compare_df, aes(shape = type),
+                   size = 3, col = "black") +
+	scale_shape_discrete(solid = FALSE,
+                  labels = c("baseline", "vital dynamics", "heterogeneity")) +
 	guides(fill = FALSE) +
 	zero_x_margin
 
@@ -409,8 +414,7 @@ ff <- function(model,variable,r=3) {
 
 
 ## r fig4_func, echo = FALSE}
-trim_gg <- function(gg,hack_spaces=TRUE,
-										hack_parenthesis = TRUE) {
+trim_gg <- function(gg,hack_spaces=TRUE,hack_parenthesis = TRUE) {
     n <- gg$nrow
     gg$nrow <- gg$ncol <- n-1
     v <- 1:n^2
@@ -472,15 +476,22 @@ sL2 <- sL2 %>%
 ggp1 <- ggpairs(sL2,
         mapping = ggplot2::aes(color = model,pch=model),
         columns=3:5,
-        legends=TRUE,
-        lower = list(continuous = wrap("points",alpha=0.6,size=2)), ## alpha = 0.3,size=0.5)),
+        ## legends=TRUE,
+        lower = list(continuous = wrap("points",alpha=0.6,size=2)),
+        ## alpha = 0.3,size=0.5)),
+        labeller=label_parsed,
         diag = list(continuous = "blankDiag"),
         upper = list(continuous = "blank"),
-        columnLabels = expression(equilibrium~mean~log[10]~SPVL, peak~time~(years), peak~mean~log[10]~SPVL))
+        columnLabels = c("'equilibrium mean SPVL'~(log[10])",
+                         "'peak time'~('years')",
+                         "'peak mean SPVL'~(log[10])")
+        )
 
 ## http://stackoverflow.com/questions/14711550/is-there-a-way-to-change-the-color-palette-for-ggallyggpairs-using-ggplot
 ## have to change plot one panel at a time
-ggp2 <- tweak_colours_gg(tweak_legends_gg(trim_gg(ggp1, FALSE, FALSE)))
+ggp2 <- tweak_colours_gg(tweak_legends_gg(trim_gg(ggp1,
+                                                  hack_spaces=FALSE,
+                                                  hack_parenthesis=FALSE)))
 ## add 1-to-1 line
 inner <- getPlot(ggp2,2,1)
 inner <- inner+geom_abline(intercept=0,slope=1,lty=2)

@@ -156,6 +156,7 @@
 \newcommand{\WT}{\textrm{WT}}
 \newcommand{\ET}{\textrm{ET}}
 \newcommand{\DM}{\textrm{DM}}
+\newcommand{\diagfig}[1]{\figurename~\ref{fig:diagrams}#1}
 
 \usepackage{color}
 \newcommand{\todo}[1]{{\color{red} \textbf{#1}}}
@@ -398,7 +399,8 @@ then derived the overall duration of the infectious period
 as the sum of the three stage durations and the 
 average transmission rate as the duration-weighted 
 average of the three stage-specific transmission rates. 
-Thus the within-couple transmission rate, $\beta$,
+Thus the within-couple transmission rate, $\beta$
+(see ``Contact Structure'' below)
 for our models is given by:
 \begin{equation}
 \beta (\alpha) = \frac{D_P \beta_P + D_A (\alpha) \beta_A (\alpha) + D_D \beta_D}{D_P + D_A (\alpha) + D_D},
@@ -511,9 +513,33 @@ for progression rate corresponding to each SPVL compartment in the model:
 
 \subsection*{Contact structure and partnership dynamics}
 
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/diagrams_panel.pdf}
+\caption{{\bf Model contact structures.} 
+Schematic representations of models with
+explicit contact structure. Top row (a,b) shows models with instantaneous
+partnership formation; bottom row (c,d)  shows those where individuals remain
+single for some period of time between partnerships. Left column (a,c) 
+shows models with within-partnership transmission only; in these models
+transmission can only occur within serodiscordant partnerships, and
+serodiscordant partnerships can only be formed by dissolution
+and reformation of partnerships. Right column (b,d) shows models
+that allow extra-pair and uncoupled transmission.
+\emph{Solid arrows} represent infection transitions; \emph{dotted arrows}
+represent partnership dissolution and formation; \emph{dashed arrows}
+show influences on infection rate, including both within-pair
+transmission (blue) and extra-pair/uncoupled transmission (red).
+In addition to these models, we also use random-mixing and implicit
+models with only $S$ and $I$ compartments and heterogeneous models
+where each compartment is subdivided by sexual activity rate
+(of both partners, in the case of partnership compartments).
+}
+\label{fig:diagrams}
+\end{figure}
+
 We developed seven multi-strain evolutionary models covering a gamut including Champredon \etal's relatively realistic \cite{champredon_hiv_2013} and Shirreff \etal's relatively simple \cite{shirreff_transmission_2011} contact structures, each of which is based on different assumptions regarding contact structure and partnership dynamics. Specifically, we focus on the effects of the assumptions of (1) instantaneous vs. non-instantaneous partnership formation; (2) zero vs. positive extra-partnership sexual contact and transmission; and (3) homogeneous vs. heterogeneous levels of sexual activity on the evolution of mean \Lspvl.
 
-Our first four models consider explicit partnership dynamics \cite{champredon_hiv_2013}. The first assumes non-instantaneous partnership formation (i.e. individuals spend some time uncoupled, outside of partnerships) and consist of five states that are classified by infection status and partnership status; single (uncoupled) susceptible individuals ($S$), single infected individuals ($I$), concordant negative (susceptible-susceptible) couples ($SS$), discordant (susceptible-infected) couples ($SI$), and concordant positive (infected-infected) couples ($II$). 
+Our first four models (\figurename~\ref{fig:diagrams}) explicitly consider partnership dynamics \cite{champredon_hiv_2013}. The first (\diagfig{d}) assumes non-instantaneous partnership formation (i.e. individuals spend some time uncoupled, outside of partnerships) and consists of five states that are classified by infection status and partnership status; single (uncoupled) susceptible individuals ($S$), single infected individuals ($I$), concordant negative (susceptible-susceptible) couples ($SS$), discordant (susceptible-infected) couples ($SI$), and concordant positive (infected-infected) couples ($II$). 
 The rates of pair formation are based on the numbers of uncoupled susceptible and infected individuals and the pair-formation rate; partnerships can either dissolve into singletons or be transformed into other types of partnerships by infection of one partner. This model also includes extra-partnership contact with both uncoupled individuals and individuals in other partnerships (we denote it ``pairform+epc''), so that susceptible uncoupled individuals and susceptible partners in any type of partnership can be infected by infected uncoupled individuals or infected partners in any type of partnership.
  
 Specifically, single individuals ($S$ and $I$) acquire partners at a rate $\rho$, and partnerships dissolve at a rate $c$. Infected individuals in a discordant partnership infect their susceptible partner at a rate $\beta$ (within-couple transmission rate) and susceptible individuals outside the partnership at a rate $c_e$ (extra-couple transmission rate). Infected individuals in seropositive ($II$) partnerships can also infect any susceptible individual at rate $c_e$. Likewise, single infected individuals ($I$) can infect any susceptible individuals (single individuals $S$, or susceptible members of $SS$ or $SI$ partnerships) at a rate $c_u$ through uncoupled mixing. 
@@ -521,9 +547,9 @@ This parameterization follows Champredon \etal; we have adapted some of the deta
 of their model to a multi-strain scenario, so that we track (for example) a matrix 
 $II_{ij}$ that records the number of concordant, HIV-positive partnerships in which the two partners have \Lspvl\ of $\alpha_i$ and $\alpha_j$. 
 
-Our second model (``pairform'') only considers within-couple transmission, in which case infection can only occur within a serodiscordant partnership; that is, we set $c_e$ and $c_u$ to zero.
+Our second model (``pairform'', \diagfig{c}) only considers within-couple transmission, in which case infection can only occur within a serodiscordant partnership; that is, we set $c_e$ and $c_u$ to zero.
 
-Our third and fourth models, which are intended to bridge the gap between models with fully explicit pair-formation dynamics and the simpler, implicit models used by Shirreff \emph{et al.} \cite{shirreff_transmission_2011}, assume instantaneous partnership formation (``instswitch''). The compartmental structure thus omits the single states $S$ and $I$, comprising only the three partnered states: $SS$, $SI$, and $II$. Like the first two models, this pair of models differs in their inclusion of extra-pair contact: the third model (``instswitch+epc'') includes extra-partnership contact (now only with individuals in other partnerships, since uncoupled individuals do not exist in this model) while the fourth (``instswitch'') only considers within-couple transmission. Although these models can also be implemented
+Our third and fourth models, which are intended to bridge the gap between models with fully explicit pair-formation dynamics and the simpler, implicit models used by Shirreff \emph{et al.} \cite{shirreff_transmission_2011}, assume instantaneous partnership formation (``instswitch''). The compartmental structure thus omits the single states $S$ and $I$, comprising only the three partnered states: $SS$, $SI$, and $II$. Like the first two models, this pair of models differs in their inclusion of extra-pair contact: the third model (``instswitch+epc'', \diagfig{b}) includes extra-partnership contact (now only with individuals in other partnerships, since uncoupled individuals do not exist in this model) while the fourth (``instswitch'', \diagfig{a}) only considers within-couple transmission. Although these models can also be implemented
 by setting the partnership formation rate of the explicit partnership models to a high value (and we have tested that both methods in fact produce same results), we model instantaneous partnership formation models independently in order to avoid scaling of partnership formation rate during model calibration affecting the virulence trajectory.
 
 The fifth and sixth models represent extreme simplifications of sexual partnership dynamics.  One (``implicit'') is an implicit serial monogamy model based on the epidemiological model used by Shirreff \etal\ \cite{shirreff_transmission_2011}. It is actually a random mixing model that explicitly tracks only the total number of susceptible and infected individuals. However, to reflect the effect of partnership structure, it uses an adjusted transmission rate derived from an approximation of the basic reproduction number of a serial monogamy model with instantaneous pair formation \cite{hollingsworth_hiv1_2008}. The second model of this pair (``random'') is a simple random-mixing model.
