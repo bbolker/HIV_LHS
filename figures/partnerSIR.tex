@@ -1,20 +1,28 @@
 
 \newcommand{\instswitchflowvec}{ 
-	\draw[->, very thick] (SS) to (SI); 
 	\draw[->, very thick] (SI) to (II); 
 }
 
+\newcommand{\instswitchepcflowvec}{
+	\draw[->, very thick] (SS) to (SI); 
+}
+
+\newcommand{\instswitchmixing}{
+	\draw[<->, dotted, very thick] (SS) to (pool);
+	\draw[<->, dotted, very thick] (SI) to (pool);
+	\draw[<->, dotted, very thick] (II) to (pool);
+}
 
 \newcommand{\instswitchnoepcinf}{
 	\draw[->, blue, dashed, very thick] (SI)
 		to [bend right=45] (SItoII);
-	\draw[->, blue, dashed, very thick] (SI)
-		to [bend left=45] (SStoSI);
 }
 
 \newcommand{\instswitchepcinf}{
+	\draw[->, red, dashed, very thick] (SI)
+		to [bend left=45] (SStoSI);
 	\draw[->, red, dashed, very thick] (II)
-		to [bend right=45] (SItoII);
+		to [bend left=45] (SItoII);
 	\draw[->, red, dashed, very thick] (II)
 		to [bend left=70] (SStoSI);
 }
@@ -75,6 +83,7 @@
 	\node(SI)[bigcompartment, right=of SStoSI]{SI};
 	\node(SItoII)[right=of SI]{};
 	\node(II)[bigcompartment, right=of SItoII]{II};
+	\node(pool)[compartment, very thick, above = 10mm of SI, text width = 40mm, align = center, draw = black, top color = white, bottom color = white, dotted]{temporary mixing pool};
 }
 
 \newcommand{\pairformboxes}{
