@@ -693,7 +693,7 @@ $\lim_{s\to 0} r(s) = 0$ and $\lim_{s\to\infty} r(s) = \infty$. As
 adjusting either partnership change rate (i.e. partnership formation
 and dissolution rate) or transmission rate fails this requirement for
 some of our models, we scaled partnership change rate and
-dissolution rate by the same factor of $\gamma$: $\tsub{\beta}{adj} =
+transmission rate by the same factor of $\gamma$: $\tsub{\beta}{adj} =
 \gamma \tsub{\beta}{base}$, $\tsub{c}{adj} = \gamma \tsub{c}{base}$,
 $\tsub{\rho}{adj} = \gamma \tsub{\rho}{base}$. Since transmission rate
 is adjusted by the scale of $\gamma$, uncoupled and extra-couple
@@ -714,30 +714,20 @@ Runge-Kutta method (\texttt{ode45} from the \texttt{deSolve} package
 (For the heterogeneous model, approximately
 10\% of the samples failed due to numerical instability.)
 
-Although each disease strain's core characteristic is its SPVL, the
-SPVL has one-to-one correspondences (based on eq.~\ref{eq:hillfuns})
-with both the expected time to progression to AIDS and with the rate
-(probability per unit time) of HIV transmission. Because the time to
-progression (measured in years) is easier to interpret than
-SPVL (measured in \Lspvl\ units), we summarize the virulence
-trajectories for each model run in terms of time to progression
-rather than SPVL. Because the  time to progression is inversely
-related to SPVL (increasing SPVL decreases the time to progression),
-the time to progression is technically measuring inverse
-virulence rather than virulence (we did not think that 
-reporting virulence as the rate of progression to AIDS, in units
-of $\textrm{years}^{-1}$, would help interpretability).
 For each model we derive the following summary statistics:
-minimum expected time to progression;
-time at which this minimum occurs
+maximum population mean \Lspvl;
+time at which this maximum occurs
 (corresponding to peak virulence --- this is also the time at which the
-maximum rate of progression, maximum SPVL, and maximum transmission rate
-occur); equilibrium time to progression; 
-and the ratio of progression time at its minimum to the equilibrium
-value. Equilibrium progression time is calculated after 4000 years of simulated
-time. Although most simulations reach equilibrium much earlier, we set our time horizon at a much later date as some simulation runs have slow rate of evolution depending on the parameter set and model assumptions.
+maximum rate of progression and maximum transmission rate
+occur); equilibrium \Lspvl; 
+and minimum expected time to progression. 
+While the rest of the summary statistics measure \Lspvl, we also report minimum expected time to progression for clearer interpretability.
+Minimum mean progression time is obtained by applying the Hill function (eq.~\ref{eq:hillfuns}) to maximum mean \Lspvl\ of each run.
+Equilibrium \Lspvl\ is calculated after 4000 years of simulated
+time. 
+Although most simulations reach equilibrium much earlier, we set our time horizon at a much later date as some simulation runs have slow rate of evolution depending on the parameter set and model assumptions.
 
-Knowing the minimum progression time, timing of the minimum progression time/peak virulence, and equilibrium progression time provide sufficient detail to identify the overall shape of the virulence trajectory.
+Knowing the peak \Lspvl, timing of the peak\Lspvl/peak virulence, and equilibrium \Lspvl\ provide sufficient detail to identify the overall shape of the virulence trajectory.
 In particular, knowing the timing of the peak virulence (how many years
 into the epidemic the virulence peaks) can help epidemiologists
 guess whether the virulence of an emerging pathogen is likely (1)
@@ -802,7 +792,6 @@ Models arranged in order of complexity, as in \figurename~\ref{fig:virtraj}.
 For every simulation, three summary statistics were obtained: peak time, maximum mean \Lspvl, and equilibrium mean \Lspvl. 
 Peak time is the time at which the SPVL reaches its maximum for each simulation run (maximum mean \Lspvl).
 Equilibrium mean \Lspvl\ is taken by taking the mean \Lspvl\ value at $t = 4000$.
-Minimum mean progression time is obtained by applying the Hill function to maximum mean \Lspvl\ of each run.
 Because the distribution of equilibrium mean \Lspvl\
 (lower left panel) for the random mixing model is very narrow, it
 has been replaced by a point in order to preserve the vertical axis scaling.}
@@ -859,8 +848,9 @@ of expected progression time to AIDS and transmission probability).
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig5.pdf}
 \caption{{\bf Sensitivity plot.}
-For most parameters in the Latin hypercube samples, the figure shows the distribution (points) and trend (smooth line) of the summary statistic as a function of the parameter value, some of which have adjusted to achieve the standard initial epidemic growth rate (see Methods).}
+For most parameters in the Latin hypercube samples, the figure shows the distribution (points) and trend (smooth line) of the summary statistic as a function of the parameter value, some of which have adjusted to achieve the standard initial epidemic growth rate (see Methods).
 Opposing trends in summary statistics with respect to partnership dissolution rate, $c$, (third column) between the model with and without extra-pair contact illustrates that similar model with different assumptions may yield opposing predictions.
+}
 \label{fig:plot_sens}
 \end{figure}
 
