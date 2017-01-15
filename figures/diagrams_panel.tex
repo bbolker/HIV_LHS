@@ -2,6 +2,7 @@
 
 \usepackage[vcentering]{geometry}
 \usepackage{subcaption}
+\usepackage{graphicx}
 % 2.4in is the smallest height for current version of sirbd
 % \geometry{papersize={6in,2.4in}, top=0.2in, bottom=0.2in}
 %% play with height: need enough to accommodate last figure
@@ -22,25 +23,13 @@
 \begin{subfigure}[b]{0.5\linewidth}
 	\centering
 	\raisebox{0.44\height}{
-		\begin{tikzpicture}[font=\LARGE]
-		\instswitchboxes
-		\instswitchmixing
-		\instswitchflowvec
-		\instswitchnoepcinf
-		\end{tikzpicture}
+		\includegraphics{tikz-f1}
 	}
 \caption{Instantaneous switching without extra-pair contact}
 \end{subfigure}
 \begin{subfigure}[b]{0.5\linewidth}
 	\centering
-	\begin{tikzpicture}[font=\LARGE]
-	\instswitchboxes
-	\instswitchmixing
-	\instswitchflowvec
-	\instswitchepcflowvec
-	\instswitchnoepcinf
-	\instswitchepcinf
-	\end{tikzpicture}
+	\includegraphics{tikz-f2}
 \caption{Instantaneous switching with extra-pair contact}
 \end{subfigure}
 
@@ -49,23 +38,13 @@
 \begin{subfigure}[b]{0.5\linewidth}
 	\centering
 	\raisebox{0.33\height}{
-		\begin{tikzpicture}[font=\LARGE]
-		\pairformboxes
-		\pairformnoepcflowvec
-		\pairformnoepcinf
-		\end{tikzpicture}
+		\includegraphics{tikz-f3}
 	}
 \caption{Pair-formation model without extra-pair/uncoupled contact}
 \end{subfigure}
 \begin{subfigure}[b]{0.5\linewidth}
 	\centering
-	\begin{tikzpicture}[font=\LARGE]
-	\pairformboxes
-	\pairformnoepcflowvec
-	\pairformepcflowvec
-	\pairformnoepcinf
-	\pairformepcinf
-	\end{tikzpicture}
+	\includegraphics{tikz-f4}
 \caption{Pair-formation model with extra-pair/uncoupled contact}
 \end{subfigure}
 \end{figure}

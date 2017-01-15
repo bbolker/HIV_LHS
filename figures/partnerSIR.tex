@@ -77,24 +77,24 @@
 
 }
 
-\newcommand{\instswitchboxes}{
-	\node(SS)[bigcompartment]{SS};
+\newcommand{\instswitchboxes}[1]{
+	\node(SS)[bigcompartment, bottom color = #1]{SS};
 	\node(SStoSI)[right=of SS]{};
-	\node(SI)[bigcompartment, right=of SStoSI]{SI};
+	\node(SI)[bigcompartment, right=of SStoSI, bottom color = #1]{SI};
 	\node(SItoII)[right=of SI]{};
-	\node(II)[bigcompartment, right=of SItoII]{II};
-	\node(pool)[compartment, very thick, above = 10mm of SI, text width = 40mm, align = center, draw = black, top color = white, bottom color = white, dotted]{temporary mixing pool};
+	\node(II)[bigcompartment, right=of SItoII, bottom color = #1]{II};
+	\node(pool)[compartment, very thick, above = 10mm of SI, text width = 40mm, align = center, draw = black, bottom color = white, dotted]{temporary mixing pool};
 }
 
-\newcommand{\pairformboxes}{
-        \node(S)[bigcompartment]{S};
+\newcommand{\pairformboxes}[1]{
+        \node(S)[bigcompartment, bottom color = #1]{S};
         \node(StoI)[right= of S]{};
-        \node(I)[bigcompartment,right= of StoI]{I};
-	\node(SS)[bigcompartment,below left= of S]{SS};
+        \node(I)[bigcompartment,right= of StoI, bottom color = #1]{I};
+	\node(SS)[bigcompartment,below left= of S, bottom color = #1]{SS};
 	\node(SStoSI)[right=of SS]{};
-	\node(SI)[bigcompartment, right=of SStoSI]{SI};
+	\node(SI)[bigcompartment, right=of SStoSI, bottom color = #1]{SI};
 	\node(SItoII)[right=of SI]{};
-	\node(II)[bigcompartment, right=of SItoII]{II};
+	\node(II)[bigcompartment, right=of SItoII, bottom color = #1]{II};
 }
 
 

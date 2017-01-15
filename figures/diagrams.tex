@@ -1,5 +1,6 @@
 \documentclass{article}
 
+\usepackage{graphics}
 \usepackage[vcentering]{geometry}
 % 2.4in is the smallest height for current version of sirbd
 % \geometry{papersize={6in,2.4in}, top=0.2in, bottom=0.2in}
@@ -14,39 +15,59 @@
 \input{diagram_geom.tex}
 \input{partnerSIR.tex}
 
+\definecolor{pairform+epc}{RGB}{217, 95, 2}
+\definecolor{pairform}{RGB}{117, 112, 179}
+\definecolor{inst+epc}{RGB}{231, 41, 138}
+\definecolor{inst}{RGB}{102, 166, 30}
+
+\pgfrealjobname{tikz}
+
 \begin{document}
 
-\begin{tikzpicture}[font=\LARGE]
-\instswitchboxes
-\instswitchmixing
-\instswitchflowvec
-\instswitchnoepcinf
-\end{tikzpicture}
+%% pdflatex --jobname=tikz-f1 tikz.tex
 
-%% can't you just break between the figures like this?
-\pagebreak
+\beginpgfgraphicnamed{tikz-f1}
+	\begin{tikzpicture}[font=\LARGE]
+		\instswitchboxes{inst}
+		\instswitchmixing
+		\instswitchflowvec
+		\instswitchnoepcinf
+	\end{tikzpicture}
+\endpgfgraphicnamed
 
-\begin{tikzpicture}[font=\LARGE]
-\instswitchboxes
-\instswitchmixing
-\instswitchflowvec
-\instswitchepcflowvec
-\instswitchnoepcinf
-\instswitchepcinf
-\end{tikzpicture}
+%% pdflatex --jobname=tikz-f2 tikz.tex
 
-\begin{tikzpicture}[font=\LARGE]
-\pairformboxes
-\pairformnoepcflowvec
-\pairformnoepcinf
-\end{tikzpicture}
+\beginpgfgraphicnamed{tikz-f2}
+	\begin{tikzpicture}[font=\LARGE]
+		\instswitchboxes{inst+epc}
+			\instswitchmixing
+		\instswitchflowvec
+		\instswitchepcflowvec
+		\instswitchnoepcinf
+		\instswitchepcinf
+	\end{tikzpicture}
+\endpgfgraphicnamed
 
-\begin{tikzpicture}[font=\LARGE]
-\pairformboxes
-\pairformnoepcflowvec
-\pairformepcflowvec
-\pairformnoepcinf
-\pairformepcinf
-\end{tikzpicture}
+%% pdflatex --jobname=tikz-f3 tikz.tex
+
+\beginpgfgraphicnamed{tikz-f3}
+	\begin{tikzpicture}[font=\LARGE]
+		\pairformboxes{pairform}
+		\pairformnoepcflowvec
+		\pairformnoepcinf
+	\end{tikzpicture}
+\endpgfgraphicnamed
+
+%% pdflatex --jobname=tikz-f4 tikz.tex
+
+\beginpgfgraphicnamed{tikz-f4}
+	\begin{tikzpicture}[font=\LARGE]
+		\pairformboxes{pairform+epc}
+		\pairformnoepcflowvec
+		\pairformepcflowvec
+		\pairformnoepcinf
+		\pairformepcinf
+	\end{tikzpicture}
+\endpgfgraphicnamed
 
 \end{document}
