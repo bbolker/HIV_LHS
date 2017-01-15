@@ -108,6 +108,8 @@
 \usepackage{setspace} 
 \doublespacing
 
+\usepackage{subcaption}
+
 % Text layout
 \raggedright
 \setlength{\parindent}{0.5cm}
@@ -513,8 +515,36 @@ for progression rate corresponding to each SPVL compartment in the model:
 
 \subsection*{Contact structure and partnership dynamics}
 
-\begin{figure}[!ht]
-\includegraphics[width=\textwidth]{../figures/diagrams_panel.pdf}
+\begin{figure}[t!p]
+
+\begin{subfigure}[b]{0.4\linewidth}
+	\centering
+	\raisebox{0.44\height}{
+	  \includegraphics[width=0.9\linewidth]{../figures/tikz-f1}
+	}
+\caption{Instantaneous switching without extra-pair contact (``instswitch'')}
+\end{subfigure}
+\begin{subfigure}[b]{0.4\linewidth}
+	\centering
+	  \includegraphics[width=0.9\linewidth]{../figures/tikz-f2}
+\caption{Instantaneous switching with extra-pair contact (``instswitch+epc'')}
+\end{subfigure}
+
+\begin{subfigure}[b]{0.4\linewidth}
+	\centering
+	\raisebox{0.33\height}{
+	  \includegraphics[width=0.9\linewidth]{../figures/tikz-f3}
+	}
+\caption{Pair-formation model without extra-pair/uncoupled contact 
+(``pairform'')}
+\end{subfigure}
+\begin{subfigure}[b]{0.4\linewidth}
+	\centering
+	  \includegraphics[width=0.9\linewidth]{../figures/tikz-f4}
+\caption{Pair-formation model with extra-pair/uncoupled contact
+(``pairform+epc'')}
+\end{subfigure}
+
 \caption{{\bf Model contact structures.} 
 Schematic representations of models with
 explicit contact structure. Top row (a,b) shows models with instantaneous
