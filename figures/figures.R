@@ -306,6 +306,7 @@ gg_univ_aug <- gg_univ %+%
 	scale_shape_discrete(solid = FALSE,
                   labels = c("baseline", "vital dynamics", "heterogeneity")) +
 	guides(fill = FALSE) +
+	scale_fill_manual(values = c("#D95F02", "#7570B3", "#E7298A", "#66A61E")) +
 	zero_x_margin
 
 ggsave(gg_univ_aug,file="fig_S2_4.pdf",width=10,height=4.8)
@@ -479,12 +480,11 @@ ggp1 <- ggpairs(sL2,
         ## legends=TRUE,
         lower = list(continuous = wrap("points",alpha=0.6,size=2)),
         ## alpha = 0.3,size=0.5)),
-        labeller=label_parsed,
         diag = list(continuous = "blankDiag"),
         upper = list(continuous = "blank"),
-        columnLabels = c("'equilibrium mean SPVL'~(log[10])",
-                         "'peak time'~('years')",
-                         "'peak mean SPVL'~(log[10])")
+        columnLabels = expression(equilibrium~mean~SPVL~(log[10]),
+                         peak~time~(years),
+                         peak~mean~SPVL~(log[10]))
         )
 
 ## http://stackoverflow.com/questions/14711550/is-there-a-way-to-change-the-color-palette-for-ggallyggpairs-using-ggplot
