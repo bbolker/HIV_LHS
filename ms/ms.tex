@@ -159,7 +159,7 @@
 \newcommand{\ET}{\textrm{ET}}
 \newcommand{\DM}{\textrm{DM}}
 \newcommand{\diagfig}[1]{\figurename~\ref{fig:diagrams}#1}
-
+\newcommand{\peryear}{year$^{-1}$}
 \usepackage{color}
 \newcommand{\todo}[1]{{\color{red} \textbf{#1}}}
 
@@ -237,7 +237,7 @@ hosts. Their models use implicit equations to
 capture the effects of partnership dynamics that are at the core of 
 epidemics of sexually transmitted diseases. 
 Our models combine HIV virulence tradeoffs with a range of
-contact models, modeling partnership formation and
+contact models, explicitly modeling partnership formation and
 dissolution and allowing for individuals to transmit disease outside
 of partnerships. We assess summary statistics such as the peak virulence
 (corresponding to the maximum value of population mean \Lspvl\ achieved throughout the epidemic) across
@@ -283,7 +283,7 @@ virulence midway through the epidemic
 (a minimum of 15 years to
 progress to AIDS) than either more realistic models
 or simple models with no partnership structure
-(both with a minimum of $\approx$ 7.25 years to progress to AIDS), 
+(both with a minimum of 7.25 years to progress to AIDS), 
 because random sexual contacts tended to wash out the effects of stable partnerships.
 Researchers trying to predict the evolution of
 pathogens must try to understand the implications of their
@@ -466,25 +466,7 @@ of HIV pathogenesis from three stages to a single stage could affect
 our conclusions about the evolution of virulence (e.g. Kretzschmar and
 Dietz \cite{kretzschmar_effect_1998} show that pair formation dynamics
 and multiple stages of infectivity have interactive effects on
-$\rzero$). However, our simplified model produces results that are
-qualitatively similar to those of Shirreff \etal's
-\cite{shirreff_transmission_2011} model; when our model is calibrated
-to have a similar initial epidemic growth rate $r$, the peak
-\Lspvl\ occurs at the same time ($\approx 200$ years) but slightly
-higher (4.6 \Lspvl\ vs. 4.3 \Lspvl: \figurename~\ref{fig:panel3}).
-
-\begin{figure}[!ht]
-\includegraphics[width=\textwidth]{../figures/fig1.pdf}
-\caption{{\bf Baseline dynamics.}
-Time series of mean population \Lspvl\ using baseline parameters. Each initial condition was varied independently in order to test their effects on transient dynamics of virulence evolution. Note that the initial condition has negligible effect on equilibrium virulence.
-(a) Contrast between the three-stage Shirreff model and the single-stage model calibrated to varying initial exponential growth rates, $r$.
-(b) Effects of varying initial infectious density $I(0)$.
-(c) Effects of varying initial mean virulence $\alpha(0)$.
-The middle $r=0.042$ (orange, dotted) curve in panel (a), calibrated to match the epidemic dynamics of Shirreff \etal's three-stage model \cite{shirreff_transmission_2011}, shows that our simplified single-stage HIV model can produce similar SPVL trajectories to the original three-stage model; the other $r$ values are chosen to show the effects of doubling or halving the initial epidemic growth rate. 
-The eco-evolutionary dynamics are qualitatively similar
-across a range of initial conditions (panels b,c).}
-\label{fig:panel3}
-\end{figure}
+$\rzero$). 
 
 \subsection*{Mutation}
 
@@ -620,19 +602,31 @@ the level of realism of our model does not support such a detailed
 consideration of the early dynamics of HIV.  In most cases, we started
 with an initial \Lspvl\ of 3.0, to match the value used by
 Shirreff \etal. Shirreff \etal\ use an initial $I(0)=10^{-3}$;
-we show results for this value in \figurename~\ref{fig:panel3}.
-Because we calibrated parameters based on the initial epidemic growth rate
-(see ``Simulation runs'' below), we set $I(0)$ to $10^{-4}$ to ensure
+because we calibrated parameters based on the initial epidemic growth rate
+(see ``Simulation runs'' below), we set $I(0)$ to $10^{-4}$
+for most runs to ensure
 that the exponential growth phase lasted long enough for reliable
 estimation of the initial growth rate.
 
-We ran one small set of sensitivity analyses with baseline values of the
-epidemiological parameters (Table~1) to test the effects of the
-initial conditions. Appendix~S1 provides
+Appendix~S1 provides
 further details on initial conditions, such
 as the initial distribution of SPVL around the mean and the
 distribution of initial infected density across single people
 and different partnership types.
+
+\subsection*{Sensitivity analyses}
+
+We ran most of our models across a wide range of parameters, as described
+in the next section. In several cases, however, we inspected only a few
+cases, to qualitatively assess the sensitivity of the models to
+initial conditions or to model structure. 
+In particular, we tested model sensitivity 
+to the initial prevalence $I(0)$ and initial mean SPVL
+$\alpha(0)$, using baseline values of all parameters (Table~\ref{table:parmsTable}).
+Using baseline parameter values,
+we also ran all four basic model structure (\figurename~\ref{fig:diagrams})
+with vital dynamics and with heterogeneity in sexual contact,
+to assess the sensitivity of our results to these phenomena.
 
 \subsection*{Latin hypercube sampling}
 
@@ -692,7 +686,7 @@ growth rate, $r$, we need to pick a parameter, $s$, such that
 $\lim_{s\to 0} r(s) = 0$ and $\lim_{s\to\infty} r(s) = \infty$. As
 adjusting either partnership change rate (i.e. partnership formation
 and dissolution rate) or transmission rate fails this requirement for
-some of our models, we scaled partnership change rate and
+some of our models, we scaled both partnership change rate and
 transmission rate by the same factor of $\gamma$: $\tsub{\beta}{adj} =
 \gamma \tsub{\beta}{base}$, $\tsub{c}{adj} = \gamma \tsub{c}{base}$,
 $\tsub{\rho}{adj} = \gamma \tsub{\rho}{base}$. Since transmission rate
@@ -743,8 +737,25 @@ treatment, the epidemic would probably still be increasing in virulence.
 % Results and Discussion can be combined.
 \section*{Results}
 
-Our simplifications of Shirreff \etal's model \cite{shirreff_transmission_2011} reproduce its qualitative behaviour --- in particular, its predictions of virulence dynamics --- reasonably well. As we change $r$ from 0.042 to 0.084 (the former value matching the initial rate of increase in prevalence in Shirreff \etal's full model) the initial trajectory of increasing virulence brackets the rate from the original model (\figurename~\ref{fig:panel3}a). However, our model produces lower peak virulence ($\approx 4.3$ vs. $\approx 4.6$ \Lspvl) 
-and equilibrium virulence ($\approx 4.25$ vs. $\approx 4.5$ \Lspvl) than Shirreff's, even for matching initial incidence trajectories (i.e., $r=0.042~\textrm{year}^{-1}$).
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../figures/fig1.pdf}
+\caption{{\bf Baseline dynamics.}
+Time series of mean population \Lspvl\ using baseline parameters. Each initial condition was varied independently in order to test their effects on transient dynamics of virulence evolution. Note that the initial condition has negligible effect on equilibrium virulence.
+(a) Contrast between the three-stage Shirreff model and the single-stage model calibrated to varying initial exponential growth rates, $r$.
+(b) Effects of varying initial infectious density $I(0)$.
+(c) Effects of varying initial mean virulence $\alpha(0)$.
+The middle $r=0.042$ (orange, dotted) curve in panel (a), calibrated to match the epidemic dynamics of Shirreff \etal's three-stage model \cite{shirreff_transmission_2011}, shows that our simplified single-stage HIV model can produce similar SPVL trajectories to the original three-stage model; the other $r$ values are chosen to show the effects of doubling or halving the initial epidemic growth rate. 
+The eco-evolutionary dynamics are qualitatively similar
+across a range of initial conditions (panels b,c).}
+\label{fig:panel3}
+\end{figure}
+
+Our simplifications of Shirreff \etal's model \cite{shirreff_transmission_2011} reproduce its qualitative behaviour --- in particular, its predictions of virulence dynamics --- reasonably well. As we calibrate the parameters to achieve initial growth rates $r$ from 0.042 \peryear\ to 0.084 \peryear\ (the former value matching the initial rate of increase in prevalence in Shirreff \etal's full model) the initial trajectory of increasing virulence brackets the rate from the original model (\figurename~\ref{fig:panel3}a). 
+For matching initial growth rates ($r=0.042$)
+the peak \Lspvl\ occurs at the same time ($\approx 200$ years)
+but the peak virulence is lower than 
+Shirreff's ($\approx 4.3$ vs. $\approx 4.6$ \Lspvl),
+as is equilibrium virulence ($\approx 4.25$ vs. $\approx 4.5$ \Lspvl).
 
 Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory. Decreasing $I(0)$ makes SPVL peak slightly later and higher, because it allows a longer exponential-growth phase before the transition to endemic dynamics (\figurename~\ref{fig:panel3}b). Decreasing the initial SPVL also leads to progressively later, higher peaks in SPVL (\figurename~\ref{fig:panel3}c). In this case the delay in the peak is more pronounced than for low $I(0)$, because the rate of SPVL increase is eventually limited by the mutation rate. The peak SPVL is actually larger for a lower starting SPVL, presumably because lower SPVL also allows for a longer epidemic phase. However, the peaks are similar across the entire range of initial conditions, because even in the most limited (high-$I(0)$, high-$\alpha(0)$) cases HIV is able to evolve most of the way to the SPVL that would be optimal in an indefinitely prolonged growth phase.
 
@@ -762,8 +773,9 @@ endemic phase, virulence peaks in all models between 200 and
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig2.pdf}
 \caption{{\bf Envelopes of virulence trajectories (population mean \Lspvl) under all models.}
-Models arranged in order of complexity of contact structure, from ``random'' (least complex) to ``hetero'' (most complex).
-All models were run until $t=4000~\textrm{years}$ using parameters from 1000 Latin hypercube samples to illustrate the range of dynamics each model can exhibit. Envelopes contain the middle 95\% of trajectories (i.e. we select all points between the 0.025 and 0.975 quantiles for each model at each year), while lines within the envelopes show mean trajectories. Truncated series (up to year 800) are shown here.}
+Models arranged in order of complexity of contact structure, from 
+``hetero'' (most complex) to ``random'' (least complex).
+All models were run until $t=4000~\textrm{years}$ using parameters from 1000 Latin hypercube samples to illustrate the range of possible dynamics. Envelopes contain the middle 95\% of trajectories (i.e. we select all points between the 0.025 and 0.975 quantiles for each model at each year), while lines within the envelopes show mean trajectories. Truncated series (up to year 800) are shown here.}
 \label{fig:virtraj}
 \end{figure}
 
@@ -901,7 +913,21 @@ Neither the uncoupled contact rate nor
 the mean ($\mu$) or CV$^2$ of the number of non-cohabiting sexual
 partners has much systematic effect in the heterogeneous model.
 
-\todo{discussion of effect of heterogeneity and vital dynamics here (referring to supp material)}
+Finally, incorporating additional realism to the model, i.e.
+combining heterogeneity with all four basic contact structures or
+allowing for vital dynamics rather than assuming an SIS model,
+leads to only small differences in the conclusions stated so far
+(\figurename~??). Relative to our baseline SIS assumption, the
+effect of adding vital dynamics is to delay the virulence peak
+slightly and increase both the peak and equilibrium virulence.
+The changes are small, however: across all models, the
+maximum increase in time until
+the virulence peak is 40 years (for the instswitch+epc model),in 
+the peak \Lspvl\ is 0.24 units (instswitch), and in the equilibrium
+\Lspvl\ is 0.4 (pairform). The changes in the most realistic
+model (pairform+epc with heterogeneity)
+
+
 
 \section*{Discussion}
 

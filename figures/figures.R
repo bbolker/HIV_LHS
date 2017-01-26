@@ -1,9 +1,9 @@
+
 ## requires ggplot 2.2.0
 library(ggplot2); theme_set(theme_bw(base_size = 12,
                                       base_family = "Times"))
 stopifnot(packageVersion("ggplot2")>="2.2.0")
 library(directlabels)
-## stopifnot(length(grep("package:dplyr",search()))==0)
 library(MASS)  ## must be before dplyr (masks 'select')
 library(tidyr)
 library(gridExtra)
@@ -16,7 +16,9 @@ stopifnot(packageVersion("GGally")>="1.3.0")
 ## devtools::install_github("lionel-/ggstance")
 library(ggstance)
 
+## set accordingly ...
 do_png <- FALSE
+do_pdf <- FALSE
 
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
@@ -128,7 +130,7 @@ g3.y <- g3 + scale_y_continuous(limits = limits, breaks = breaks)+
 
 ## r fig1,fig.height=3.5,fig.width=10, echo = FALSE, dpi = 600}
 fig1 <- arrangeGrob(g1.y, g2.y, g3.y, nrow=1)
-ggsave("fig1.pdf", fig1, height = 3.5, width = 10)
+if (do_pdf) ggsave("fig1.pdf", fig1, height = 3.5, width = 10)
 
 if (do_png) {
     png(file="fig1.png",height=3.5*600,width=10*600)
@@ -184,7 +186,7 @@ gg_virtraj <-
 
 ## FIXME: make minimal example for direct labels/linetype warning?
 
-ggsave(gg_virtraj,file="fig2.pdf",width=8,height=6)
+if (do_pdf) ggsave(gg_virtraj,file="fig2.pdf",width=8,height=6)
 if (do_png) ggsave(gg_virtraj,file="fig2.png",width=8,height=6,dpi=400)
 
 fig_objects <- c(fig_objects,"gg_virtraj","bottom.points2","top.points2")
@@ -196,13 +198,13 @@ ss_beta <- transform(ss, mean = returnBeta(mean,HIVpars.skeleton),
                       upr = returnBeta(upr,HIVpars.skeleton))
 
 gg_betatraj <- direct.label(gg_basetraj %+% ss_beta + nostrips +
-           labs(y=expression(mean~transmission~rate~during~asymptomatic~stage~(year^-1))),
+           labs(y=expression("mean transmission rate during asymptomatic stage "*("year"^-1))),
              method=list("top.points2","bumpup"))
 
 ## scale_x_continuous(limits=c(0,2500))
 ## r fig2.1, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400} 
 
-ggsave(gg_betatraj,file="fig_S2_1.pdf",width=8,height=6)
+if (do_pdf) ggsave(gg_betatraj,file="fig_S2_1.pdf",width=8,height=6)
 if (do_png) ggsave(gg_betatraj,file="fig_S2_1.png",width=8,height=6,dpi=400)
 
 ## scale_x_continuous(limits=c(0,2500))
@@ -217,7 +219,7 @@ gg_durtraj <- direct.label(gg_basetraj %+% ss_dur + nostrips +
 													 	labs(y="expected progression to AIDS (years)"),
 													 method=list("bottom.points2","bumpup"))
 
-ggsave(gg_durtraj,file="fig_S2_2.pdf",width=6,height=4)
+if (do_pdf) ggsave(gg_durtraj,file="fig_S2_2.pdf",width=6,height=4)
 if (do_png) ggsave(gg_durtraj,file="fig_S2_2.png",width=6,height=4,dpi=400)
 
 ### Figure 3
@@ -259,7 +261,6 @@ gg_univ <- ggplot(mLw,aes(value,model,fill=model))+
 	guides(fill=guide_legend(reverse=TRUE))+
 	labs(y="")
 	
-
 random_point <- geom_point(data=data.frame(model="random",
 																					 variable="equilibrium~mean~log[10]~SPVL",
 																					 value=rval),
@@ -275,7 +276,7 @@ gg_univ_fig <- gg_univ +
 
 ## r fig3, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
 
-ggsave(gg_univ_fig,file="fig3.pdf",width=8,height=4.8)
+if (do_pdf) ggsave(gg_univ_fig,file="fig3.pdf",width=8,height=4.8)
 if (do_png) ggsave(gg_univ_fig,file="fig3.png",width=8,height=4.8,dpi=600)
 
 hetero <- seq(1, 7, 2)
@@ -309,7 +310,7 @@ gg_univ_aug <- gg_univ %+%
 	scale_fill_manual(values = c("#D95F02", "#7570B3", "#E7298A", "#66A61E")) +
 	zero_x_margin
 
-ggsave(gg_univ_aug,file="fig_S2_4.pdf",width=10,height=4.8)
+if (do_pdf) ggsave(gg_univ_aug,file="fig_S2_4.pdf",width=10,height=4.8)
 if (do_png) ggsave(gg_univ_aug,file="fig_S2_4.png",width=10,height=4.8,dpi=600)
 
 mLw_res <- mLw  %>%
@@ -378,7 +379,7 @@ gg_univ.epi <- ggplot(mLw.epi,aes(value,model,fill=model))+
 
 ## r fig3.1, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
 
-ggsave(gg_univ.epi,file="fig_S2_3.pdf",width=8,height=4.8)
+if (do_pdf) ggsave(gg_univ.epi,file="fig_S2_3.pdf",width=8,height=4.8)
 if (do_png) ggsave(gg_univ.epi,file="fig_S2_3.png",width=8,height=4.8,dpi=600)
 
 fig_objects <- c(fig_objects,"gg_univ.epi")
@@ -477,15 +478,27 @@ sL2 <- sL2 %>%
 ggp1 <- ggpairs(sL2,
         mapping = ggplot2::aes(color = model,pch=model),
         columns=3:5,
+        ## axisLabels="show",
         ## legends=TRUE,
         lower = list(continuous = wrap("points",alpha=0.6,size=2)),
         ## alpha = 0.3,size=0.5)),
         diag = list(continuous = "blankDiag"),
         upper = list(continuous = "blank"),
-        columnLabels = expression(equilibrium~mean~SPVL~(log[10]),
-                         peak~time~(years),
-                         peak~mean~SPVL~(log[10]))
-        )
+        labeller=label_parsed,
+        columnLabels = c("'equilibrium mean SPVL'~(log[10])",
+                         "'peak time'~('years')",
+                         "'peak mean SPVL'~(log[10])"),
+        switch="both"
+        ## columnLabels = expression(equilibrium~mean~SPVL~(log[10]),
+        ## peak~time~(years),
+        ## peak~mean~SPVL~(log[10]))
+        )+
+    ## theme_gray()+
+    theme(strip.background = element_rect(fill = NA, colour=NA),
+          strip.placement = "outside",
+          panel.border = element_rect(fill = NA)
+          )
+
 
 ## http://stackoverflow.com/questions/14711550/is-there-a-way-to-change-the-color-palette-for-ggallyggpairs-using-ggplot
 ## have to change plot one panel at a time
@@ -505,9 +518,9 @@ for(i in 1:2){
 
 ## ``{r fig4,fig.width=7,fig.height=7, echo = FALSE, cache = TRUE,dpi = 600}
 
-pdf(file="fig4.pdf",width=7,height=7)
+if (do_pdf) pdf(file="fig4.pdf",width=7,height=7)
 print(ggp2,spacingProportion=0, left = 0.14)
-dev.off()
+if (do_pdf) dev.off()
 
 if (do_png) {
     png(file="fig4.png",width=7*600,height=7*600)
@@ -617,9 +630,19 @@ ggsens <- ggplot(mL3,aes(LHSval,sumval,colour=model))+
 		scale_y_continuous(expand=c(0,0)) +
     zero_margin
 
-ggsave(ggsens, file="fig5.pdf",width=10,height=5)
+if (do_pdf) ggsave(ggsens, file="fig5.pdf",width=10,height=5)
 if (do_png) ggsave(ggsens, file="fig5.png",width=10,height=5,dpi=600)
 
 fig_objects <- c(fig_objects,"ggsens")
 
 save(list=c("fig_objects",fig_objects),file="HIVLHS_figures.RData")
+
+## compute max differences based on hetero vs homo
+(compare_df
+    %>% group_by(model,variable)
+    %>% summarise(bd_base=value[type=="bd"]-value[type=="base"],
+                  hetero_base=value[type=="hetero"]-value[type=="base"])
+    %>%  gather(key="type",value="value",-c(model,variable))
+    %>%  group_by(type,variable)
+    %>%  top_n(1,abs(value))
+)

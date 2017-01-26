@@ -5,10 +5,10 @@
 - describe heterog, vital dynamics results in Discussion
 - finish responding to reviewers/editor
 
-- Figure 5
-   - axis labels messed up by new version of ggpairs (?)
-   - revert version?
-   - or, move strip labels to left/bottom?
-
+- Figure 2 change order back to least -> most complex (don't forget to change caption accordingly)
+- Figure 5: do with new version of GGally/ggpairs?
+    - need to fix strips
+	- need to fix font
+  
 - refs: cite blanquart_transmission-virulence_2016 ; figure out what to say about Herbeck mixing
 
