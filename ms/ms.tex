@@ -425,7 +425,7 @@ where $V_{\alpha} = 10^\alpha$.
 %Tables need to be placed after the first paragraph in which they are cited.
 
 \begin{table}[h!]
-\caption{Parameter ranges/values. Parameters with fixed values are kept constant throughout simulations while other parameter values are taken from Latin hypercube samples using ranges specified in the table. Values of $c$ and $\rho$ are doubled from those given by Champredon \etal\ because we keep track of individuals in the model, while they keep track of couples. Starred (*) parameters (used in \figurename~\ref{fig:panel3}), and descriptions of Hill function coefficients, are taken from \cite{shirreff_transmission_2011}.}
+\caption{\textbf{Parameter ranges and values}. Parameters with fixed values are kept constant throughout simulations while other parameter values are taken from Latin hypercube samples using ranges specified in the table. Values of $c$ and $\rho$ are doubled from those given by Champredon \etal\ because we keep track of individuals in the model, while they keep track of couples. Starred (*) parameters (used in \figurename~\ref{fig:panel3}), and descriptions of Hill function coefficients, are taken from \cite{shirreff_transmission_2011}.}
 \centering
 \begin{tabular}{c p{2in} c l}
 \hline 
@@ -527,7 +527,7 @@ for progression rate corresponding to each SPVL compartment in the model:
 (``pairform+epc'')}
 \end{subfigure}
 
-\caption{{\bf Model contact structures.} 
+\caption{\textbf{Model contact structures.} 
 Schematic representations of models with
 explicit contact structure. Top row (a,b) shows models with instantaneous
 partnership formation; bottom row (c,d)  shows those where individuals remain
@@ -739,14 +739,12 @@ treatment, the epidemic would probably still be increasing in virulence.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig1.pdf}
-\caption{{\bf Baseline dynamics.}
-Time series of mean population \Lspvl\ using baseline parameters. Each initial condition was varied independently in order to test their effects on transient dynamics of virulence evolution. Note that the initial condition has negligible effect on equilibrium virulence.
+\caption{\textbf{Baseline dynamics.}
+Time series of mean population \Lspvl\ using baseline parameters.
 (a) Contrast between the three-stage Shirreff model and the single-stage model calibrated to varying initial exponential growth rates, $r$.
 (b) Effects of varying initial infectious density $I(0)$.
 (c) Effects of varying initial mean virulence $\alpha(0)$.
-The middle $r=0.042$ (orange, dotted) curve in panel (a), calibrated to match the epidemic dynamics of Shirreff \etal's three-stage model \cite{shirreff_transmission_2011}, shows that our simplified single-stage HIV model can produce similar SPVL trajectories to the original three-stage model; the other $r$ values are chosen to show the effects of doubling or halving the initial epidemic growth rate. 
-The eco-evolutionary dynamics are qualitatively similar
-across a range of initial conditions (panels b,c).}
+The middle $r=0.042$ (orange, dotted) curve in panel (a), calibrated to match the epidemic dynamics of Shirreff \etal's three-stage model \cite{shirreff_transmission_2011}, shows that our simplified single-stage HIV model can produce similar SPVL trajectories to the original three-stage model; the other $r$ values are chosen to show the effects of doubling or halving the initial epidemic growth rate. The other panels (b,c) show that eco-evolutionary dynamics are qualitatively similar across a range of initial conditions.}
 \label{fig:panel3}
 \end{figure}
 
@@ -772,9 +770,9 @@ endemic phase, virulence peaks in all models between 200 and
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../figures/fig2.pdf}
-\caption{{\bf Envelopes of virulence trajectories (population mean \Lspvl) under all models.}
-Models arranged in order of complexity of contact structure, from 
-``hetero'' (most complex) to ``random'' (least complex).
+\caption{\textbf{Envelopes of virulence trajectories (population mean \Lspvl) under all models.}
+Panels are arranged in order of complexity of contact structure, from 
+``random'' (least complex) to ``hetero'' (most complex).
 All models were run until $t=4000~\textrm{years}$ using parameters from 1000 Latin hypercube samples to illustrate the range of possible dynamics. Envelopes contain the middle 95\% of trajectories (i.e. we select all points between the 0.025 and 0.975 quantiles for each model at each year), while lines within the envelopes show mean trajectories. Truncated series (up to year 800) are shown here.}
 \label{fig:virtraj}
 \end{figure}
@@ -925,9 +923,17 @@ maximum increase in time until
 the virulence peak is 40 years (for the instswitch+epc model),in 
 the peak \Lspvl\ is 0.24 units (instswitch), and in the equilibrium
 \Lspvl\ is 0.4 (pairform). The changes in the most realistic
-model (pairform+epc with heterogeneity)
-
-
+model (pairform+epc) are considerably smaller: 
+an increase of 2 years vs. a decrease of 13 years in the
+time to the virulence peak for the
+models with vital dynamics and heterogeneity, respectively;
+an increase of 0.1 units vs. a decrease of 0.01 units in peak \Lspvl;
+and an increase of 0.145 units vs. a decrease of 0.03 units
+in equilibrium~\Lspvl. Thus, while we can never rule out the
+possibility of some higher-order interaction among epidemiological
+phenomena leading to significant changes in our conclusions,
+we are reasonably confident that the results reported here are
+robust to additional complexities.
 
 \section*{Discussion}
 

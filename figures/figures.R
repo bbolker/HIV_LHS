@@ -18,7 +18,7 @@ library(ggstance)
 
 ## set accordingly ...
 do_png <- FALSE
-do_pdf <- FALSE
+do_pdf <- TRUE
 
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
@@ -48,6 +48,7 @@ new_sum_labs <- c(bquote(atop("peak time", "(years)")),
                   "peak:equilibrium ratio")
 m_order <- c("heterogeneous","pairform+epc", "pairform",
              "instswitch+epc","instswitch" , "implicit", "random")
+
 fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
     if (atop) new_sum_labs <-
                   gsub("(.*) (.*)","atop(\\1,\\2)",new_sum_labs)
@@ -148,7 +149,7 @@ ss$model <- factor(ss$model,levels=m_order)
 
 ss <- transform(ss,
                 cmodel=droplevels(factor(gsub("+epc","",model,fixed=TRUE),
-                                         levels=levels(model))))
+                                         levels=rev(levels(model)))))
 
 ## base plot for Figure 2 and related (duration, SPVL, beta trajectories)
 gg_basetraj <- ggplot(ss,aes(tvec,mean,ymin=lwr,ymax=upr))+
@@ -280,10 +281,12 @@ if (do_pdf) ggsave(gg_univ_fig,file="fig3.pdf",width=8,height=4.8)
 if (do_png) ggsave(gg_univ_fig,file="fig3.png",width=8,height=4.8,dpi=600)
 
 hetero <- seq(1, 7, 2)
+basemodels <- grep("(instswitch|pairform)",m_order,value=TRUE)
+nm <- length(basemodels)
 compare_df <- data.frame(
-	model = c(rep(m_order[2:5], each = 2), m_order[2:5]),
-	type = c(rep(c("base", "bd"), 4),
-                 rep("hetero", 4)),
+	model = c(rep(basemodels, each = 2), basemodels),
+	type = c(rep(c("base", "bd"), nm),
+                 rep("hetero", nm)),
 	eq_vir = c(eq_vec_bd, eq_vecFull[hetero])) %>%
 	bind_cols(rbind(peak_mat_bd, peak_matFull[hetero,]) %>% 
 	     as.data.frame %>% 
@@ -624,7 +627,7 @@ ggsens <- ggplot(mL3,aes(LHSval,sumval,colour=model))+
     geom_point(pch=".",alpha=0.2)+
     facet_grid(sumvar~LHSvar,scales="free",
                labeller = label_parsed)+
-    geom_smooth(se=FALSE)+labs(x="",y="")+
+    geom_smooth(se=FALSE,method="gam")+labs(x="",y="")+
     ## leave a little extra room?
     scale_x_log10(expand=c(0,0.08), breaks=brkfun)+
 		scale_y_continuous(expand=c(0,0)) +
@@ -646,3 +649,12 @@ save(list=c("fig_objects",fig_objects),file="HIVLHS_figures.RData")
     %>%  group_by(type,variable)
     %>%  top_n(1,abs(value))
 )
+
+(compare_df
+    %>% filter(model=="pairform+epc")
+    %>% group_by(variable)
+    %>% summarise(bd_base=value[type=="bd"]-value[type=="base"],
+                  hetero_base=value[type=="hetero"]-value[type=="base"]))
+
+## compare pairform+hetero+bd to pairform+hetero?
+
