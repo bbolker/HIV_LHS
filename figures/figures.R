@@ -522,7 +522,9 @@ for(i in 1:2) {
 ## ``{r fig4,fig.width=7,fig.height=7, echo = FALSE, cache = TRUE,dpi = 600}
 
 if (do_pdf) pdf(file="fig4.pdf",width=7,height=7)
-theme_set(theme_bw()+theme(panel.spacing=grid::unit(0,"lines")))
+orig_theme <- theme_get()
+theme_set(orig_theme+
+          theme(panel.spacing=grid::unit(0,"lines")))
 print(ggp2)
 if (do_pdf) dev.off()
 
@@ -535,6 +537,7 @@ if (do_png) {
 
 fig_objects <- c(fig_objects,"ggp2")
 
+theme_set(orig_theme)
 ### Figure 5
 remove_runs <- unique(subset(mL3, sumvar == "peak_time" & is.na(sumval))[,"run"])
 mL3 <- subset(mL3, !(model == "heterogeneous" & run %in% remove_runs))
