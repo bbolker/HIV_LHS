@@ -225,7 +225,8 @@ if (do_png) ggsave(gg_durtraj,file="fig_S2_2.png",width=6,height=4,dpi=400)
 
 ### Figure 3
 
-sL <- transform(sum_list[["sum_mat"]], peak_dur = returnDur(peak_vir,HIVpars.skeleton))
+sL <- transform(sum_list[["sum_mat"]],
+                peak_dur = returnDur(peak_vir,HIVpars.skeleton))
 sL$model <- factor(sL$model, m_order)
 
 ## we get long tails because eq_vir has default value of 0.
@@ -239,12 +240,14 @@ mL <- na.omit(melt(sL,id.vars=c("model","run")))
 w <- with(mL,which(model=="random" & variable== "eq_vir"))
 rval <- mean(mL$value[w])
 mLw <- droplevels(mL[-w,])
+var_levels <- c("peak_time", "peak_vir", "eq_vir", "peak_dur")
+var_labels <- c("peak~time~(years)",
+                "peak~mean~log[10]~SPVL",
+                "equilibrium~mean~log[10]~SPVL",
+                "minimum~mean~progression~time~(years)")
 mLw$variable <- factor(mLw$variable,
-         levels = c("peak_time", "peak_vir", "eq_vir", "peak_dur"),
-         labels = c("peak~time~(years)",
-                    "peak~mean~log[10]~SPVL",
-										"equilibrium~mean~log[10]~SPVL",
-         					  "minimum~mean~progression~time~(years)"))
+         levels = var_levels, 
+         labels = var_labels)
 
 maxvir <- mL %>%
 	group_by(model) %>%
@@ -291,20 +294,18 @@ compare_df <- data.frame(
 	bind_cols(rbind(peak_mat_bd, peak_matFull[hetero,]) %>% 
 	     as.data.frame %>% 
              setNames(c("peak_time", "peak_vir"))) %>%
+    mutate(peak_dur = returnDur(peak_vir,HIVpars.skeleton)) %>%
 	gather(data, key, -model, -type) %>%
 	setNames(c("model", "type", "variable", "value"))
 
 ## FIXME: match columnLabels from above ...
 compare_df$variable <- factor(compare_df$variable,
-											 levels = c("peak_time", "peak_vir", "eq_vir"),
-											 labels = c("peak~time~(years)",
-											            "peak~mean~log[10]~SPVL",
-                                                                                                    "equilibrium~mean~log[10]~SPVL"))
+                              levels = var_levels,
+                              labels = var_labels)
 
 gg_univ_aug <- gg_univ %+% 
 	filter(mLw, 
-		!(model %in% c("heterogeneous", "random", "implicit")), 
-		variable != "minimum~mean~progression~time~(years)") +
+		!(model %in% c("heterogeneous", "random", "implicit"))) +
 	geom_point(data = compare_df, aes(shape = type),
                    size = 3, col = "black") +
 	scale_shape_discrete(solid = FALSE,
