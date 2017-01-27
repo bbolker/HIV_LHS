@@ -446,8 +446,11 @@ tweak_legends_gg <- function(gg,pos=1.5) {
         for (j in 1:n) {
             inner <- getPlot(gg,i,j)
             if (i==1 & j==1) {
+                newguide <- guide_legend(override.aes = list(size=4),
+                                                 reverse=TRUE)
                 inner <- inner + ggplot2::theme(legend.position=c(pos,0.5)) +
-                    guides(colour = guide_legend(override.aes = list(size=6)))
+                    guides(colour = newguide,
+                           shape = guide_legend(reverse=TRUE))
             } else {
                 inner <- inner + ggplot2::theme(legend.position="none")
             }
@@ -456,6 +459,7 @@ tweak_legends_gg <- function(gg,pos=1.5) {
     }
     return(gg)
 }
+
 tweak_colours_gg <- function(gg) {
     n <- gg$nrow
     for (i in 1:n) {
@@ -481,10 +485,7 @@ sL2 <- sL2 %>%
 ggp1 <- ggpairs(sL2,
         mapping = ggplot2::aes(color = model,pch=model),
         columns=3:5,
-        ## axisLabels="show",
-        ## legends=TRUE,
         lower = list(continuous = wrap("points",alpha=0.6,size=2)),
-        ## alpha = 0.3,size=0.5)),
         diag = list(continuous = "blankDiag"),
         upper = list(continuous = "blank"),
         labeller=label_parsed,
@@ -492,11 +493,9 @@ ggp1 <- ggpairs(sL2,
                          "'peak time'~('years')",
                          "'peak mean SPVL'~(log[10])"),
         switch="both"
-        ## columnLabels = expression(equilibrium~mean~SPVL~(log[10]),
-        ## peak~time~(years),
-        ## peak~mean~SPVL~(log[10]))
         )+
-    ## theme_gray()+
+    ## blank strip boxes to make strip labels look like
+    ##  regular axis labels
     theme(strip.background = element_rect(fill = NA, colour=NA),
           strip.placement = "outside",
           panel.border = element_rect(fill = NA)
@@ -508,25 +507,28 @@ ggp1 <- ggpairs(sL2,
 ggp2 <- tweak_colours_gg(tweak_legends_gg(trim_gg(ggp1,
                                                   hack_spaces=FALSE,
                                                   hack_parenthesis=FALSE)))
-## add 1-to-1 line
+## add 1-to-1 line in row 2, column 1 (peak vs equil)
 inner <- getPlot(ggp2,2,1)
 inner <- inner+geom_abline(intercept=0,slope=1,lty=2)
 ggp2 <- putPlot(ggp2,inner,2,1)
-## tweak scale
-for(i in 1:2){
+## tweak scales for both of the bottom-row plots
+for(i in 1:2) {
 	inner <- getPlot(ggp2,2,i)
 	inner <- inner+scale_y_continuous(breaks=seq(3,5,by=1))
 	ggp2 <- putPlot(ggp2,inner,2,i)	
 }
 
+
 ## ``{r fig4,fig.width=7,fig.height=7, echo = FALSE, cache = TRUE,dpi = 600}
 
 if (do_pdf) pdf(file="fig4.pdf",width=7,height=7)
-print(ggp2,spacingProportion=0, left = 0.14)
+theme_set(theme_bw()+theme(panel.spacing=grid::unit(0,"lines")))
+print(ggp2)
 if (do_pdf) dev.off()
 
 if (do_png) {
     png(file="fig4.png",width=7*600,height=7*600)
+    theme_set(theme_bw()+theme(panel.spacing=grid::unit(0,"lines")))
     print(ggp2,spacingProportion=0)
     dev.off()
 }
@@ -627,7 +629,9 @@ ggsens <- ggplot(mL3,aes(LHSval,sumval,colour=model))+
     geom_point(pch=".",alpha=0.2)+
     facet_grid(sumvar~LHSvar,scales="free",
                labeller = label_parsed)+
-    geom_smooth(se=FALSE,method="gam")+labs(x="",y="")+
+    geom_smooth(se=FALSE)+
+    labs(x="",y="")+
+    guides(colour=guide_legend(reverse=TRUE))+
     ## leave a little extra room?
     scale_x_log10(expand=c(0,0.08), breaks=brkfun)+
 		scale_y_continuous(expand=c(0,0)) +
