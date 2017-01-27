@@ -14,8 +14,9 @@ ms%.pdf: ms$*.Rnw ms_parms.tex
 	echo "library(knitr); knit2pdf(\"ms$*.Rnw\")" | R --slave
 
 
-compare: plos_latex.tex
-	../latexdiff/latexdiff plos_latex_old.txt plos_latex.tex >plos_latex_cmp.tex
-	texi2dvi --batch plos_latex_cmp.tex
+compare: ms.tex
+	../latexdiff/latexdiff plos_latex_rev1.tex ms.tex >cmp.tex
+	texi2dvi --batch --pdf cmp.tex
+
 clean:
 	rm -f ms.html ms.tex *.log *.snm *.toc *.aux *.out *.blg .#* #*
