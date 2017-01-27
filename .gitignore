@@ -36,3 +36,6 @@ figure
 *.Rout
 *.krasched.*
 R/simulations/*.rda
+
+*.#*
+*#*#
