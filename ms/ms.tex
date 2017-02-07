@@ -659,9 +659,10 @@ We assume that the number of non-cohabiting partners follows a Gamma distributio
 \subsection*{Simulation runs}
 
 One of the most difficult parts of model comparison is finding
-parameter sets that are commensurate with many different model
-structures. For the most part, our models are too complex to easily
-derive analytical correspondences among them. Given a numerical
+parameter sets that are commensurate across radically different model
+structures. For the most part, our models are too complex to
+derive analytical correspondences among the parameters
+for different models. Given a numerical
 criterion, such as $r$ (initial exponential growth rate) or $\rzero$ 
 (intrinsic reproductive number), we can adjust one or more
 parameters by brute force to ensure that all of the models match
@@ -890,9 +891,12 @@ One of the distinguishing features of the scaled parameters (in comparison to th
 Models with extra-pair contact show wide range parameters as they can display a wide range of dynamics depending on $c_e/c_w$ (as well as $c_u/c_w$ for models with uncoupled mixing) and thus require wide range of scaling factors to achieve the target $r$.
 Parameter range for random-mixing model is severely compressed because latin hypercube sampling does not affect the prevalence trajectory very much, and scaling factor does not vary much across parameters.
 
-For parameters involved in partnership turnover ($c$ and $\rho$), main distinction is between models with and without extra-pair contact. With extra-pair contact, we get gradual decrease in peak time, maximum \Lspvl, and equilibrium \Lspvl\ with increasing turnover rates; Otherwise we get increase in summary statistics.
-Although we have not verified this idea analytically, we speculate that increase in turnover rates diminishes the effect of epc (equivalently increasing relative importance of within-partnership contact), therefore selecting for lower \Lspvl.
-For models without epc, increased rates of partnership change decrease the level of structured mixing (mimicing epc models), resulting in selection for higher \Lspvl.
+For parameters involved in partnership turnover ($c$ and $\rho$), the main distinction is between models with and without extra-pair contact. With extra-pair contact, we see a gradual decrease in peak time, maximum \Lspvl, and equilibrium \Lspvl\ with increasing turnover rates.
+Increases in the other parameters lead to increases in all
+three summary statistics.
+We interpret these patterns as evidence
+that the increase in turnover rates diminishes the effect of extra-pair contact (equivalently increasing relative importance of within-partnership contact), therefore selecting for lower \Lspvl.
+For models without extra-pair contact, increased rates of partnership change decrease the level of structured mixing (mimicing extra-pair contact models), resulting in selection for higher \Lspvl.
 
 We also note that the implicit model and the instantaneous partnership formation model show similar patterns in scaled parameters. In fact, we can see that the effect of partnership dissolution rate, $c$, on equilibrium \Lspvl\ of the two models are almost identical (in \figurename~\ref{fig:pairplot}, they have distinguishing features).
 Lastly, we note that increase in transmission rates ($\beta_P$ and $\beta_D$) has a decreasing effect on summary statistics for all models except for random mixing model.
@@ -947,13 +951,31 @@ of sexual partnership behaviour used. This difference in \Lspvl\ is
 epidemiologically significant, corresponding to a twofold difference
 (12 vs. 6 years) in expected time to progression.
 
-Surprisingly, the biggest differences are not between the simplest
-and the most complex contact structures, but between the
+The restriction of transmission within stable partnerships
+strongly limits eco-evolutionary dynamics by
+limiting the maximum speed of epidemic growth. An HIV genotype
+that optimizes SPVL to maximize the speed of spread in
+a homogeneous population will be sub-optimal in a context
+where infection can only spread beyond a partnership once
+it dissolves. This finding echoes a long line of
+studies that show that population structure leads to the
+evolution of ``prudent'' parasites, although most of these studies
+focus on equilibrium optima rather than eco-evolutionary dynamics
+\citep{herre_factors_1995,kerr_local_2006,webb_theoretical_2013,berngruber_spatial_2015}. 
+The more complex contact structures we modeled
+mitigate these constraints by allowing HIV to spread among uncoupled individuals (through finite pair-formation) and members of stable partnerships
+(through extra-pair contact), albeit at lower rates than within
+partnerships.
+
+Thus, we see the biggest differences not between the simplest
+and the most complex contact structures, which either
+ignore pair structure completely or allow for extra-pair
+contact that reduces its impact, but between the
 complex contact structures and models of \emph{intermediate}
 complexity. These intermediate-complexity models attempt,
 quite reasonably, to add at least some of the realism of
-human sexual behaviour, but leave out apparently insignificant
-details such as extra-pair contact. If partial complexity
+human sexual behaviour, but err by neglecting the apparently insignificant
+detail of extra-pair contact. If partial complexity
 may lead to such mistakes, how can modelers do anything but always
 strive to build the most realistic models possible?
 
