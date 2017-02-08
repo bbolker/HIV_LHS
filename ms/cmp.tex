@@ -1,7 +1,7 @@
 % ## http://journals.plos.org/ploscompbiol/s/submit-now
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL plos_latex_rev1.tex   Tue Dec 13 15:20:48 2016
-%DIF ADD ms.tex                Fri Jan 27 09:52:08 2017
+%DIF ADD ms.tex                Tue Feb  7 18:08:43 2017
 % Template for PLoS
 % Version 3.2 March 2016
 %
@@ -1073,9 +1073,11 @@ We assume that the number of non-cohabiting partners follows a Gamma distributio
 \subsection*{Simulation runs}
 
 One of the most difficult parts of model comparison is finding
-parameter sets that are commensurate with many different model
-structures. For the most part, our models are too complex to easily
-derive analytical correspondences among them. Given a numerical
+parameter sets that are commensurate \DIFdelbegin \DIFdel{with many }\DIFdelend \DIFaddbegin \DIFadd{across radically }\DIFaddend different model
+structures. For the most part, our models are too complex to
+\DIFdelbegin \DIFdel{easily
+}\DIFdelend derive analytical correspondences among \DIFdelbegin \DIFdel{them}\DIFdelend \DIFaddbegin \DIFadd{the parameters
+for different models}\DIFaddend . Given a numerical
 criterion, such as $r$ (initial exponential growth rate) or $\rzero$ 
 (intrinsic reproductive number), we can adjust one or more
 parameters by brute force to ensure that all of the models match
@@ -1348,8 +1350,7 @@ note that the \DIFdelbegin \DIFdel{plot shows the effects of the }\emph{\DIFdel{
 \DIFdel{parameters , i.
 e.
 before they have been calibrated to achieve a standard initial epidemic
-growth rate.
-Increases in the }\DIFdelend \DIFaddbegin \DIFadd{effects of $\beta_D$ and $D_D$ are not shown in \figurename~\ref{fig:plot_sens} as their patterns are so similar to $\beta_P$ and $D_P$, respectively.
+growth rate}\DIFdelend \DIFaddbegin \DIFadd{effects of $\beta_D$ and $D_D$ are not shown in \figurename~\ref{fig:plot_sens} as their patterns are so similar to $\beta_P$ and $D_P$, respectively.
 }
 
 \DIFadd{One of the distinguishing features of the scaled parameters (in comparison to the unscaled parameters) is that the range of the parameters is compressed (relative to other models) for models without extra-pair contact as those models require parameters to be scaled by a large value in order to achieve a given $r$ of 0.04.
@@ -1357,9 +1358,12 @@ Models with extra-pair contact show wide range parameters as they can display a 
 Parameter range for random-mixing model is severely compressed because latin hypercube sampling does not affect the prevalence trajectory very much, and scaling factor does not vary much across parameters.
 }
 
-\DIFadd{For parameters involved in partnership turnover ($c$ and $\rho$), main distinction is between models with and without extra-pair contact. With extra-pair contact, we get gradual decrease in peak time, maximum }\Lspvl\DIFadd{, and equilibrium }\Lspvl\DIFadd{\ with increasing turnover rates; Otherwise we get increase in summary statistics.
-Although we have not verified this idea analytically, we speculate that increase in turnover rates diminishes the effect of epc (equivalently increasing relative importance of within-partnership contact), therefore selecting for lower }\Lspvl\DIFadd{.
-For models without epc, increased rates of partnership change decrease the level of structured mixing (mimicing epc models), resulting in selection for higher }\Lspvl\DIFadd{.
+\DIFadd{For parameters involved in partnership turnover ($c$ and $\rho$), the main distinction is between models with and without extra-pair contact. With extra-pair contact, we see a gradual decrease in peak time, maximum }\Lspvl\DIFadd{, and equilibrium }\Lspvl\DIFadd{\ with increasing turnover rates}\DIFaddend .
+Increases in the \DIFaddbegin \DIFadd{other parameters lead to increases in all
+three summary statistics.
+We interpret these patterns as evidence
+that the increase in turnover rates diminishes the effect of extra-pair contact (equivalently increasing relative importance of within-partnership contact), therefore selecting for lower }\Lspvl\DIFadd{.
+For models without extra-pair contact, increased rates of partnership change decrease the level of structured mixing (mimicing extra-pair contact models), resulting in selection for higher }\Lspvl\DIFadd{.
 }
 
 \DIFadd{We also note that the implicit model and the instantaneous partnership formation model show similar patterns in scaled parameters. In fact, we can see that the effect of partnership dissolution rate, $c$, on equilibrium }\Lspvl\DIFadd{\ of the two models are almost identical (in \figurename~\ref{fig:pairplot}, they have distinguishing features).
@@ -1423,7 +1427,50 @@ robust to additional complexities.
 
 \DIFaddend \section*{Discussion}
 
-All models must simplify the world.  Many constraints --- among them data
+\DIFaddbegin \DIFadd{How contact structures are modeled can strongly affect
+researchers' conclusions about the evolutionary dynamics of
+virulence. In particular, a relatively simple (strategic) 
+eco-evolutionary model of HIV can predict peak $\log_{10}$
+set-point viral loads (over the course of an epidemic)
+ranging from 3.5 to 4.8 depending on the specific model
+of sexual partnership behaviour used. This difference in }\Lspvl\DIFadd{\ is
+epidemiologically significant, corresponding to a twofold difference
+(12 vs. 6 years) in expected time to progression.
+}
+
+\DIFadd{The restriction of transmission within stable partnerships
+strongly limits eco-evolutionary dynamics by
+limiting the maximum speed of epidemic growth. An HIV genotype
+that optimizes SPVL to maximize the speed of spread in
+a homogeneous population will be sub-optimal in a context
+where infection can only spread beyond a partnership once
+it dissolves. This finding echoes a long line of
+studies that show that population structure leads to the
+evolution of ``prudent'' parasites, although most of these studies
+focus on equilibrium optima rather than eco-evolutionary dynamics
+\mbox{%DIFAUXCMD
+\cite{Herre1995,Kerr+2006,webb_theoretical_2013,berngruber_spatial_2015}}%DIFAUXCMD
+. 
+The more complex contact structures we modeled
+mitigate these constraints by allowing HIV to spread among uncoupled individuals (through finite pair-formation) and members of stable partnerships
+(through extra-pair contact), albeit at lower rates than within
+partnerships.
+}
+
+\DIFadd{Thus, we see the biggest differences not between the simplest
+and the most complex contact structures, which either
+ignore pair structure completely or allow for extra-pair
+contact that reduces its impact, but between the
+complex contact structures and models of }\emph{\DIFadd{intermediate}}
+\DIFadd{complexity. These intermediate-complexity models attempt,
+quite reasonably, to add at least some of the realism of
+human sexual behaviour, but err by neglecting the apparently insignificant
+detail of extra-pair contact. If partial complexity
+may lead to such mistakes, how can modelers do anything but always
+strive to build the most realistic models possible?
+}
+
+\DIFaddend All models must simplify the world.  Many constraints --- among them data
 availability, computation time, and code complexity --- drive the need
 for parsimony, with different constraints applying in different
 contexts. The critical question that modelers must ask is whether the
@@ -1556,211 +1603,452 @@ Computational resources were provided by SHARCnet.
 % here.
 % 
 
-\begin{thebibliography}{10}
+\DIFdelbegin %DIFDELCMD < \begin{thebibliography}{10}
+%DIFDELCMD < 
 
-\bibitem{alizon_virulence_2009}
-Alizon S, Hurford A, Mideo N, van Baalen M.
-\newblock Virulence evolution and the trade-off hypothesis: history, current
+%DIFDELCMD < \bibitem{alizon_virulence_2009}
+%DIFDELCMD < %%%
+\DIFdel{Alizon S, Hurford A, Mideo N, van Baalen M.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Virulence evolution and the trade-off hypothesis: history, current
   state of affairs and the future.
-\newblock J Evol Biol. 2009;22:245--259.
-\newblock doi:{10.1111/j.1420-9101.2008.01658.x}.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{J Evol Biol. 2009;22:245--259.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1111/j.1420-9101.2008.01658.x}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{EbertBull2003}
-Ebert D, Bull JJ.
-\newblock Challenging the trade-off model for the evolution of virulence: is
+%DIFDELCMD < \bibitem{EbertBull2003}
+%DIFDELCMD < %%%
+\DIFdel{Ebert D, Bull JJ.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Challenging the trade-off model for the evolution of virulence: is
   virulence management feasible?
-\newblock Trends Microbiol. 2003;11(1):15--20.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Trends Microbiol. 2003;11(1):15--20.
+}%DIFDELCMD < 
 
-\bibitem{alizon_adaptive_2015}
-Alizon S, Michalakis Y.
-\newblock Adaptive virulence evolution: the good old fitness-based approach.
-\newblock Trends in Ecology \& Evolution. 2015;30(5):248--254.
-\newblock doi:{10.1016/j.tree.2015.02.009}.
+%DIFDELCMD < \bibitem{alizon_adaptive_2015}
+%DIFDELCMD < %%%
+\DIFdel{Alizon S, Michalakis Y.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Adaptive virulence evolution: the good old fitness-based approach.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Trends in Ecology \& Evolution. 2015;30(5):248--254.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1016/j.tree.2015.02.009}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{Dwyer+1990}
-Dwyer G, Levin SA, Buttel L.
-\newblock A simulation model of the population dynamics and evolution of
+%DIFDELCMD < \bibitem{Dwyer+1990}
+%DIFDELCMD < %%%
+\DIFdel{Dwyer G, Levin SA, Buttel L.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{A simulation model of the population dynamics and evolution of
   myxomatosis.
-\newblock Ecol Monog. 1990;60:423--447.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Ecol Monog. 1990;60:423--447.
+}%DIFDELCMD < 
 
-\bibitem{mackinnon1999genetic}
-Mackinnon MJ, Read AF.
-\newblock Genetic relationships between parasite virulence and transmission in
-  the rodent malaria {{\em Plasmodium chabaudi}}.
-\newblock Evolution. 1999; p. 689--703.
+%DIFDELCMD < \bibitem{mackinnon1999genetic}
+%DIFDELCMD < %%%
+\DIFdel{Mackinnon MJ, Read AF.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Genetic relationships between parasite virulence and transmission in
+  the rodent malaria }%DIFDELCMD < {{\em %%%
+\DIFdel{Plasmodium chabaudi}%DIFDELCMD < }}%%%
+\DIFdel{.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Evolution. 1999; p. 689--703.
+}%DIFDELCMD < 
 
-\bibitem{jensen2006empirical}
-Jensen KH, Little T, Skorping A, Ebert D.
-\newblock Empirical support for optimal virulence in a castrating parasite.
-\newblock PLoS Biol. 2006;4(7):e197.
+%DIFDELCMD < \bibitem{jensen2006empirical}
+%DIFDELCMD < %%%
+\DIFdel{Jensen KH, Little T, Skorping A, Ebert D.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Empirical support for optimal virulence in a castrating parasite.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{PLoS Biol. 2006;4(7):e197.
+}%DIFDELCMD < 
 
-\bibitem{deroode2008virulence}
-De~Roode JC, Yates AJ, Altizer S.
-\newblock Virulence-transmission trade-offs and population divergence in
+%DIFDELCMD < \bibitem{deroode2008virulence}
+%DIFDELCMD < %%%
+\DIFdel{De~Roode JC, Yates AJ, Altizer S.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Virulence-transmission trade-offs and population divergence in
   virulence in a naturally occurring butterfly parasite.
-\newblock Proceedings of the National Academy of Sciences.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Proceedings of the National Academy of Sciences.
   2008;105(21):7489--7494.
+}%DIFDELCMD < 
 
-\bibitem{Fraser+2007}
-Fraser C, Hollingsworth TD, Chapman R, de~Wolf F, Hanage WP.
-\newblock Variation in {HIV}-1 set-point viral load: Epidemiological analysis
+%DIFDELCMD < \bibitem{Fraser+2007}
+%DIFDELCMD < %%%
+\DIFdel{Fraser C, Hollingsworth TD, Chapman R, de~Wolf F, Hanage WP.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Variation in }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < }%%%
+\DIFdel{-1 set-point viral load: Epidemiological analysis
   and an evolutionary hypothesis.
-\newblock PNAS. 2007;104:17441--17446.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{PNAS. 2007;104:17441--17446.
+}%DIFDELCMD < 
 
-\bibitem{fraser_virulence_2014}
-Fraser C, Lythgoe K, Leventhal GE, Shirreff G, Hollingsworth TD, Alizon S,
+%DIFDELCMD < \bibitem{fraser_virulence_2014}
+%DIFDELCMD < %%%
+\DIFdel{Fraser C, Lythgoe K, Leventhal GE, Shirreff G, Hollingsworth TD, Alizon S,
   et~al.
-\newblock Virulence and Pathogenesis of {HIV}-1 Infection: An Evolutionary
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Virulence and Pathogenesis of }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < }%%%
+\DIFdel{-1 Infection: An Evolutionary
   Perspective.
-\newblock Science. 2014;343(6177):1243727.
-\newblock doi:{10.1126/science.1243727}.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Science. 2014;343(6177):1243727.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1126/science.1243727}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{shirreff_transmission_2011}
-Shirreff G, Pellis L, Laeyendecker O, Fraser C.
-\newblock Transmission Selects for {HIV-1} Strains of Intermediate Virulence: A
+%DIFDELCMD < \bibitem{shirreff_transmission_2011}
+%DIFDELCMD < %%%
+\DIFdel{Shirreff G, Pellis L, Laeyendecker O, Fraser C.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Transmission Selects for }%DIFDELCMD < {%%%
+\DIFdel{HIV-1}%DIFDELCMD < } %%%
+\DIFdel{Strains of Intermediate Virulence: A
   Modelling Approach.
-\newblock PLoS Computational Biology. 2011;7(10):e1002185.
-\newblock doi:{10.1371/journal.pcbi.1002185}.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{PLoS Computational Biology. 2011;7(10):e1002185.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1371/journal.pcbi.1002185}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{herbeck_hiv_2014}
-Herbeck JT, Mittler JE, Gottlieb GS, Mullins JI.
-\newblock An {HIV} Epidemic Model Based on Viral Load Dynamics: Value in
-  Assessing Empirical Trends in {HIV} Virulence and Community Viral Load.
-\newblock {PLoS} Comput Biol. 2014;10(6):e1003673.
+%DIFDELCMD < \bibitem{herbeck_hiv_2014}
+%DIFDELCMD < %%%
+\DIFdel{Herbeck JT, Mittler JE, Gottlieb GS, Mullins JI.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{An }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < } %%%
+\DIFdel{Epidemic Model Based on Viral Load Dynamics: Value in
+  Assessing Empirical Trends in }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < } %%%
+\DIFdel{Virulence and Community Viral Load.
+}%DIFDELCMD < \newblock {%%%
+\DIFdel{PLoS}%DIFDELCMD < } %%%
+\DIFdel{Comput Biol. 2014;10(6):e1003673.
+}%DIFDELCMD < 
 
-\bibitem{herbeck_evolution_2016}
-Herbeck JT, Mittler JE, Gottlieb GS, Goodreau SM, Murphy JT, Cori A, et~al.
-\newblock Evolution of {HIV} virulence in response to widespread scale up of
+%DIFDELCMD < \bibitem{herbeck_evolution_2016}
+%DIFDELCMD < %%%
+\DIFdel{Herbeck JT, Mittler JE, Gottlieb GS, Goodreau SM, Murphy JT, Cori A, et~al.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Evolution of }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < } %%%
+\DIFdel{virulence in response to widespread scale up of
   antiretroviral therapy: a modeling study.
-\newblock Virus Evolution. 2016;2(2):vew028.
-\newblock doi:{10.1093/ve/vew028}.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Virus Evolution. 2016;2(2):vew028.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1093/ve/vew028}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{day_virulence_2004}
-Day T, Proulx SR.
-\newblock A General Theory for the Evolutionary Dynamics of Virulence.
-\newblock The American Naturalist. 2004;163(4):E40--E63.
-\newblock doi:{10.1086/382548}.
+%DIFDELCMD < \bibitem{day_virulence_2004}
+%DIFDELCMD < %%%
+\DIFdel{Day T, Proulx SR.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{A General Theory for the Evolutionary Dynamics of Virulence.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{The American Naturalist. 2004;163(4):E40--E63.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1086/382548}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{alizon_price_2009}
-Alizon S.
-\newblock The {Price} equation framework to study disease within-host
+%DIFDELCMD < \bibitem{alizon_price_2009}
+%DIFDELCMD < %%%
+\DIFdel{Alizon S.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{The }%DIFDELCMD < {%%%
+\DIFdel{Price}%DIFDELCMD < } %%%
+\DIFdel{equation framework to study disease within-host
   evolution.
-\newblock Journal of Evolutionary Biology. 2009;22(5):1123--1132.
-\newblock doi:{10.1111/j.1420-9101.2009.01726.x}.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Journal of Evolutionary Biology. 2009;22(5):1123--1132.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1111/j.1420-9101.2009.01726.x}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{champredon_hiv_2013}
-Champredon D, Bellan S, Dushoff J.
-\newblock {HIV} Sexual Transmission Is Predominantly Driven by Single
+%DIFDELCMD < \bibitem{champredon_hiv_2013}
+%DIFDELCMD < %%%
+\DIFdel{Champredon D, Bellan S, Dushoff J.
+}%DIFDELCMD < \newblock {%%%
+\DIFdel{HIV}%DIFDELCMD < } %%%
+\DIFdel{Sexual Transmission Is Predominantly Driven by Single
   Individuals Rather than Discordant Couples: A Model-Based Approach.
-\newblock PLoS ONE. 2013;8(12):e82906.
-\newblock doi:{10.1371/journal.pone.0082906}.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{PLoS ONE. 2013;8(12):e82906.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1371/journal.pone.0082906}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{dietz_epidemiological_1988}
-Dietz K, Hadeler KP.
-\newblock Epidemiological models for sexually transmitted diseases.
-\newblock Journal of Mathematical Biology. 1988;26(1):1--25.
+%DIFDELCMD < \bibitem{dietz_epidemiological_1988}
+%DIFDELCMD < %%%
+\DIFdel{Dietz K, Hadeler KP.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Epidemiological models for sexually transmitted diseases.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Journal of Mathematical Biology. 1988;26(1):1--25.
+}%DIFDELCMD < 
 
-\bibitem{kretzschmar_effect_1998}
-Kretzschmar M, Dietz K.
-\newblock The effect of pair formation and variable infectivity on the spread
+%DIFDELCMD < \bibitem{kretzschmar_effect_1998}
+%DIFDELCMD < %%%
+\DIFdel{Kretzschmar M, Dietz K.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{The effect of pair formation and variable infectivity on the spread
   of an infection without recovery.
-\newblock Mathematical Biosciences. 1998;148(1):83--113.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Mathematical Biosciences. 1998;148(1):83--113.
+}%DIFDELCMD < 
 
-\bibitem{hollingsworth_hiv1_2008}
-Hollingsworth TD, Anderson RM, Fraser C.
-\newblock {HIV}-1 Transmission, by Stage of Infection.
-\newblock Journal of Infectious Diseases. 2008;198(5):687--693.
-\newblock doi:{10.1086/590501}.
+%DIFDELCMD < \bibitem{hollingsworth_hiv1_2008}
+%DIFDELCMD < %%%
+\DIFdel{Hollingsworth TD, Anderson RM, Fraser C.
+}%DIFDELCMD < \newblock {%%%
+\DIFdel{HIV}%DIFDELCMD < }%%%
+\DIFdel{-1 Transmission, by Stage of Infection.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Journal of Infectious Diseases. 2008;198(5):687--693.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1086/590501}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{omori2015dynamics}
-Omori R, Chemaitelly H, Abu-Raddad LJ.
-\newblock Dynamics of non-cohabiting sex partnering in sub-{Saharan} {Africa}:
-  a modelling study with implications for {HIV} transmission.
-\newblock Sexually Transmitted Infections.
-  2015;doi:{10.1136/sextrans-2014-051925}.
+%DIFDELCMD < \bibitem{omori2015dynamics}
+%DIFDELCMD < %%%
+\DIFdel{Omori R, Chemaitelly H, Abu-Raddad LJ.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Dynamics of non-cohabiting sex partnering in sub-}%DIFDELCMD < {%%%
+\DIFdel{Saharan}%DIFDELCMD < } {%%%
+\DIFdel{Africa}%DIFDELCMD < }%%%
+\DIFdel{:
+  a modelling study with implications for }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < } %%%
+\DIFdel{transmission.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Sexually Transmitted Infections.
+  2015;doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1136/sextrans-2014-051925}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{may_transmission_1988}
-May RM, Anderson RM.
-\newblock The Transmission Dynamics of Human Immunodeficiency Virus (HIV).
-\newblock Philosophical Transactions of the Royal Society of London Series B,
+%DIFDELCMD < \bibitem{may_transmission_1988}
+%DIFDELCMD < %%%
+\DIFdel{May RM, Anderson RM.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{The Transmission Dynamics of Human Immunodeficiency Virus (HIV).
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Philosophical Transactions of the Royal Society of London Series B,
   Biological Sciences. 1988;321(1207):565--607.
+}%DIFDELCMD < 
 
-\bibitem{delva_connecting_2016}
-Delva W, Leventhal GE, Helleringer S.
-\newblock Connecting the dots: network data and models in {HIV} epidemiology.
-\newblock AIDS. 2016;30(13):2009--2020.
-\newblock doi:{10.1097/QAD.0000000000001184}.
+%DIFDELCMD < \bibitem{delva_connecting_2016}
+%DIFDELCMD < %%%
+\DIFdel{Delva W, Leventhal GE, Helleringer S.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Connecting the dots: network data and models in }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < } %%%
+\DIFdel{epidemiology.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{AIDS. 2016;30(13):2009--2020.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1097/QAD.0000000000001184}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{blower_drugs_1991}
-Blower SM, Hartel D, Dowlatabadi H, Anderson RM, May RM.
-\newblock Drugs, Sex and {HIV}: A Mathematical Model for {New York City}.
-\newblock Philosophical Transactions of the Royal Society of London B:
+%DIFDELCMD < \bibitem{blower_drugs_1991}
+%DIFDELCMD < %%%
+\DIFdel{Blower SM, Hartel D, Dowlatabadi H, Anderson RM, May RM.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Drugs, Sex and }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < }%%%
+\DIFdel{: A Mathematical Model for }%DIFDELCMD < {%%%
+\DIFdel{New York City}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Philosophical Transactions of the Royal Society of London B:
   Biological Sciences. 1991;331(1260):171--187.
-\newblock doi:{10.1098/rstb.1991.0006}.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1098/rstb.1991.0006}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{ma_estimating_2014}
-Ma J, Dushoff J, Bolker BM, Earn DJD.
-\newblock Estimating Initial Epidemic Growth Rates.
-\newblock Bulletin of Mathematical Biology. 2014;76(1):245--260.
-\newblock doi:{10.1007/s11538-013-9918-2}.
+%DIFDELCMD < \bibitem{ma_estimating_2014}
+%DIFDELCMD < %%%
+\DIFdel{Ma J, Dushoff J, Bolker BM, Earn DJD.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Estimating Initial Epidemic Growth Rates.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Bulletin of Mathematical Biology. 2014;76(1):245--260.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1007/s11538-013-9918-2}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{wallinga_how_2007}
-Wallinga J, Lipsitch M.
-\newblock How generation intervals shape the relationship between growth rates
+%DIFDELCMD < \bibitem{wallinga_how_2007}
+%DIFDELCMD < %%%
+\DIFdel{Wallinga J, Lipsitch M.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{How generation intervals shape the relationship between growth rates
   and reproductive numbers.
-\newblock Proceedings of the Royal Society of London B: Biological Sciences.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Proceedings of the Royal Society of London B: Biological Sciences.
   2007;274(1609):599--604.
-\newblock doi:{10.1098/rspb.2006.3754}.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1098/rspb.2006.3754}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{soetaert_solving_2010}
-Soetaert K, Petzoldt T, Setzer RW.
-\newblock Solving Differential Equations in {R}: Package {deSolve}.
-\newblock Journal of Statistical Software. 2010;33(9):1--25.
-\newblock doi:{10.18637/jss.v033.i09}.
+%DIFDELCMD < \bibitem{soetaert_solving_2010}
+%DIFDELCMD < %%%
+\DIFdel{Soetaert K, Petzoldt T, Setzer RW.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Solving Differential Equations in }%DIFDELCMD < {%%%
+\DIFdel{R}%DIFDELCMD < }%%%
+\DIFdel{: Package }%DIFDELCMD < {%%%
+\DIFdel{deSolve}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Journal of Statistical Software. 2010;33(9):1--25.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.18637/jss.v033.i09}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{wawer2005rates}
-Wawer MJ, Gray RH, Sewankambo NK, Serwadda D, Li X, Laeyendecker O, et~al.
-\newblock Rates of {HIV}-1 transmission per coital act, by stage of {HIV}-1
-  infection, in {Rakai}, {Uganda}.
-\newblock Journal of Infectious Diseases. 2005;191(9):1403--1409.
+%DIFDELCMD < \bibitem{wawer2005rates}
+%DIFDELCMD < %%%
+\DIFdel{Wawer MJ, Gray RH, Sewankambo NK, Serwadda D, Li X, Laeyendecker O, et~al.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Rates of }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < }%%%
+\DIFdel{-1 transmission per coital act, by stage of }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < }%%%
+\DIFdel{-1
+  infection, in }%DIFDELCMD < {%%%
+\DIFdel{Rakai}%DIFDELCMD < }%%%
+\DIFdel{, }%DIFDELCMD < {%%%
+\DIFdel{Uganda}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Journal of Infectious Diseases. 2005;191(9):1403--1409.
+}%DIFDELCMD < 
 
-\bibitem{faria_early_2014}
-Faria NR, Rambaut A, Suchard MA, Baele G, Bedford T, Ward MJ, et~al.
-\newblock The early spread and epidemic ignition of {HIV}-1 in human
+%DIFDELCMD < \bibitem{faria_early_2014}
+%DIFDELCMD < %%%
+\DIFdel{Faria NR, Rambaut A, Suchard MA, Baele G, Bedford T, Ward MJ, et~al.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{The early spread and epidemic ignition of }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < }%%%
+\DIFdel{-1 in human
   populations.
-\newblock Science (New York, NY). 2014;346(6205):56--61.
-\newblock doi:{10.1126/science.1256739}.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Science (New York, NY). 2014;346(6205):56--61.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1126/science.1256739}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{elderd_uncertainty_2006}
-Elderd BD, Dukic VM, Dwyer G.
-\newblock Uncertainty in predictions of disease spread and public health
+%DIFDELCMD < \bibitem{elderd_uncertainty_2006}
+%DIFDELCMD < %%%
+\DIFdel{Elderd BD, Dukic VM, Dwyer G.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Uncertainty in predictions of disease spread and public health
   responses to bioterrorism and emerging diseases.
-\newblock Proceedings of the National Academy of Sciences. 2006;103(42):15693
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Proceedings of the National Academy of Sciences. 2006;103(42):15693
   --15697.
-\newblock doi:{10.1073/pnas.0600816103}.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1073/pnas.0600816103}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{herbeck_is_2012}
-Herbeck JT, Müller V, Maust BS, Ledergerber B, Torti C, Di~Giambenedetto S,
+%DIFDELCMD < \bibitem{herbeck_is_2012}
+%DIFDELCMD < %%%
+\DIFdel{Herbeck JT, Müller V, Maust BS, Ledergerber B, Torti C, Di~Giambenedetto S,
   et~al.
-\newblock Is the virulence of {HIV} changing? {A} meta-analysis of trends in
-  prognostic markers of {HIV} disease progression and transmission.
-\newblock AIDS (London, England). 2012;26(2):193--205.
-\newblock doi:{10.1097/QAD.0b013e32834db418}.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Is the virulence of }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < } %%%
+\DIFdel{changing? }%DIFDELCMD < {%%%
+\DIFdel{A}%DIFDELCMD < } %%%
+\DIFdel{meta-analysis of trends in
+  prognostic markers of }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < } %%%
+\DIFdel{disease progression and transmission.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{AIDS (London, England). 2012;26(2):193--205.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1097/QAD.0b013e32834db418}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{payne_impact_2014}
-Payne R, Muenchhoff M, Mann J, Roberts HE, Matthews P, Adland E, et~al.
-\newblock Impact of {HLA}-driven {HIV} adaptation on virulence in populations
-  of high {HIV} seroprevalence.
-\newblock Proceedings of the National Academy of Sciences.
+%DIFDELCMD < \bibitem{payne_impact_2014}
+%DIFDELCMD < %%%
+\DIFdel{Payne R, Muenchhoff M, Mann J, Roberts HE, Matthews P, Adland E, et~al.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Impact of }%DIFDELCMD < {%%%
+\DIFdel{HLA}%DIFDELCMD < }%%%
+\DIFdel{-driven }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < } %%%
+\DIFdel{adaptation on virulence in populations
+  of high }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < } %%%
+\DIFdel{seroprevalence.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Proceedings of the National Academy of Sciences.
   2014;111(50):E5393--E5400.
-\newblock doi:{10.1073/pnas.1413339111}.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{doi:}%DIFDELCMD < {%%%
+\DIFdel{10.1073/pnas.1413339111}%DIFDELCMD < }%%%
+\DIFdel{.
+}%DIFDELCMD < 
 
-\bibitem{roberts2015impact}
-Roberts HE, Goulder PJ, McLean AR.
-\newblock The impact of antiretroviral therapy on population-level virulence
-  evolution of {HIV}-1.
-\newblock Journal of The Royal Society Interface. 2015;12(113):20150888.
+%DIFDELCMD < \bibitem{roberts2015impact}
+%DIFDELCMD < %%%
+\DIFdel{Roberts HE, Goulder PJ, McLean AR.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{The impact of antiretroviral therapy on population-level virulence
+  evolution of }%DIFDELCMD < {%%%
+\DIFdel{HIV}%DIFDELCMD < }%%%
+\DIFdel{-1.
+}%DIFDELCMD < \newblock %%%
+\DIFdel{Journal of The Royal Society Interface. 2015;12(113):20150888.
+}%DIFDELCMD < 
 
-\end{thebibliography}
-\end{document}
+%DIFDELCMD < \end{thebibliography}
+%DIFDELCMD <  %%%
+\DIFdelend \DIFaddbegin \bibliography{virulence}
+ \DIFaddend\end{document}
 

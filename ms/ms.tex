@@ -352,16 +352,13 @@ However, despite these studies' attention to detail at the individual
 or physiological level, the population-level contact structures used in these
 models are relatively simple.
 
-As we discuss in detail below,
-existing models of HIV eco-evolutionary dynamics either use implicit
+Many existing models of HIV eco-evolutionary dynamics use implicit
 models that incorporate the average effects of within-couple sexual
 contact --- without representing the explicit dynamics of partnership
-formation and dissolution or accounting for extra-partnership contact %
---- or use an agent-based formulation with parameters that effectively
-lead to random mixing among infected and uninfected individuals
-\todo{may not be true any more, Herbeck may have fixed this in their revised versions}. Here
-we explore the effects of incorporating \emph{explicit}
-contact structure in eco-evolutionary models.
+formation and dissolution or accounting for extra-partnership contact;
+agent-based formulations are more realistic. Here we explore the
+effects of incorporating explicit contact structure in
+eco-evolutionary models.
 
 Because our main goal is to explore how conclusions about virulence
 evolution depend on the way in which contact structure
@@ -961,7 +958,7 @@ it dissolves. This finding echoes a long line of
 studies that show that population structure leads to the
 evolution of ``prudent'' parasites, although most of these studies
 focus on equilibrium optima rather than eco-evolutionary dynamics
-\citep{herre_factors_1995,kerr_local_2006,webb_theoretical_2013,berngruber_spatial_2015}. 
+\cite{Herre1995,Kerr+2006,webb_theoretical_2013,berngruber_spatial_2015}. 
 The more complex contact structures we modeled
 mitigate these constraints by allowing HIV to spread among uncoupled individuals (through finite pair-formation) and members of stable partnerships
 (through extra-pair contact), albeit at lower rates than within
@@ -1003,19 +1000,27 @@ among people outside of stable partnerships --- tends to drive
 faster virulence evolution, leading to higher peak virulence and 
 lower times to progression at the peak time.
 
-Taking further steps to make the model even more realistic
-might add further structure,
-making the random-mixing model predictions less accurate. For
-example, our model forms partnerships randomly, and assumes that
-extra-pair contact is randomly mixing across the population;
-one could instead model extra-pair contact as arising from
+Taking further steps to make the model even more realistic might add
+further structure, making the random-mixing model predictions less
+accurate. For example, our model forms partnerships randomly, and
+assumes that extra-pair contact is randomly mixing across the
+population; one could instead model extra-pair contact as arising from
 multiple concurrent partnerships (some, such as contact with sex
 workers, of very short duration) and/or more structured partnership
 formation (by age, ethnicity, or behaviour group). The effects of
-other realistic complications such as explicit modeling of two
-sexes (both in contact structure and differential transmission
+other realistic complications such as explicit modeling of two sexes
+(both in contact structure and differential transmission
 probabilities), temporal and spatial variation in epidemic processes,
 or presence of genetic variation in hosts are harder to predict.
+In contrast, the elevated viral load in the early stage of HIV infection,
+neglected in our model, will likely lead to higher maximum
+epidemic growth rates and allow more scope for transient viral
+evolution, although only if extra-pair contact is possible.
+As mentioned above, our compartmental model already requires tens
+of thousands of coupled differential equations, which will increase
+multiplicatively with additional model dimensions such as age,
+sex, or HIV stage. Thus, further model elaboration will best be 
+done with agent-based models.
 
 Parameterization is one of the biggest challenges of epidemiological
 modeling. In addition to following Champredon \etal\ \cite{champredon_hiv_2013} 
@@ -1104,211 +1109,6 @@ Computational resources were provided by SHARCnet.
 % here.
 % 
 
-\begin{thebibliography}{10}
-
-\bibitem{alizon_virulence_2009}
-Alizon S, Hurford A, Mideo N, van Baalen M.
-\newblock Virulence evolution and the trade-off hypothesis: history, current
-  state of affairs and the future.
-\newblock J Evol Biol. 2009;22:245--259.
-\newblock doi:{10.1111/j.1420-9101.2008.01658.x}.
-
-\bibitem{EbertBull2003}
-Ebert D, Bull JJ.
-\newblock Challenging the trade-off model for the evolution of virulence: is
-  virulence management feasible?
-\newblock Trends Microbiol. 2003;11(1):15--20.
-
-\bibitem{alizon_adaptive_2015}
-Alizon S, Michalakis Y.
-\newblock Adaptive virulence evolution: the good old fitness-based approach.
-\newblock Trends in Ecology \& Evolution. 2015;30(5):248--254.
-\newblock doi:{10.1016/j.tree.2015.02.009}.
-
-\bibitem{Dwyer+1990}
-Dwyer G, Levin SA, Buttel L.
-\newblock A simulation model of the population dynamics and evolution of
-  myxomatosis.
-\newblock Ecol Monog. 1990;60:423--447.
-
-\bibitem{mackinnon1999genetic}
-Mackinnon MJ, Read AF.
-\newblock Genetic relationships between parasite virulence and transmission in
-  the rodent malaria {{\em Plasmodium chabaudi}}.
-\newblock Evolution. 1999; p. 689--703.
-
-\bibitem{jensen2006empirical}
-Jensen KH, Little T, Skorping A, Ebert D.
-\newblock Empirical support for optimal virulence in a castrating parasite.
-\newblock PLoS Biol. 2006;4(7):e197.
-
-\bibitem{deroode2008virulence}
-De~Roode JC, Yates AJ, Altizer S.
-\newblock Virulence-transmission trade-offs and population divergence in
-  virulence in a naturally occurring butterfly parasite.
-\newblock Proceedings of the National Academy of Sciences.
-  2008;105(21):7489--7494.
-
-\bibitem{Fraser+2007}
-Fraser C, Hollingsworth TD, Chapman R, de~Wolf F, Hanage WP.
-\newblock Variation in {HIV}-1 set-point viral load: Epidemiological analysis
-  and an evolutionary hypothesis.
-\newblock PNAS. 2007;104:17441--17446.
-
-\bibitem{fraser_virulence_2014}
-Fraser C, Lythgoe K, Leventhal GE, Shirreff G, Hollingsworth TD, Alizon S,
-  et~al.
-\newblock Virulence and Pathogenesis of {HIV}-1 Infection: An Evolutionary
-  Perspective.
-\newblock Science. 2014;343(6177):1243727.
-\newblock doi:{10.1126/science.1243727}.
-
-\bibitem{shirreff_transmission_2011}
-Shirreff G, Pellis L, Laeyendecker O, Fraser C.
-\newblock Transmission Selects for {HIV-1} Strains of Intermediate Virulence: A
-  Modelling Approach.
-\newblock PLoS Computational Biology. 2011;7(10):e1002185.
-\newblock doi:{10.1371/journal.pcbi.1002185}.
-
-\bibitem{herbeck_hiv_2014}
-Herbeck JT, Mittler JE, Gottlieb GS, Mullins JI.
-\newblock An {HIV} Epidemic Model Based on Viral Load Dynamics: Value in
-  Assessing Empirical Trends in {HIV} Virulence and Community Viral Load.
-\newblock {PLoS} Comput Biol. 2014;10(6):e1003673.
-
-\bibitem{herbeck_evolution_2016}
-Herbeck JT, Mittler JE, Gottlieb GS, Goodreau SM, Murphy JT, Cori A, et~al.
-\newblock Evolution of {HIV} virulence in response to widespread scale up of
-  antiretroviral therapy: a modeling study.
-\newblock Virus Evolution. 2016;2(2):vew028.
-\newblock doi:{10.1093/ve/vew028}.
-
-\bibitem{day_virulence_2004}
-Day T, Proulx SR.
-\newblock A General Theory for the Evolutionary Dynamics of Virulence.
-\newblock The American Naturalist. 2004;163(4):E40--E63.
-\newblock doi:{10.1086/382548}.
-
-\bibitem{alizon_price_2009}
-Alizon S.
-\newblock The {Price} equation framework to study disease within-host
-  evolution.
-\newblock Journal of Evolutionary Biology. 2009;22(5):1123--1132.
-\newblock doi:{10.1111/j.1420-9101.2009.01726.x}.
-
-\bibitem{champredon_hiv_2013}
-Champredon D, Bellan S, Dushoff J.
-\newblock {HIV} Sexual Transmission Is Predominantly Driven by Single
-  Individuals Rather than Discordant Couples: A Model-Based Approach.
-\newblock PLoS ONE. 2013;8(12):e82906.
-\newblock doi:{10.1371/journal.pone.0082906}.
-
-\bibitem{dietz_epidemiological_1988}
-Dietz K, Hadeler KP.
-\newblock Epidemiological models for sexually transmitted diseases.
-\newblock Journal of Mathematical Biology. 1988;26(1):1--25.
-
-\bibitem{kretzschmar_effect_1998}
-Kretzschmar M, Dietz K.
-\newblock The effect of pair formation and variable infectivity on the spread
-  of an infection without recovery.
-\newblock Mathematical Biosciences. 1998;148(1):83--113.
-
-\bibitem{hollingsworth_hiv1_2008}
-Hollingsworth TD, Anderson RM, Fraser C.
-\newblock {HIV}-1 Transmission, by Stage of Infection.
-\newblock Journal of Infectious Diseases. 2008;198(5):687--693.
-\newblock doi:{10.1086/590501}.
-
-\bibitem{omori2015dynamics}
-Omori R, Chemaitelly H, Abu-Raddad LJ.
-\newblock Dynamics of non-cohabiting sex partnering in sub-{Saharan} {Africa}:
-  a modelling study with implications for {HIV} transmission.
-\newblock Sexually Transmitted Infections.
-  2015;doi:{10.1136/sextrans-2014-051925}.
-
-\bibitem{may_transmission_1988}
-May RM, Anderson RM.
-\newblock The Transmission Dynamics of Human Immunodeficiency Virus (HIV).
-\newblock Philosophical Transactions of the Royal Society of London Series B,
-  Biological Sciences. 1988;321(1207):565--607.
-
-\bibitem{delva_connecting_2016}
-Delva W, Leventhal GE, Helleringer S.
-\newblock Connecting the dots: network data and models in {HIV} epidemiology.
-\newblock AIDS. 2016;30(13):2009--2020.
-\newblock doi:{10.1097/QAD.0000000000001184}.
-
-\bibitem{blower_drugs_1991}
-Blower SM, Hartel D, Dowlatabadi H, Anderson RM, May RM.
-\newblock Drugs, Sex and {HIV}: A Mathematical Model for {New York City}.
-\newblock Philosophical Transactions of the Royal Society of London B:
-  Biological Sciences. 1991;331(1260):171--187.
-\newblock doi:{10.1098/rstb.1991.0006}.
-
-\bibitem{ma_estimating_2014}
-Ma J, Dushoff J, Bolker BM, Earn DJD.
-\newblock Estimating Initial Epidemic Growth Rates.
-\newblock Bulletin of Mathematical Biology. 2014;76(1):245--260.
-\newblock doi:{10.1007/s11538-013-9918-2}.
-
-\bibitem{wallinga_how_2007}
-Wallinga J, Lipsitch M.
-\newblock How generation intervals shape the relationship between growth rates
-  and reproductive numbers.
-\newblock Proceedings of the Royal Society of London B: Biological Sciences.
-  2007;274(1609):599--604.
-\newblock doi:{10.1098/rspb.2006.3754}.
-
-\bibitem{soetaert_solving_2010}
-Soetaert K, Petzoldt T, Setzer RW.
-\newblock Solving Differential Equations in {R}: Package {deSolve}.
-\newblock Journal of Statistical Software. 2010;33(9):1--25.
-\newblock doi:{10.18637/jss.v033.i09}.
-
-\bibitem{wawer2005rates}
-Wawer MJ, Gray RH, Sewankambo NK, Serwadda D, Li X, Laeyendecker O, et~al.
-\newblock Rates of {HIV}-1 transmission per coital act, by stage of {HIV}-1
-  infection, in {Rakai}, {Uganda}.
-\newblock Journal of Infectious Diseases. 2005;191(9):1403--1409.
-
-\bibitem{faria_early_2014}
-Faria NR, Rambaut A, Suchard MA, Baele G, Bedford T, Ward MJ, et~al.
-\newblock The early spread and epidemic ignition of {HIV}-1 in human
-  populations.
-\newblock Science (New York, NY). 2014;346(6205):56--61.
-\newblock doi:{10.1126/science.1256739}.
-
-\bibitem{elderd_uncertainty_2006}
-Elderd BD, Dukic VM, Dwyer G.
-\newblock Uncertainty in predictions of disease spread and public health
-  responses to bioterrorism and emerging diseases.
-\newblock Proceedings of the National Academy of Sciences. 2006;103(42):15693
-  --15697.
-\newblock doi:{10.1073/pnas.0600816103}.
-
-\bibitem{herbeck_is_2012}
-Herbeck JT, Müller V, Maust BS, Ledergerber B, Torti C, Di~Giambenedetto S,
-  et~al.
-\newblock Is the virulence of {HIV} changing? {A} meta-analysis of trends in
-  prognostic markers of {HIV} disease progression and transmission.
-\newblock AIDS (London, England). 2012;26(2):193--205.
-\newblock doi:{10.1097/QAD.0b013e32834db418}.
-
-\bibitem{payne_impact_2014}
-Payne R, Muenchhoff M, Mann J, Roberts HE, Matthews P, Adland E, et~al.
-\newblock Impact of {HLA}-driven {HIV} adaptation on virulence in populations
-  of high {HIV} seroprevalence.
-\newblock Proceedings of the National Academy of Sciences.
-  2014;111(50):E5393--E5400.
-\newblock doi:{10.1073/pnas.1413339111}.
-
-\bibitem{roberts2015impact}
-Roberts HE, Goulder PJ, McLean AR.
-\newblock The impact of antiretroviral therapy on population-level virulence
-  evolution of {HIV}-1.
-\newblock Journal of The Royal Society Interface. 2015;12(113):20150888.
-
-\end{thebibliography}
+\bibliography{virulence}
 \end{document}
 
