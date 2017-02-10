@@ -295,6 +295,7 @@ produce intermediate conclusions.
 % Use "Eq" instead of "Equation" for equation citations.
 \section*{Introduction}
 
+\todo{Define virulence? I think it might be a good idea to add it to author summary as well for non-technical readers...}
 The evolution of pathogen virulence has both 
 theoretical and, potentially, practical
 importance. In general, evolutionary theory suggests that
@@ -324,7 +325,7 @@ The \emph{set-point viral load} (SPVL: i.e., the
 characteristic virus load measured in blood during the intermediate
 stage of infection) is a measurable proxy for the rate of HIV within-host
 reproduction. Higher viral loads are correlated with 
-shorter progression times (higher virulence).
+shorter progression times (higher virulence). \todo{We say the same thing in the next sentence.}
 Studies of discordant partnerships --- stable
 sexual partnerships with one infected and one uninfected partner --- %
 have shown that SPVL is (1) correlated with faster transmission
@@ -399,7 +400,7 @@ as the sum of the three stage durations and the
 average transmission rate as the duration-weighted 
 average of the three stage-specific transmission rates. 
 Thus the within-couple transmission rate, $\beta$
-(see ``Contact Structure'' below)
+(see ``Contact Structure'' below),
 for our models is given by:
 \begin{equation}
 \beta (\alpha) = \frac{D_P \beta_P + D_A (\alpha) \beta_A (\alpha) + D_D \beta_D}{D_P + D_A (\alpha) + D_D},
@@ -409,15 +410,17 @@ of infection are independent of the host's SPVL
 (Table~\ref{table:parmsTable} gives definitions, units, and values for all parameters).
 Following Shirreff \etal, the duration of infection ($D_A$) and rate of transmission ($\beta_A$) for the Asymptomatic stage are Hill functions of the SPVL:
 
+\todo{I changed $V_\alpha$ to $V(\alpha)$ because $\alpha$ isn't necessarily an integer...}
+
 \begin{equation}
 \begin{split}
-D_A(\alpha) &= \frac{\tsub{D}{max} D_{50} ^{D_k}}{V_\alpha ^{D_k} + D_{50}^{D_k}}, \\
-\beta_A(\alpha) &= \frac{\tsub{\beta}{max} V_\alpha ^ {\beta_k}}%
-{V_\alpha^{\beta_k} + \beta_{50} ^{\beta_k}},
+D_A(\alpha) &= \frac{\tsub{D}{max} D_{50} ^{D_k}}{V(\alpha) ^{D_k} + D_{50}^{D_k}}, \\
+\beta_A(\alpha) &= \frac{\tsub{\beta}{max} V(\alpha) ^ {\beta_k}}%
+{V(\alpha)^{\beta_k} + \beta_{50} ^{\beta_k}},
 \end{split}
 \label{eq:hillfuns}
 \end{equation}
-where $V_{\alpha} = 10^\alpha$. 
+where $V(\alpha) = 10^\alpha$. 
 
 %Tables need to be placed after the first paragraph in which they are cited.
 
@@ -471,13 +474,15 @@ Over the course of infection, mutation occurs within the host.
 However, we follow Shirreff \etal\ in assuming that SPVL of the strain transmitted by an infected 
 individual is determined by the SPVL at the time of infection and is not further affected by within-host mutation. 
 Instead, the mutational effect is modeled as occurring in a single
-step at the time of transmission. First, the distribution of \Lspvl\ is discretized into a vector:
+step at the time of transmission. 
+
+First, the distribution of \Lspvl\ is discretized into a vector:
 \begin{equation}
 \alpha_i = \tsub{\alpha}{min} + (\tsub{\alpha}{max} - \tsub{\alpha}{min})\frac{i-1}{n-1} \qquad i = 1,2,3, \dots n.
 \end{equation}
 We have experimented with varying degrees of discretization in the strain distribution (i.e., values of $n$); in our model runs comparing results with Shirreff \etal\ \cite{shirreff_transmission_2011} (\figurename~\ref{fig:panel3}) we use $n=51$ (i.e. a bin width of 0.1 \Lspvl\ for $\alpha$), but reducing $n$ to 21 (bin width = 0.25 \Lspvl) makes little difference; we use this coarser grid for all other simulations reported.
 
-We construct an $n \times n$ mutational matrix, $M$ --- which is multiplied with the transmission term ---  so that $M_{ij}$ is the probability that a newly infected individual will have \Lspvl\ of $\alpha_j$ given that the infector has \Lspvl\ of $\alpha_i$. Finally, the probabilities are normalized so that each row sums to 1:
+We then construct an $n \times n$ mutational matrix, $M$ --- which is multiplied with the transmission term ---  so that $M_{ij}$ is the probability that a newly infected individual will have \Lspvl\ of $\alpha_j$ given that the infector has \Lspvl\ of $\alpha_i$. Finally, the probabilities are normalized so that each row sums to 1:
 \begin{equation}
 M_{ij} = \frac{\Phi(\alpha_j + d/2;i) - \Phi(\alpha_j - d/2;i)}{\Phi(\tsub{\alpha}{max} + d/2;i) - \Phi(\tsub{\alpha}{min} - d/2;i)},
 \end{equation}
@@ -563,7 +568,7 @@ by setting the partnership formation rate of the explicit partnership models to 
 
 The fifth and sixth models represent extreme simplifications of sexual partnership dynamics.  One (``implicit'') is an implicit serial monogamy model based on the epidemiological model used by Shirreff \etal\ \cite{shirreff_transmission_2011}. It is actually a random mixing model that explicitly tracks only the total number of susceptible and infected individuals. However, to reflect the effect of partnership structure, it uses an adjusted transmission rate derived from an approximation of the basic reproduction number of a serial monogamy model with instantaneous pair formation \cite{hollingsworth_hiv1_2008}. The second model of this pair (``random'') is a simple random-mixing model.
 
-Lastly, we incorporate heterogeneity in sexual activity into the models. Individuals are divided into different risk groups based on their level of sexual activity; we scale all aspects of sexual activity, assuming that sexual activity level in both within- and extra-couple contacts is directly proportional to number of non-cohabiting (extra-couple and uncoupled) partners per year \cite{omori2015dynamics} (see Appendix S1). We assume random activity-weighted mixing between risk groups \cite{may_transmission_1988}. 
+Lastly, we incorporate heterogeneity in sexual activity into the models. Individuals are divided into different risk groups based on their level of sexual activity; we scale all aspects of sexual activity, assuming that sexual activity level in both within- and extra-couple contacts is directly proportional to number of non-cohabiting (extra-couple and uncoupled) partners per year \cite{omori2015dynamics} (see Appendix S1) \todo{We should also mention that appendix S1 has full model details... It doesn't seem like we mention that anywhere in the txet.}. We assume random activity-weighted mixing between risk groups \cite{may_transmission_1988}. 
 (In the main text we focus on the model with non-instantaneous pair formation, extra-partnership contact (``pairform+epc'') and heterogeneous sexual activity, which we denote as ``hetero''; \figurename~S4 in Appendix S2 presents results on the effect of adding heterogeneity to other model variants.)
 While this model lacks some 
 important elements, such as age-structured mixing patterns, needed for realistic models of HIV transmission in sub-Saharan Africa, it represents a first step toward assessing the effects of epidemiological complexity. As even the models shown here push the limits of compartmental-based models (the heterogeneity model comprises 24530 coupled ordinary differential equations), adding further complexity will probably require a shift to an agent-based model framework, as well as considerable effort in model calibration \cite{herbeck_hiv_2014,delva_connecting_2016}.
@@ -696,7 +701,7 @@ dissolution rate (in this case equivalent to the partnership change
 rate) are adjusted.
 
 We run each model for each of 1000 parameter sets chosen by Latin hypercube sampling, with fixed starting conditions
-of mean \Lspvl\ of 3 and epidemic size of $10^{-4}$. After each run, initial exponential growth rate is calculated. Then, parameters are scaled so that the initial exponential growth rate is scaled to 0.04, a value that approximates the growth rates of Shirreff \etal's original models.
+of mean \Lspvl\ of 3 \todo{We mention that initial sd is 0.2 in the Appendix but we don't say it in the text. We can add it here or to the table...} and epidemic size of $10^{-4}$. After each run, initial exponential growth rate is calculated. Then, parameters are scaled so that the initial exponential growth rate is scaled to 0.04, a value that approximates the growth rates of Shirreff \etal's original models.
 For calibration purposes, we run each model for only 500 years
 (full simulations are run for 4000 years), which is always long
 enough to capture the exponential growth phase of the model. 
@@ -753,14 +758,14 @@ but the peak virulence is lower than
 Shirreff's ($\approx 4.3$ vs. $\approx 4.6$ \Lspvl),
 as is equilibrium virulence ($\approx 4.25$ vs. $\approx 4.5$ \Lspvl).
 
-Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material), has little effect on the virulence trajectory. Decreasing $I(0)$ makes SPVL peak slightly later and higher, because it allows a longer exponential-growth phase before the transition to endemic dynamics (\figurename~\ref{fig:panel3}b). Decreasing the initial SPVL also leads to progressively later, higher peaks in SPVL (\figurename~\ref{fig:panel3}c). In this case the delay in the peak is more pronounced than for low $I(0)$, because the rate of SPVL increase is eventually limited by the mutation rate. The peak SPVL is actually larger for a lower starting SPVL, presumably because lower SPVL also allows for a longer epidemic phase. However, the peaks are similar across the entire range of initial conditions, because even in the most limited (high-$I(0)$, high-$\alpha(0)$) cases HIV is able to evolve most of the way to the SPVL that would be optimal in an indefinitely prolonged growth phase.
+Changing the initial infectious density ($I(0)$), while it produces the expected changes in the initial epidemic trajectory (Supplementary material) \todo{I'm not sure where in supplementary material you're referring to... Isn't this just figure 1?}, has little effect on the virulence trajectory. Decreasing $I(0)$ makes SPVL peak slightly later and higher, because it allows a longer exponential-growth phase before the transition to endemic dynamics (\figurename~\ref{fig:panel3}b). Decreasing the initial SPVL also leads to progressively later, higher peaks in SPVL (\figurename~\ref{fig:panel3}c). In this case the delay in the peak is more pronounced than for low $I(0)$, because the rate of SPVL increase is eventually limited by the mutation rate. The peak SPVL is actually larger for a lower starting SPVL, presumably because lower SPVL also allows for a longer epidemic phase. However, the peaks are similar across the entire range of initial conditions, because even in the most limited (high-$I(0)$, high-$\alpha(0)$) cases HIV is able to evolve most of the way to the SPVL that would be optimal in an indefinitely prolonged growth phase. \todo{The last sentence makes sense but it's a little bit awkward... I'm not sure why...}
 
-Across the entire range of parameters covered by the LHS analysis, all
+Across the entire range of parameters covered by the LHS analysis \todo{replace this with Latin hypercube samples? Seems like a better terminology than LHS analysis}, all
 of the classes of models we considered produce qualitatively similar
 virulence trajectories, which we quantify in terms of population mean
 \Lspvl\ (\figurename~\ref{fig:virtraj}: higher population mean
 \Lspvl\ corresponds to higher virulence). Although the speed of
-virulence evolution varies, leading to wide variation in the peak SPVL
+virulence evolution varies, leading to wide variation in the peak SPVL \todo{log10 SPVL?}
 (ranging from 3 to 5.5) because HIV can evolve farther toward
 its exponential-phase optimum before the transition to the
 endemic phase, virulence peaks in all models between 200 and
@@ -845,7 +850,7 @@ progression to AIDS at the virulence peak
 (median/95\% CI = 6.1 (5.7-6.3), 6.02 (5.04-7.7), 6.03  (4.8-9.2)),
 while the implicit model predicts minimum progression times about twice as long
 (12.5 (9.6-15.6) years).
-The corresponding differences in  mean within-couple transmission
+The corresponding differences in mean within-couple transmission
 probability at the peak are even more extreme, about a fourfold difference:
 0.249 (0.24-0.26), 0.252 (0.19-0.28), and 0.252 (0.15-0.28) per year for the 
 random and pairform+epc models vs. 0.059 (0.02-0.13) per year
@@ -886,7 +891,7 @@ note that the effects of $\beta_D$ and $D_D$ are not shown in \figurename~\ref{f
 
 One of the distinguishing features of the scaled parameters (in comparison to the unscaled parameters) is that the range of the parameters is compressed (relative to other models) for models without extra-pair contact as those models require parameters to be scaled by a large value in order to achieve a given $r$ of 0.04.
 Models with extra-pair contact show wide range parameters as they can display a wide range of dynamics depending on $c_e/c_w$ (as well as $c_u/c_w$ for models with uncoupled mixing) and thus require wide range of scaling factors to achieve the target $r$.
-Parameter range for random-mixing model is severely compressed because latin hypercube sampling does not affect the prevalence trajectory very much, and scaling factor does not vary much across parameters.
+Parameter range for random-mixing model is severely compressed because Latin hypercube sampling does not affect the prevalence trajectory very much, and scaling factor does not vary much across parameters.
 
 For parameters involved in partnership turnover ($c$ and $\rho$), the main distinction is between models with and without extra-pair contact. With extra-pair contact, we see a gradual decrease in peak time, maximum \Lspvl, and equilibrium \Lspvl\ with increasing turnover rates.
 Increases in the other parameters lead to increases in all
