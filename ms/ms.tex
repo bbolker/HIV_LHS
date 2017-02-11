@@ -573,7 +573,7 @@ The fifth and sixth models represent extreme simplifications of sexual partnersh
 Lastly, we incorporated heterogeneity in sexual activity into the models. Individuals are divided into different risk groups based on their level of sexual activity; we scale all aspects of sexual activity, assuming that sexual activity level in both within- and extra-couple contacts is directly proportional to number of non-cohabiting (extra-couple and uncoupled) partners per year \cite{omori2015dynamics} (see Appendix S1 for full model details). We assume random activity-weighted mixing between risk groups \cite{may_transmission_1988}. 
 (In the main text we focus on the model with non-instantaneous pair formation, extra-pair contact (``pairform+epc'') and heterogeneous sexual activity, which we denote as ``hetero''; \figurename~S4 in Appendix~S2 presents results on the effect of adding heterogeneity to other model variants.)
 While this model lacks some 
-important elements, such as age-structured mixing patterns, needed for realistic models of HIV transmission in sub-Saharan Africa, it represents a first step toward assessing the effects of epidemiological complexity. As even the models shown here push the limits of compartmental-based models (the heterogeneity model comprises 24530 coupled ordinary differential equations), adding further complexity will probably require a shift to an agent-based model framework, as well as considerable effort in model calibration \cite{herbeck_hiv_2014,delva_connecting_2016,blanquart_transmission-virulence_2016}.
+important elements, such as age-structured mixing patterns, needed for realistic models of HIV transmission in sub-Saharan Africa, it represents a first step toward assessing the effects of epidemiological complexity. As even the models shown here push the limits of compartmental-based models (the heterogeneity model comprises 24530 coupled ordinary differential equations), adding further complexity will probably require a shift to an agent-based model framework, as well as considerable effort in model calibration \cite{herbeck_hiv_2014,delva_connecting_2016,blanquart_transmission_virulence_2016}.
 
 For simplicity (and following
 Shirreff \etal), all of our base models use an SIS (susceptible-infected-susceptible) formulation, where 
@@ -1118,18 +1118,8 @@ Computational resources were provided by SHARCnet.
 
 \nolinenumbers
 
-% Either type in your references using
-% \begin{thebibliography}{}
-% \bibitem{}
-% Text
-% \end{thebibliography}
-%
-% or
-%
-% Compile your BiBTeX database using our plos2015.bst
-% style file and paste the contents of your .bbl file
-% here.
-% 
+% \bibliography{virulence}
+
 \begin{thebibliography}{10}
 
 \bibitem{alizon_virulence_2009}
@@ -1214,6 +1204,12 @@ Alizon S.
 \newblock Journal of Evolutionary Biology. 2009;22(5):1123--1132.
 \newblock doi:{10.1111/j.1420-9101.2009.01726.x}.
 
+\bibitem{kretzschmar_effect_1998}
+Kretzschmar M, Dietz K.
+\newblock The effect of pair formation and variable infectivity on the spread
+  of an infection without recovery.
+\newblock Mathematical Biosciences. 1998;148(1):83--113.
+
 \bibitem{champredon_hiv_2013}
 Champredon D, Bellan S, Dushoff J.
 \newblock {HIV} Sexual Transmission Is Predominantly Driven by Single
@@ -1234,12 +1230,6 @@ Omori R, Chemaitelly H, Abu-Raddad LJ.
 \newblock Sexually Transmitted Infections.
   2015;doi:{10.1136/sextrans-2014-051925}.
 
-\bibitem{kretzschmar_effect_1998}
-Kretzschmar M, Dietz K.
-\newblock The effect of pair formation and variable infectivity on the spread
-  of an infection without recovery.
-\newblock Mathematical Biosciences. 1998;148(1):83--113.
-
 \bibitem{may_transmission_1988}
 May RM, Anderson RM.
 \newblock The Transmission Dynamics of Human Immunodeficiency Virus (HIV) [and
@@ -1252,6 +1242,13 @@ Delva W, Leventhal GE, Helleringer S.
 \newblock Connecting the dots: network data and models in {HIV} epidemiology.
 \newblock AIDS. 2016;30(13):2009--2020.
 \newblock doi:{10.1097/QAD.0000000000001184}.
+
+\bibitem{blanquart_transmission_virulence_2016}
+Blanquart F, Grabowski MK, Herbeck J, Nalugoda F, Serwadda D, Eller MA, et~al.
+\newblock A transmission-virulence evolutionary trade-off explains attenuation
+  of {HIV}-1 in {Uganda}.
+\newblock eLife. 2016;5:e20492.
+\newblock doi:{10.7554/eLife.20492}.
 
 \bibitem{blower_drugs_1991}
 Blower SM, Hartel D, Dowlatabadi H, Anderson RM, May RM.
@@ -1349,6 +1346,19 @@ Roberts HE, Goulder PJ, McLean AR.
 \newblock Journal of The Royal Society Interface. 2015;12(113):20150888.
 
 \end{thebibliography}
+
+% Either type in your references using
+% \begin{thebibliography}{}
+% \bibitem{}
+% Text
+% \end{thebibliography}
+%
+% or
+%
+% Compile your BiBTeX database using our plos2015.bst
+% style file and paste the contents of your .bbl file
+% here.
+% 
 
 \end{document}
 
