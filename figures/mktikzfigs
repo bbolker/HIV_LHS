@@ -1,0 +1,4 @@
+#!/bin/bash
+for i in 1 2 3 4; do 
+    pdflatex --jobname=tikz-f${i} diagrams.tex
+done
