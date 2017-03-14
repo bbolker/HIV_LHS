@@ -1,4 +1,4 @@
 #!/bin/bash
-for i in {1..5}; do
+for i in {2..6}; do
     cp figures_files/figure-html/fig${i}-1.png fig$i.png
 done

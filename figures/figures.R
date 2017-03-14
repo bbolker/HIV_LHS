@@ -57,7 +57,8 @@ fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
            labels=new_sum_labs)
 }
 
-### Figure 1
+fignum <- 2
+### Figure 2 (3-panel figure)
 
 for (i in c("","2","3")) 
     load(sprintf("../simdata/ev_LHS_resS%s.rda",i))
@@ -73,12 +74,17 @@ df_tot <- rbind(shirreff_df_m,d_littleR_m)
 tlab <- "time (years)"
 g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run))+
     geom_line(aes(linetype=run))+labs(x=tlab,
-            y=expression(population~mean~set-point~viral~load~(log[10])))+
+            y=expression("pop. mean set-point viral load"~(log[10])))+
 		scale_x_continuous(expand = c(0.005, 0), breaks = seq(0, 600, by = 100), 
 											 labels = c("0", "", "200", "", "400", "", "")) +
-    theme(legend.position=c(0.63,0.45),
-    			legend.justification = c(0, 1),
-    			panel.grid = element_blank())
+    theme(legend.position=c(0.5,0.45),
+          ## plot.margin=grid::unit(c(1,0.5,0.5,0.5),"cm"),
+          legend.justification = c(0, 1),
+          legend.key.height=grid::unit(0.7,"line"),
+          legend.text=element_text(size=10),
+          ## *positive* hjust shifts to the *right* ???
+          axis.title.y = element_text(size=11.5,hjust=1),
+          panel.grid = element_blank())
 
 ## Compute difference between 
 
@@ -130,18 +136,25 @@ g3.y <- g3 + scale_y_continuous(limits = limits, breaks = breaks)+
     scale_linetype_discrete(name=bquote(alpha*"(0)"))
 
 ## r fig1,fig.height=3.5,fig.width=10, echo = FALSE, dpi = 600}
-fig1 <- arrangeGrob(g1.y, g2.y, g3.y, nrow=1)
-if (do_pdf) ggsave("fig1.pdf", fig1, height = 3.5, width = 10)
+fig_panel3 <- arrangeGrob(g1.y, g2.y, g3.y, nrow=1)
+figtweak <- 0.8
+figname <- paste0("fig",fignum)
+
+if (do_pdf) ggsave(paste0(figname,".pdf"), fig_panel3,
+                   height = figtweak*3.5, width = figtweak*10)
 
 if (do_png) {
-    png(file="fig1.png",height=3.5*600,width=10*600)
+    png(file=paste0(figname,".png"),
+        height=figtweak*3.5*600,width=figtweak*10*600)
     print(grid.arrange(g1.y, g2.y, g3.y, nrow=1))
     dev.off()
 }
 
 fig_objects <- c("g1.y","g2.y","g3.y")
 
-### Figure 2
+fignum <- fignum + 1
+
+### Figure 3 (SPVL trajectory envelopes)
 
 ss <- subset(sum_list[["vir_mat"]],tvec<750)
 
@@ -151,7 +164,7 @@ ss <- transform(ss,
                 cmodel=droplevels(factor(gsub("+epc","",model,fixed=TRUE),
                                          levels=rev(levels(model)))))
 
-## base plot for Figure 2 and related (duration, SPVL, beta trajectories)
+## base plot for Figure 3 and related (duration, SPVL, beta trajectories)
 gg_basetraj <- ggplot(ss,aes(tvec,mean,ymin=lwr,ymax=upr))+
     geom_line(aes(colour=model,linetype=model),lwd=1)+
     geom_ribbon(aes(fill = model), alpha=0.3)+
@@ -178,7 +191,7 @@ bottom.points2 <- gapply.fun(transform(d[which.min(d$y), ],
 nostrips <- theme(strip.background = element_blank(),
                   strip.text.x = element_blank())
 
-## r fig2, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400}
+## r fig3, fig.width=6, fig.height = 4, echo = FALSE, cache = TRUE,dpi = 400}
 
 gg_virtraj <-
     suppressWarnings(direct.label(gg_basetraj + nostrips +
@@ -187,8 +200,10 @@ gg_virtraj <-
 
 ## FIXME: make minimal example for direct labels/linetype warning?
 
-if (do_pdf) ggsave(gg_virtraj,file="fig2.pdf",width=8,height=6)
-if (do_png) ggsave(gg_virtraj,file="fig2.png",width=8,height=6,dpi=400)
+figname <- paste0("fig",fignum)
+
+if (do_pdf) ggsave(gg_virtraj,file=paste0(figname,".pdf"),width=8,height=6)
+if (do_png) ggsave(gg_virtraj,file=paste0(figname,".png"),width=8,height=6,dpi=400)
 
 fig_objects <- c(fig_objects,"gg_virtraj","bottom.points2","top.points2")
 
@@ -223,7 +238,9 @@ gg_durtraj <- direct.label(gg_basetraj %+% ss_dur + nostrips +
 if (do_pdf) ggsave(gg_durtraj,file="fig_S2_2.pdf",width=6,height=4)
 if (do_png) ggsave(gg_durtraj,file="fig_S2_2.png",width=6,height=4,dpi=400)
 
-### Figure 3
+fignum <- fignum+1
+
+### Figure 4 (univariate summary stats)
 
 sL <- transform(sum_list[["sum_mat"]],
                 peak_dur = returnDur(peak_vir,HIVpars.skeleton))
@@ -280,8 +297,11 @@ gg_univ_fig <- gg_univ +
 
 ## r fig3, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
 
-if (do_pdf) ggsave(gg_univ_fig,file="fig3.pdf",width=8,height=4.8)
-if (do_png) ggsave(gg_univ_fig,file="fig3.png",width=8,height=4.8,dpi=600)
+figname <- paste0("fig",fignum)
+if (do_pdf) ggsave(gg_univ_fig,
+                   file=paste0(figname,".pdf"),width=8,height=4.8)
+if (do_png) ggsave(gg_univ_fig,
+                   file=paste0(figname,".png"),width=8,height=4.8,dpi=600)
 
 hetero <- seq(1, 7, 2)
 basemodels <- grep("(instswitch|pairform)",m_order,value=TRUE)
@@ -327,7 +347,7 @@ gg_univ_0 <- ggplot(mLw_res,aes(value,model,fill=model))+
 	theme(legend.position = "none") +
 	guides(fill=guide_legend(reverse=TRUE))+
     labs(x= expression(peak~mean~log[10]~SPVL))
-saveRDS(gg_univ_0,file="HIV_dur.rds")
+saveRDS(gg_univ_0,file="HIV_dur0.rds")
 
 fig_objects <- c(fig_objects,"gg_univ")
 
@@ -372,13 +392,28 @@ gg_univ.epi <- ggplot(mLw.epi,aes(value,model,fill=model))+
 	guides(fill=guide_legend(reverse=TRUE))+
 	labs(y="")+
 	geom_point(data=data.frame(model="random",
-                   variable=c("equilibrium~mean~transmission~rate~(year^-1)",
-                   					 "equilibrium~mean~progression~time~(years)"),
-                               value=c(rval.epi.t, rval.epi.d)),pch=22,size=3,show.legend=FALSE) +
-	zero_x_margin +
-	theme(panel.grid.major.x = element_blank(),
-				panel.grid.minor.x = element_blank())
+                  variable=c("equilibrium~mean~transmission~rate~(year^-1)",
+                             "equilibrium~mean~progression~time~(years)"),
+                  value=c(rval.epi.t, rval.epi.d)),pch=22,size=3,
+                  show.legend=FALSE) +
+    zero_x_margin +
+    theme(panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank())
 
+mLw_res.epi <- mLw.epi  %>%
+  filter(model %in% c("implicit","pairform+epc","heterogeneous","random"))  %>%
+  filter(variable %in%  "minimum~mean~progression~time~(years)")
+
+man_colours <- RColorBrewer::brewer.pal(name="Dark2",7)
+gg_univ_dur0 <- ggplot(mLw_res.epi,aes(value,model,fill=model))+
+    geom_violinh(width=1)+
+    theme(legend.position = "none") +
+    scale_fill_manual(values=man_colours[c(1:3,7)]) +
+    guides(fill=guide_legend(reverse=TRUE))+
+    labs(x="minimum mean progression time (years)",
+         y = "")
+
+saveRDS(gg_univ_dur0,file="HIV_dur1.rds")
 # http://stackoverflow.com/questions/19282897/how-to-add-expressions-to-labels-in-facet-wrap
 
 ## r fig3.1, fig.width=8,fig.height=4.8, echo = FALSE, cache = TRUE,dpi = 600}
@@ -387,6 +422,7 @@ if (do_pdf) ggsave(gg_univ.epi,file="fig_S2_3.pdf",width=8,height=4.8)
 if (do_png) ggsave(gg_univ.epi,file="fig_S2_3.png",width=8,height=4.8,dpi=600)
 
 fig_objects <- c(fig_objects,"gg_univ.epi")
+
 
 ## ```{r sumtab,as.is=TRUE,eval=FALSE}
 if (FALSE) {
@@ -418,6 +454,8 @@ ff <- function(model,variable,r=3) {
 	save(list=ls(pattern="^(maxt|mindur)"),file="../ms/maxminstats.RData")
 }
 
+
+fignum <-  fignum + 1
 
 ## r fig4_func, echo = FALSE}
 trim_gg <- function(gg,hack_spaces=TRUE,hack_parenthesis = TRUE) {
@@ -474,7 +512,7 @@ tweak_colours_gg <- function(gg) {
     return(gg)
 }
 
-### Figure 4
+### Figure 5
 
 sL2 <- sL[,c("model", "run", "eq_vir", "peak_time", "peak_vir")]
 
@@ -522,7 +560,9 @@ for(i in 1:2) {
 
 ## ``{r fig4,fig.width=7,fig.height=7, echo = FALSE, cache = TRUE,dpi = 600}
 
-if (do_pdf) pdf(file="fig4.pdf",width=7,height=7)
+figname <- paste0("fig",fignum)
+
+if (do_pdf) pdf(file=paste0(figname,".pdf"),width=7,height=7)
 orig_theme <- theme_get()
 theme_set(orig_theme+
           theme(panel.spacing=grid::unit(0,"lines")))
@@ -530,7 +570,7 @@ print(ggp2)
 if (do_pdf) dev.off()
 
 if (do_png) {
-    png(file="fig4.png",width=7*600,height=7*600)
+    png(file=paste0(figname,".png"),width=7*600,height=7*600)
     theme_set(theme_bw()+theme(panel.spacing=grid::unit(0,"lines")))
     print(ggp2,spacingProportion=0)
     dev.off()
@@ -539,7 +579,11 @@ if (do_png) {
 fig_objects <- c(fig_objects,"ggp2")
 
 theme_set(orig_theme)
-### Figure 5
+
+fignum <- fignum + 1
+
+### Figure 6 (sensitivity plots)
+
 remove_runs <- unique(subset(mL3, sumvar == "peak_time" & is.na(sumval))[,"run"])
 mL3 <- subset(mL3, !(model == "heterogeneous" & run %in% remove_runs))
 
@@ -641,8 +685,11 @@ ggsens <- ggplot(mL3,aes(LHSval,sumval,colour=model))+
 		scale_y_continuous(expand=c(0,0)) +
     zero_margin
 
-if (do_pdf) ggsave(ggsens, file="fig5.pdf",width=10,height=5)
-if (do_png) ggsave(ggsens, file="fig5.png",width=10,height=5,dpi=600)
+figname <- paste0("fig",fignum)
+if (do_pdf) ggsave(ggsens,
+                   file=paste0(figname,".pdf"),width=10,height=5)
+if (do_png) ggsave(ggsens,
+                   file=paste0(figname,".png"),width=10,height=5,dpi=600)
 
 fig_objects <- c(fig_objects,"ggsens")
 
