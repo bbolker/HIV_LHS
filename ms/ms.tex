@@ -484,6 +484,16 @@ First, the distribution of \Lspvl\ is discretized into a vector:
 \end{equation}
 We have experimented with varying degrees of discretization in the strain distribution (i.e., values of $n$); in our model runs comparing results with Shirreff \etal\ \cite{shirreff_transmission_2011} (\figurename~\ref{fig:panel3}) we use $n=51$ (i.e. a bin width of 0.1 \Lspvl\ for $\alpha$), but reducing $n$ to 21 (bin width = 0.25 \Lspvl) makes little difference; we use this coarser grid for all other simulations reported.
 
+\begin{figure}[!ht]
+\caption{\textbf{Baseline dynamics.}
+Time series of mean population \Lspvl\ using baseline parameters.
+(a) Contrast between the three-stage Shirreff model and the single-stage model calibrated to varying initial exponential growth rates, $r$.
+(b) Effects of varying initial infectious density $I(0)$.
+(c) Effects of varying initial mean virulence $\alpha(0)$.
+The middle $r=0.042$ (orange, dotted) curve in panel (a), calibrated to match the epidemic dynamics of Shirreff \etal's three-stage model \cite{shirreff_transmission_2011}, shows that our simplified single-stage HIV model can produce similar SPVL trajectories to the original three-stage model; the other $r$ values are chosen to show the effects of doubling or halving the initial epidemic growth rate. The other panels (b,c) show that eco-evolutionary dynamics are qualitatively similar across a range of initial conditions.}
+\label{fig:panel3}
+\end{figure}
+
 We then construct an $n \times n$ mutational matrix, $M$ --- which is multiplied with the transmission term ---  so that $M_{ij}$ is the probability that a newly infected individual will have \Lspvl\ of $\alpha_j$ given that their infected partner has \Lspvl\ of $\alpha_i$. Finally, the probabilities are normalized so that each row sums to 1:
 \begin{equation}
 M_{ij} = \frac{\Phi(\alpha_j + d/2;i) - \Phi(\alpha_j - d/2;i)}{\Phi(\tsub{\alpha}{max} + d/2;i) - \Phi(\tsub{\alpha}{min} - d/2;i)},
@@ -501,36 +511,12 @@ for progression rate corresponding to each SPVL compartment in the model:
 
 \subsection*{Contact structure and partnership dynamics}
 
+We developed seven multi-strain evolutionary models covering a gamut including Champredon \etal's relatively realistic \cite{champredon_hiv_2013} and Shirreff \etal's relatively simple \cite{shirreff_transmission_2011} contact structures, each of which is based on different assumptions regarding contact structure and partnership dynamics. Specifically, we focus on the effects of the assumptions of (1) instantaneous vs. non-instantaneous partnership formation; (2) zero vs. positive extra-pair sexual contact and transmission; and (3) homogeneous vs. heterogeneous levels of sexual activity on the evolution of mean \Lspvl.
+
+Our first four models (\figurename~\ref{fig:diagrams}) explicitly consider partnership dynamics \cite{champredon_hiv_2013}. The first (\diagfig{d}) assumes non-instantaneous partnership formation (i.e. individuals spend some time uncoupled, outside of partnerships) and consists of five states that are classified by infection status and partnership status; single (uncoupled) susceptible individuals ($S$), single infected individuals ($I$), concordant negative (susceptible-susceptible) couples ($SS$), discordant (susceptible-infected) couples ($SI$), and concordant positive (infected-infected) couples ($II$). 
+The rates of pair formation are based on the numbers of uncoupled susceptible and infected individuals and the pair-formation rate; partnerships can either dissolve into singletons or be transformed into other types of partnerships by infection of one partner. This model also includes extra-pair contact with both uncoupled individuals and individuals in other partnerships (we denote it ``pairform+epc''), so that susceptible uncoupled individuals and susceptible partners in any type of partnership can be infected by infected uncoupled individuals or infected partners in any type of partnership.
+
 \begin{figure}[t!p]
-
-\begin{subfigure}[b]{0.4\linewidth}
-	\centering
-	\raisebox{0.44\height}{
-	  \includegraphics[width=0.9\linewidth]{../figures/tikz-f1}
-	}
-\caption{Instantaneous switching without extra-pair contact (``instswitch'')}
-\end{subfigure}
-\begin{subfigure}[b]{0.4\linewidth}
-	\centering
-	  \includegraphics[width=0.9\linewidth]{../figures/tikz-f2}
-\caption{Instantaneous switching with extra-pair contact (``instswitch+epc'')}
-\end{subfigure}
-
-\begin{subfigure}[b]{0.4\linewidth}
-	\centering
-	\raisebox{0.33\height}{
-	  \includegraphics[width=0.9\linewidth]{../figures/tikz-f3}
-	}
-\caption{Pair-formation model without extra-pair/uncoupled contact 
-(``pairform'')}
-\end{subfigure}
-\begin{subfigure}[b]{0.4\linewidth}
-	\centering
-	  \includegraphics[width=0.9\linewidth]{../figures/tikz-f4}
-\caption{Pair-formation model with extra-pair/uncoupled contact
-(``pairform+epc'')}
-\end{subfigure}
-
 \caption{\textbf{Model contact structures.} 
 Schematic representations of models with
 explicit contact structure. Top row (a,b) shows models with instantaneous
@@ -553,11 +539,6 @@ where each compartment is subdivided by sexual activity rate
 \label{fig:diagrams}
 \end{figure}
 
-We developed seven multi-strain evolutionary models covering a gamut including Champredon \etal's relatively realistic \cite{champredon_hiv_2013} and Shirreff \etal's relatively simple \cite{shirreff_transmission_2011} contact structures, each of which is based on different assumptions regarding contact structure and partnership dynamics. Specifically, we focus on the effects of the assumptions of (1) instantaneous vs. non-instantaneous partnership formation; (2) zero vs. positive extra-pair sexual contact and transmission; and (3) homogeneous vs. heterogeneous levels of sexual activity on the evolution of mean \Lspvl.
-
-Our first four models (\figurename~\ref{fig:diagrams}) explicitly consider partnership dynamics \cite{champredon_hiv_2013}. The first (\diagfig{d}) assumes non-instantaneous partnership formation (i.e. individuals spend some time uncoupled, outside of partnerships) and consists of five states that are classified by infection status and partnership status; single (uncoupled) susceptible individuals ($S$), single infected individuals ($I$), concordant negative (susceptible-susceptible) couples ($SS$), discordant (susceptible-infected) couples ($SI$), and concordant positive (infected-infected) couples ($II$). 
-The rates of pair formation are based on the numbers of uncoupled susceptible and infected individuals and the pair-formation rate; partnerships can either dissolve into singletons or be transformed into other types of partnerships by infection of one partner. This model also includes extra-pair contact with both uncoupled individuals and individuals in other partnerships (we denote it ``pairform+epc''), so that susceptible uncoupled individuals and susceptible partners in any type of partnership can be infected by infected uncoupled individuals or infected partners in any type of partnership.
- 
 Specifically, single individuals ($S$ and $I$) form partnerships at a \percap\ rate $\rho$, and partnerships dissolve at a rate $c$. Infected individuals in a discordant partnership infect their susceptible partner at a rate $\beta$ (within-couple transmission rate) and susceptible individuals outside the partnership at a rate $c_e$ (extra-couple transmission rate). Infected individuals in seropositive ($II$) partnerships can also infect any susceptible individual at rate $c_e$. Likewise, single infected individuals ($I$) can infect any susceptible individuals (single individuals $S$, or susceptible members of $SS$ or $SI$ partnerships) at a rate $c_u$ through uncoupled mixing. 
 This parameterization follows Champredon \etal; we have adapted some of the details
 of their model to a multi-strain scenario, so that we track (for example) a matrix 
@@ -742,17 +723,6 @@ treatment, the epidemic would probably still be increasing in virulence.
 % Results and Discussion can be combined.
 \section*{Results}
 
-\begin{figure}[!ht]
-\includegraphics[width=\textwidth]{../figures/fig2.pdf}
-\caption{\textbf{Baseline dynamics.}
-Time series of mean population \Lspvl\ using baseline parameters.
-(a) Contrast between the three-stage Shirreff model and the single-stage model calibrated to varying initial exponential growth rates, $r$.
-(b) Effects of varying initial infectious density $I(0)$.
-(c) Effects of varying initial mean virulence $\alpha(0)$.
-The middle $r=0.042$ (orange, dotted) curve in panel (a), calibrated to match the epidemic dynamics of Shirreff \etal's three-stage model \cite{shirreff_transmission_2011}, shows that our simplified single-stage HIV model can produce similar SPVL trajectories to the original three-stage model; the other $r$ values are chosen to show the effects of doubling or halving the initial epidemic growth rate. The other panels (b,c) show that eco-evolutionary dynamics are qualitatively similar across a range of initial conditions.}
-\label{fig:panel3}
-\end{figure}
-
 Our simplifications of Shirreff \etal's model \cite{shirreff_transmission_2011} reproduce its qualitative behaviour --- in particular, its predictions of virulence dynamics --- reasonably well. As we calibrate the parameters to achieve initial epidemic growth rates $r$ ranging
 from 0.042 \peryear\ to 0.084 \peryear\ (the former value matching the initial rate of increase in prevalence in Shirreff \etal's full model) the initial trajectory of increasing virulence brackets the rate from the original model (\figurename~\ref{fig:panel3}a). 
 For matching initial growth rates ($r=0.042$)
@@ -777,7 +747,6 @@ endemic phase, virulence peaks between 200 and
 300 years in all models.
 
 \begin{figure}[!ht]
-\includegraphics[width=\textwidth]{../figures/fig3.pdf}
 \caption{\textbf{Envelopes of virulence trajectories (population mean \Lspvl) under all models.}
 Panels are arranged in order of complexity of contact structure, from 
 ``random'' (least complex) to ``hetero'' (most complex).
@@ -804,7 +773,6 @@ also produce late peaks ($> 200~\text{years}$) and
 high peak virulence (5.6 \Lspvl).
 
 \begin{figure}[!ht]
-\includegraphics[width=\textwidth]{../figures/fig4.pdf}
 \caption{{\bf Univariate distributions of summary statistics.}
 Models arranged in order of complexity, as in \figurename~\ref{fig:virtraj}.
 For every simulation, three summary statistics are shown: peak time, maximum mean \Lspvl, and equilibrium mean \Lspvl.
@@ -817,7 +785,6 @@ has been replaced by a point in order to preserve the vertical axis scaling.}
 \end{figure}
 
 \begin{figure}[!ht]
-\includegraphics[width=\textwidth]{../figures/fig5.pdf}
 \caption{{\bf Pairs plot: bivariate relationships among summary statistics for each model structure.}
 The three summary statistics for each simulation are plotted against each other in order to visualize the relationship among the summary statistics and to help compare models.
 Surprisingly, the implicit model, an approximation for instantaneous partnership formation model (instswitch), shows an almost identical trend with a model that has pair formation dynamics (pairform).
@@ -863,17 +830,6 @@ for the implicit model. (Appendix S2
 presents plots showing univariate summaries
 of expected progression time to AIDS and transmission probability.)
 
-\begin{figure}[!ht]
-\includegraphics[width=\textwidth]{../figures/fig6.pdf}
-\caption{{\bf Sensitivity plot.}
-Distribution (points) and trend (smooth line) of summary statistics (y-axis,
-rows) as a function of parameter values (x-axis, columns), some of which have been scaled to calibrate the initial epidemic growth rate.
-Changing parameters may have differing effects for models with different
-contact structures: for example, partnership dissolution rate ($c$, third column) increases peak time and virulence in models without explicit pair formation but decreases them in more realistic models.
-}
-\label{fig:plot_sens}
-\end{figure}
-
 Bivariate relationships (\figurename~\ref{fig:pairplot}) help distinguish the results of 
 different models with similar univariate 
 distributions of dynamical summaries. While the
@@ -897,6 +853,16 @@ of each parameter on the summary statistics.
 The most notable difference can be observed by comparing the scaled parameters (e.g. $\beta_P$, $\beta_D$, $c$, $\rho$) with the unscaled parameters (e.g. $D_P$, $D_D$, $c_e/c_w$, $c_u/c_w$, $\kappa$, $\mu$);
 the effects of $\beta_D$ and $D_D$ are not shown in \figurename~\ref{fig:plot_sens} as 
 they show patterns almost identical to $\beta_P$ and $D_P$, respectively.
+
+\begin{figure}[!ht]
+\caption{{\bf Sensitivity plot.}
+Distribution (points) and trend (smooth line) of summary statistics (y-axis,
+rows) as a function of parameter values (x-axis, columns), some of which have been scaled to calibrate the initial epidemic growth rate.
+Changing parameters may have differing effects for models with different
+contact structures: for example, partnership dissolution rate ($c$, third column) increases peak time and virulence in models without explicit pair formation but decreases them in more realistic models.
+}
+\label{fig:plot_sens}
+\end{figure}
 
 For the scaled parameters, the parameter ranges 
 (horizontal axis) are compressed 
@@ -1101,8 +1067,7 @@ could significantly change their conclusions.
 \section*{Acknowledgements}
 We would like to thank Christophe Fraser and
 David Champredon for access to simulation code
-and David Earn, Wim Delva, and an anonymous reviewer for useful comments;
-this work was funded by NSERC Discovery Grant 386590-2010.
+and David Earn for useful comments.
 Computational resources were provided by SHARCnet.
 
 \section*{Supporting Information}
