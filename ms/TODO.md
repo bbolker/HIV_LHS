@@ -1,5 +1,5 @@
-# Second revision/resubmission
+# Provisional acceptance
 
-- refs: cite blanquart_transmission-virulence_2016 ; new Herbeck paper?
+- Clean the repo
 
-- re-do bibliography hack
+- Make necessary changes (see TODO.pdf)
