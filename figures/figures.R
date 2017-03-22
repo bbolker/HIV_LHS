@@ -237,8 +237,8 @@ gg_durtraj <- direct.label(gg_basetraj %+% ss_dur + nostrips +
 													 	labs(y="expected progression to AIDS (years)"),
 													 method=list("bottom.points2","bumpup"))
 
-if (do_pdf) ggsave(gg_durtraj,file="fig_S2_2.pdf",width=6,height=4)
-if (do_png) ggsave(gg_durtraj,file="fig_S2_2.png",width=6,height=4,dpi=400)
+if (do_pdf) ggsave(gg_durtraj,file="fig_S2_2.pdf",width=8,height=6)
+if (do_png) ggsave(gg_durtraj,file="fig_S2_2.png",width=8,height=6,dpi=400)
 
 fignum <- fignum+1
 
