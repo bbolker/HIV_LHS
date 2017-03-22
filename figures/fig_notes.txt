@@ -1,0 +1,11 @@
+
+"at least 6.68cm wide, but less than 19.05cm and under 22.225cm tall"
+300 dpi == 118 dp cm
+
+9 cm wide for single-panel, 18 cm wide for double panel?
+1062 /  2124 pixels
+
+convert -alpha off -depth 8 -density 300 -resize 2124 -compress lzw fig1.pdf fig1.tif
+
+
+

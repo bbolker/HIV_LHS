@@ -57,8 +57,8 @@ fixfac2 <- function(x,atop=FALSE,newlines=FALSE) {
            labels=new_sum_labs)
 }
 
-fignum <- 2
-### Figure 2 (3-panel figure)
+fignum <- 1
+### Figure 1 (3-panel figure)
 
 for (i in c("","2","3")) 
     load(sprintf("../simdata/ev_LHS_resS%s.rda",i))
@@ -152,7 +152,9 @@ if (do_png) {
 
 fig_objects <- c("g1.y","g2.y","g3.y")
 
-fignum <- fignum + 1
+
+## skip figure 2 (3-panel figure)
+fignum <- 3
 
 ### Figure 3 (SPVL trajectory envelopes)
 

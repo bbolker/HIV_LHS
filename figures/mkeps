@@ -1,0 +1,11 @@
+make figures
+for i in 1 3 4 5 6; do 
+make fig$i.eps
+done
+for i in _S2_1 _S2_2 _S2_3 _S2_4; do make fig$i.eps; done
+# for i in a b c d; do
+# pdflatex diagram_$i
+# pdfcrop diagram_$i.pdf
+# mv diagram_$i-crop.pdf fig1$i.pdf
+## make fig1$i.tif
+make tikz-comb

@@ -54,10 +54,10 @@
 		to  (StoI);
 	\draw[->, red2, dashed, very thick] (SI)
 		to [bend right=45] (SStoSI);
-	\draw[->, red2, dashed, very thick] (II)
-		to [bend left=60] (SStoSI);
 	\draw[->, red2, dashed, very thick] (I)
 		to  (SItoII);
+	\draw[->, red2, dashed, very thick] (II.south)
+		to [bend left=60] (SStoSI);
 	\draw[->, red2, dashed, very thick] (II)
 		to [bend left=70] (SItoII);
 %% these are the problematic ones

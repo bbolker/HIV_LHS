@@ -1,0 +1,2 @@
+#! /bin/bash 
+convert -alpha off -depth 8 -density 300 -resize 2124 -compress lzw $1.pdf $1.tif

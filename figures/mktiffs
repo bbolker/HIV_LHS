@@ -1,13 +1,9 @@
-R CMD BATCH --vanilla figures.R
-for i in 5 4 3 2 1; do 
-make fig$i.tif
-mv fig$i.tif fig$((i+1)).tif
+## make figures
+make tikz-comb
+for i in 1 2 3 4 6; do 
+   ./mkwidetif fig$i
 done
-for i in _S2_1 _S2_2 _S2_3 _S2_4; do make fig$i.tif; done
-for i in a b c d; do
-pdflatex diagram_$i
-pdfcrop diagram_$i.pdf
-mv diagram_$i-crop.pdf fig1$i.pdf
-make fig1$i.tif
-done
+./mktif fig5 1416
+for i in _S2_1 _S2_2 _S2_3 _S2_4; do ./mkwidetif fig$i; done
+
    
