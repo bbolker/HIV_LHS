@@ -17,6 +17,7 @@ tikz-comb: comb_diagrams.tex partnerSIR.tex diagrams.tex diagram_geom.tex
 	pdfcrop comb_diagrams
 	pdftops -eps comb_diagrams-crop.pdf
 	mv comb_diagrams-crop.eps fig2.eps
+	mv comb_diagrams-crop.pdf fig2.pdf
 
 ## should improve Makefile so that we don't rebuild PNG 
 figures: figures.R
