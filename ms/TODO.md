@@ -1,11 +1,5 @@
 # Provisional acceptance
 
 - Repo:
-     - Clean
-	 - Push to Zenodo
-- Make necessary changes (see TODO.pdf)
-     - Metadata:
-	     - all OK, but data availability statement will need to change
-     - ms
-	     - remove figures (legends only)
-		 - remove reviewers 
+  - Push to Zenodo (https://guides.github.com/activities/citable-code/)
+- Relabel figures in supplementary material (see TODO.pdf) 
