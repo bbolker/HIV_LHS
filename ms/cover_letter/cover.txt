@@ -1,7 +1,0 @@
-To the editor,
-
-We are submitting our manuscript, "Effects of Epidemiological Structure on the Transient Evolution of HIV Virulence", for consideration for publication in \emph{PLoS Computational Biology}. Using HIV as a model system, our study explores the transient, eco-evolutionary changes in pathogen characteristics over the course of an epidemic. Building on modeling frameworks and estimated parameters developed by \cite{shirreff_transmission_2011} and \cite{champredon_hiv_2013}, we ask how predicted changes in virulence depend on way that contact patterns (e.g. the dynamics of sexual partnership change and contact outside of stable partnerships) are modeled.
-
-This study is important because modelers are actively publishing studies that predict the evolutionary consequences of public-health interventions \cite{payne_impact_2014,roberts2015impact,herbeck2016evolution}. Our paper suggests that these studies, which generally focus on the within-host and evolutionary properties of the pathogen but neglect important epidemiological structure, should be interpreted with caution.
-
-suggested reviewers: Christophe Fraser, Shirreff, Samuel Alizon, Sebastian Lion, Troy Day
