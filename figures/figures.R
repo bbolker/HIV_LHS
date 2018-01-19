@@ -10,11 +10,12 @@ library(gridExtra)
 library(plyr)  ## for ldply() -- MUST be before dplyr!
 library(dplyr) ## for full_join()
 library(reshape2)  ## for melt()
-library(GGally) ## need BMB version
-stopifnot(packageVersion("GGally")>="1.3.0")
+library(GGally)
+stopifnot(packageVersion("GGally")>="1.3.2")
 ## devtools::install_github("bbolker/GGally")
 ## devtools::install_github("lionel-/ggstance")
 library(ggstance)
+library(ggplot2)
 
 ## set accordingly ...
 do_png <- FALSE
@@ -89,10 +90,10 @@ g1 <- ggplot(df_tot,aes(x=Time,y=Mean.VL,colour=run))+
 ## Compute difference between 
 
 df_tot %>%
-    subset(run %in% c("Shirreff", "r=0.042")) %>%
+    filter(run %in% c("Shirreff", "r=0.042")) %>%
     group_by(run) %>%
     summarise(Mean.VL=max(Mean.VL)) %>%
-    select(Mean.VL) %>%
+    dplyr::select(Mean.VL) %>%
     unlist -> TODO.values
 
 ## ratio of peak SPVL, Shirreff vs. single-stage model with r=0.042
@@ -167,9 +168,11 @@ ss <- transform(ss,
                                          levels=rev(levels(model)))))
 
 ## base plot for Figure 3 and related (duration, SPVL, beta trajectories)
-gg_basetraj <- ggplot(ss,aes(tvec,mean,ymin=lwr,ymax=upr))+
-    geom_line(aes(colour=model,linetype=model),lwd=1)+
-    geom_ribbon(aes(fill = model), alpha=0.3)+
+## n.b. need colour=model in overall mapping, then cancel out in
+##   geom_ribbon, rather than 
+gg_basetraj <- ggplot(ss,aes(tvec,mean,ymin=lwr,ymax=upr,colour=model))+
+    geom_line(aes(linetype=model),lwd=1)+
+    geom_ribbon(aes(fill = model), colour=NA, alpha=0.3)+
     labs(x="time (years)")+
     scale_x_continuous(expand=c(0,0))+
     theme(axis.title.y = element_text(margin = margin(0,10,0,0)),
